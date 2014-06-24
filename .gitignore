@@ -1,0 +1,19 @@
+#Vagrant directories
+.vagrant/
+
+#Gradle directories
+.gradle/
+
+#Idea directories
+.idea/
+*.iml
+*.ipr
+*.iws
+
+#Build dirs
+build/
+out/
+classes
+
+#Mac
+*.DS_Store
