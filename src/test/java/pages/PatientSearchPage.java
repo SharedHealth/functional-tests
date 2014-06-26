@@ -1,6 +1,5 @@
 package pages;
 
-import builders.PatientDataBuilder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -46,7 +45,7 @@ public class PatientSearchPage extends Page {
     }
 
     public PatientDetailsPage goToCreatePatientPage() {
-        WebElement createNewPatient = driver.findElement(By.xpath("//span[text()='Create New']"));
+        WebElement createNewPatient = driver.findElement(By.xpath("//ul[@class='top-nav']/li[2]/a"));
         createNewPatient.click();
         return initialize(webDriver, PatientDetailsPage.class);
     }

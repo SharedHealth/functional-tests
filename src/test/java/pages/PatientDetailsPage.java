@@ -1,6 +1,6 @@
 package pages;
 
-import builders.PatientDataBuilder;
+import domain.Patient;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -58,7 +58,7 @@ public class PatientDetailsPage extends Page{
     private WebElement patientPrimaryContact;
 
 
-    @FindBy(xpath = "//button[text()='Start LAB_VISIT visit']")
+    @FindBy(xpath = "//button[text()='Start OPD visit']")
     private WebElement startLabVisit;
 
 
@@ -78,7 +78,7 @@ public class PatientDetailsPage extends Page{
         });
     }
 
-    public void verifyPatientDetails(PatientDataBuilder primaryPatient) {
+    public void verifyPatientDetails(Patient primaryPatient) {
         this.waitForMillis(1000);
 
         Select patientEducationSelectBox = new  Select(patientEducation);
@@ -105,7 +105,7 @@ public class PatientDetailsPage extends Page{
 
     }
 
-    public PatientVisitInformationPage createPatient(PatientDataBuilder primaryPatient) {
+    public PatientVisitInformationPage createPatient(Patient primaryPatient) {
 
         String addressOptions = "//a[text()='"+primaryPatient.getAddress().getUnion()+", "+primaryPatient.getAddress().getUpazilla()+"']";
 

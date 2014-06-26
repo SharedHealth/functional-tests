@@ -37,7 +37,6 @@ public class PatientSearchResultPage extends Page {
     public PatientDetailsPage viewPatientDetails() {
 
         WebElement viewButton = driver.findElement(By.xpath("//td[@class=\"edit-col\"]//button"));
-//        System.out.println(viewButton.getAttribute("name"));
         viewButton.click();
         return initialize(webDriver, PatientDetailsPage.class);
 

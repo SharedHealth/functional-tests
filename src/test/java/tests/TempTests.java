@@ -1,7 +1,8 @@
 package tests;
 
-import builders.PatientData;
-import builders.PatientDataBuilder;
+import data.PatientData;
+import domain.Patient;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -12,13 +13,13 @@ import utils.WebDriverProperties;
 public class TempTests {
 
     static WebDriver driver = new FirefoxDriver();
-    protected PatientDataBuilder primaryPatient;
+    protected Patient primaryPatient;
 
 
-    @Test
+    @Test @Ignore
     public void verifyPatientSearchByNID(){
 
-        driver.get(WebDriverProperties.getProperty("facilityOneURL"));
+        driver.get(WebDriverProperties.getProperty("facilityTwoURL"));
 
         primaryPatient = PatientData.defaultPatient;
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
@@ -27,17 +28,7 @@ public class TempTests {
 
 
     }
-    @Test
-    public void searchInNationalRegistry(){
-        driver.get(WebDriverProperties.getProperty("facilityOneURL"));
-        primaryPatient = PatientData.newPatient;
-        primaryPatient.withNid("NIDA573228").withHid("HIDA573228").withFirstName("A573228");
-
-        LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login().goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).verifyPatientDetails(primaryPatient);
-
-    }
-    @Test
+    @Test @Ignore
     public void generateTimeStamp(){
 
         String id = String.valueOf(System.currentTimeMillis() );

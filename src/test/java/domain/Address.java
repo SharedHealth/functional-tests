@@ -8,6 +8,28 @@ public class Address {
     private String union;
     private String addressLine1;
 
+    public String getDivision() {
+        return division;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public String getUpazilla() {
+        return upazilla;
+    }
+
+    public String getUnion() {
+        return union;
+    }
+
+    public String getAddressLine1() {
+        return addressLine1;
+    }
+
+
+
     private Address(AddressBuilder builder) {
         this.division = builder.division;
         this.district = builder.district;

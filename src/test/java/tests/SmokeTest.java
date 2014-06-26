@@ -1,7 +1,7 @@
 package tests;
 
-import builders.PatientData;
-import builders.PatientDataBuilder;
+import data.PatientData;
+import domain.Patient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import utils.WebDriverProperties;
 public class SmokeTest {
 
     static WebDriver driver ;
-    protected PatientDataBuilder primaryPatient;
+    protected Patient primaryPatient;
 
     @Before
     public void setUp(){
