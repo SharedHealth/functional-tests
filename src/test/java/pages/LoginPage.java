@@ -34,10 +34,17 @@ public class LoginPage extends Page {
             }
         });
     }
+    public HomePage login(String uname) {
+
+        userName.sendKeys(uname);
+        password.sendKeys("Demo1234");
+        loginButton.click();
+        return initialize(webDriver, HomePage.class);
+    }
     public HomePage login() {
 
-        userName.sendKeys("superman");
-        password.sendKeys("Admin123");
+        userName.sendKeys("Demo");
+        password.sendKeys("Demo1234");
         loginButton.click();
         return initialize(webDriver, HomePage.class);
     }

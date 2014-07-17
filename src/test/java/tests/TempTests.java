@@ -37,5 +37,39 @@ public class TempTests {
         System.out.println(id);
     }
 
+    @Test @Ignore
+    public void verifyPatientSyncFromBahmni1(){
+
+        driver.get(WebDriverProperties.getProperty("facilityOneExternalURL"));
+
+        primaryPatient = PatientData.newPatient1;
+        LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login("demo").goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).logout();
+
+
+        driver.get(WebDriverProperties.getProperty("facilityTwoExternalURL"));
+        page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login("demo").goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).verifyPatientDetails(primaryPatient);
+
+    }
+    @Test @Ignore
+    public void verifyPatientSyncFromBahmni2(){
+
+        driver.get(WebDriverProperties.getProperty("facilityTwoExternalURL"));
+
+        primaryPatient = PatientData.newPatient2;
+        LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login("demo").goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).logout();
+
+
+        driver.get(WebDriverProperties.getProperty("facilityOneExternalURL"));
+        page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login("demo").goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).verifyPatientDetails(primaryPatient);
+
+    }
+
+
+
+
 
 }
