@@ -2,6 +2,7 @@ package tests;
 
 import data.PatientData;
 import domain.Patient;
+import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
@@ -69,6 +70,10 @@ public class TempTests {
     }
 
 
+    @After
+    public void tearDown(){
+        driver.quit();
+    }
 
 
 

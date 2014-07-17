@@ -20,12 +20,12 @@ public class PatientData {
 
     public static Patient newPatient1 = new Patient.PatientBuilder().firstName("A"+id1)
             .lastName("ATEST").gender("Male").dateOfBirth("01-03-2000").address(defaultAddress)
-            .nid("NIDA"+id1).hid("HIDA"+id1).education("5th Pass and Below").occupation("Agriculture").primaryContact("Primary One").build();
+            .nid("9000000"+id1).hid("9000000000000"+id1).education("5th Pass and Below").occupation("Agriculture").primaryContact("Primary One").build();
 
     private static String id2 = String.valueOf(System.currentTimeMillis()).substring(7);
     public static Patient newPatient2 = new Patient.PatientBuilder().firstName("A"+id2)
             .lastName("ATEST").gender("Male").dateOfBirth("01-03-2000").address(defaultAddress)
-            .nid("NIDA"+id2).hid("HIDA"+id2).education("5th Pass and Below").occupation("Agriculture").primaryContact("Primary One").build();
+            .nid("9000000"+id2).hid("9000000000000"+id2).education("5th Pass and Below").occupation("Agriculture").primaryContact("Primary One").build();
 
 
 
