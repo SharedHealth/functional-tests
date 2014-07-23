@@ -1,6 +1,9 @@
 package tests;
 
+import data.ConceptData;
 import data.PatientData;
+import domain.Concept;
+import domain.ConceptReferenceTerm;
 import domain.Patient;
 import org.junit.After;
 import org.junit.Ignore;
@@ -8,6 +11,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.LoginPage;
+import pages.TRLoginPage;
 import utils.PageFactoryWithWait;
 import utils.WebDriverProperties;
 
@@ -15,6 +19,8 @@ public class TempTests {
 
     static WebDriver driver = new FirefoxDriver();
     protected Patient primaryPatient;
+    protected ConceptReferenceTerm conceptReferenceTerm;
+    protected Concept concept;
 
 
     @Test @Ignore
@@ -56,7 +62,7 @@ public class TempTests {
     @Test @Ignore
     public void verifyPatientSyncFromBahmni2(){
 
-        driver.get(WebDriverProperties.getProperty("facilityTwoExternalURL"));
+        driver.get(WebDriverProperties.getProperty("facilityOneExternalURL"));
 
         primaryPatient = PatientData.newPatient2;
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
@@ -70,9 +76,23 @@ public class TempTests {
     }
 
 
+@Test  @Ignore
+    public void verifyConceptDetails(){
+
+        driver.get(WebDriverProperties.getProperty("facilityOneOpenMRSInternalURL"));
+        conceptReferenceTerm = ConceptData.conceptReferenceTermForVerification;
+        concept = ConceptData.conceptForDiagnosisForVerification;
+
+        TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
+        page.login("admin","test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchForConcept(concept).verifyConceptDetails(concept) ;
+
+
+
+    }
+
     @After
     public void tearDown(){
-        driver.quit();
+//        driver.quit();
     }
 
 

@@ -40,10 +40,7 @@ public class PatientVisitInformationPage extends Page{
 
     public void logout() {
         userInfoButton.click();
-//        waitForMillis(2500);
         WebElement logoutButton = driver.findElement(By.linkText("Logout"));
-//        WebElement logoutButton = driver.findElement(By.xpath("//span[text()=''Logout']"));
-
         logoutButton.click();
     }
 }
