@@ -11,9 +11,10 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 
+import java.util.HashMap;
 import java.util.List;
 
-public class EditConceptPage extends Page{
+public class ConceptEditPage extends Page{
 
     @FindBy(name = "namesByLocale[en].name")
     private WebElement name;
@@ -49,7 +50,7 @@ public class EditConceptPage extends Page{
     private WebElement addMapping;
 
 
-    public EditConceptPage(WebDriver driver) {
+    public ConceptEditPage(WebDriver driver) {
         super(driver);
         this.webDriver = webDriver;
     }
@@ -106,26 +107,5 @@ public class EditConceptPage extends Page{
 
     }
 
-    public void verifyConceptDetails(Concept concept) {
 
-        WebElement conceptMappingRelationship = webDriver.findElement(By.xpath("(//table[@id='conceptMapTable']//select)[1]"));
-
-        Select conceptClassSelectBox = new  Select(conceptClass);
-        Select dataTypeSelectBox = new  Select(dataType);
-        Select conceptRelationshipSelectBox = new  Select(conceptMappingRelationship);
-
-
-        Assert.assertEquals(concept.getName(), name.getAttribute("value")) ;
-        Assert.assertEquals(concept.getSynonyms1(), synonyms1.getAttribute("value")) ;
-        Assert.assertEquals(concept.getShortName() , shortName.getAttribute("value"));
-        Assert.assertEquals(concept.getDescription(), description.getAttribute("value")) ;
-        Assert.assertEquals(concept.getConceptClass(),  conceptClassSelectBox.getFirstSelectedOption().getText());
-        Assert.assertEquals(concept.getDataType(),  dataTypeSelectBox.getFirstSelectedOption().getText());
-        Assert.assertEquals(concept.getVersion(), version.getAttribute("value")) ;
-        Assert.assertEquals(concept.getConceptMappingRelationship(),  conceptRelationshipSelectBox.getFirstSelectedOption().getText());
-//        Assert.assertEquals(concept.get ation(),  patientOccupationSelectBox.getFirstSelectedOption().getText());
-//        Assert.assertEquals(concept.get ryContact(),  patientPrimaryContact.getAttribute("value")) ;
-
-        System.out.println("Verified Concept details in Bahmni for Concept :"+concept.getName());
-    }
 }

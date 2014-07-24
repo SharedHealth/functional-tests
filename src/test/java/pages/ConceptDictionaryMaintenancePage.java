@@ -34,24 +34,21 @@ public class ConceptDictionaryMaintenancePage extends Page {
         });
     }
 
-    public EditConceptPage goToCreateNewConcept() {
+    public ConceptEditPage goToCreateNewConcept() {
         addNewConceptLink.click();
-        return initialize(webDriver, EditConceptPage.class);
+        return initialize(webDriver, ConceptEditPage.class);
 
     }
 
-    public EditConceptPage searchForConcept(Concept concept) {
+    public ConceptViewPage searchAndViewConcept(Concept concept) {
 
         System.out.println("Waiting 20 Secs for the Concept Sync to complete");
         waitForMillis(20000);
-
-
         setText(conceptSearchBox, concept.getName());
         WebElement conceptName = this.waitFindElement(By.xpath("//table[@id='openmrsSearchTable']//td//span"));
         conceptName.click();
         WebElement editConceptLink = this.waitFindElement(By.id("editConcept"));
-        editConceptLink.click();
-        return initialize(webDriver, EditConceptPage.class);
-
+//        editConceptLink.click();
+        return initialize(webDriver, ConceptViewPage.class);
     }
 }

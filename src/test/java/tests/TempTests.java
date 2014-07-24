@@ -84,8 +84,7 @@ public class TempTests {
         concept = ConceptData.conceptForDiagnosisForVerification;
 
         TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
-        page.login("admin","test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchForConcept(concept).verifyConceptDetails(concept) ;
-
+        page.login("admin","test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConcept(concept).readCurrentConcept(concept);
 
 
     }

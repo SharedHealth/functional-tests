@@ -59,7 +59,7 @@ public class SmokeTest {
         driver.get(WebDriverProperties.getProperty("facilityOneOpenMRSInternalURL"));
 
         page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
-        page.login("admin","test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchForConcept(concept).verifyConceptDetails(concept) ;
+        page.login("admin","test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConcept(concept).readCurrentConcept(concept);
     }
 
 
