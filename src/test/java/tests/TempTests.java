@@ -80,14 +80,34 @@ public class TempTests {
     public void verifyConceptDetails(){
 
         driver.get(WebDriverProperties.getProperty("facilityOneOpenMRSInternalURL"));
-        conceptReferenceTerm = ConceptData.conceptReferenceTermForVerification;
-        concept = ConceptData.conceptForDiagnosisForVerification;
+
+        ConceptData dataStore = new ConceptData();
+        conceptReferenceTerm = dataStore.conceptReferenceTermForVerification;
+        concept = dataStore.conceptForDiagnosisForVerification;
+
 
         TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
-        page.login("admin","test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConcept(concept).readCurrentConcept(concept);
+        page.login("admin","test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
+
+    }
+
+    @Test  @Ignore
+    public void createReferenceTerm(){
+
+        driver.get(WebDriverProperties.getProperty("trExternalURL"));
+        ConceptData dataStore = new ConceptData();
+        conceptReferenceTerm = dataStore.conceptReferenceTerm;
+        concept = dataStore.conceptForDiagnosis;
+
+        TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
+        page.login("admin","Admin123").goToAdministrationPage().goToReferenceTermManagementPage().goToCreateReferenceTerm().createReferenceTerm(conceptReferenceTerm);
 
 
     }
+
+
+
+
 
     @After
     public void tearDown(){

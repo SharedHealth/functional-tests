@@ -40,15 +40,24 @@ public class ConceptDictionaryMaintenancePage extends Page {
 
     }
 
-    public ConceptViewPage searchAndViewConcept(Concept concept) {
+    public ConceptViewPage searchAndViewConceptWithWait(Concept concept) {
 
         System.out.println("Waiting 20 Secs for the Concept Sync to complete");
         waitForMillis(20000);
         setText(conceptSearchBox, concept.getName());
         WebElement conceptName = this.waitFindElement(By.xpath("//table[@id='openmrsSearchTable']//td//span"));
         conceptName.click();
-        WebElement editConceptLink = this.waitFindElement(By.id("editConcept"));
-//        editConceptLink.click();
         return initialize(webDriver, ConceptViewPage.class);
+    }
+
+
+    public ConceptEditPage searchAndEditConcept(Concept concept) {
+
+        setText(conceptSearchBox, concept.getName());
+        WebElement conceptName = this.waitFindElement(By.xpath("//table[@id='openmrsSearchTable']//td//span"));
+        conceptName.click();
+        WebElement editConceptLink = this.waitFindElement(By.id("editConcept"));
+        editConceptLink.click();
+        return initialize(webDriver, ConceptEditPage.class);
     }
 }

@@ -106,6 +106,27 @@ public class ConceptEditPage extends Page{
         System.out.println("Concept name :"+concept.getName()+" Created");
 
     }
+public void editConcept(Concept concept) {
+
+        Select conceptClassSelectBox = new  Select(conceptClass);
+        Select dataTypeSelectBox = new  Select(dataType);
+
+
+        setText(name,concept.getName());
+        setText(shortName,concept.getShortName());
+        setText(description,concept.getDescription());
+        setText(version,concept.getVersion());
+
+        conceptClassSelectBox.selectByVisibleText(concept.getConceptClass());
+        dataTypeSelectBox.selectByVisibleText(concept.getDataType());
+
+        setText(synonyms1,concept.getSynonyms1());
+
+        saveButton.click();
+
+        System.out.println("Concept name :"+concept.getName()+" Edited");
+
+    }
 
 
 }

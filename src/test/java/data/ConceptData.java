@@ -5,8 +5,8 @@ import domain.ConceptReferenceTerm;
 
 public class ConceptData {
 
-    private static String id = String.valueOf(System.currentTimeMillis()).substring(7);
-    public static ConceptReferenceTerm conceptReferenceTerm = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
+    private String id = String.valueOf(System.currentTimeMillis()).substring(7);
+    public  ConceptReferenceTerm conceptReferenceTerm = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
             .code("J19."+id)
             .name("Viral pneumonia "+id)
             .source("ICD10-BD [ICD10-BD]")
@@ -16,7 +16,7 @@ public class ConceptData {
             .version("1.0")
             .build();
 
-    public static Concept conceptForDiagnosis = new Concept.ConceptBuilder()
+    public  Concept conceptForDiagnosis = new Concept.ConceptBuilder()
      .name("Viral pneumonia " + id)
      .synonyms1("Viral pneumonia "+id+" Syn")
      .synonyms2("Viral pneumonia "+id+" Syn2")
@@ -32,8 +32,24 @@ public class ConceptData {
      .conceptMappingName(conceptReferenceTerm.getName())
       .build();
 
-    public static String id1 =  "055673";
-    public static ConceptReferenceTerm conceptReferenceTermForVerification = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
+    public Concept conceptForDiagnosisEdit = new Concept.ConceptBuilder()
+     .name("Viral pneumonia " + id )
+     .synonyms1("Viral pneumonia "+id+" Syn Changed")
+     .synonyms2("Viral pneumonia "+id+" Syn2")
+     .shortName("ViralPneumonia"+id+ "Changed")
+     .description("Viral pneumonia, unspecified \n "
+                   +id)
+     .conceptClass("Diagnosis")
+     .dataType("N/A")
+     .version("1.1")
+     .conceptMappingRelationship("SAME-AS")
+     .conceptMappingSource("ICD10-BD")
+     .conceptMappingCode(conceptReferenceTerm.getCode())
+     .conceptMappingName(conceptReferenceTerm.getName())
+      .build();
+
+    public String id1 =  "055673";
+    public ConceptReferenceTerm conceptReferenceTermForVerification = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
             .code("J19."+id1)
             .name("Viral pneumonia "+id1)
             .source("ICD10-BD [ICD10-BD]")
@@ -43,7 +59,7 @@ public class ConceptData {
             .version("1.0")
             .build();
 
-    public static Concept conceptForDiagnosisForVerification = new Concept.ConceptBuilder()
+    public Concept conceptForDiagnosisForVerification = new Concept.ConceptBuilder()
      .name("Viral pneumonia " + id1)
      .synonyms1("Viral pneumonia "+id1+" Syn")
      .synonyms2("Viral pneumonia "+id1+" Syn2")

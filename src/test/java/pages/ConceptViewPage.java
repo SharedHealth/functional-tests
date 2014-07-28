@@ -83,6 +83,8 @@ public class ConceptViewPage extends Page{
         Assert.assertEquals(concept.getConceptMappingCode(),conceptForDiagnosisForVerification.getConceptMappingCode());
         Assert.assertEquals(concept.getConceptMappingName(),conceptForDiagnosisForVerification.getConceptMappingName());
 
+        System.out.println("Concept name :"+concept.getName()+" found in Bahmni OpenMRS");
+
 
     }
 
