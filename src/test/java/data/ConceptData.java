@@ -9,7 +9,7 @@ public class ConceptData {
     public  ConceptReferenceTerm conceptReferenceTerm = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
             .code("J19."+id)
             .name("Viral pneumonia "+id)
-            .source("ICD10-BD [ICD10-BD]")
+            .source("ICD10-BD [ICD10-BD-A]")
             .description("Viral pneumonia, unspecified\n" +
                     "Excl.:\n" +
                     id)
