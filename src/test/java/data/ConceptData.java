@@ -48,24 +48,24 @@ public class ConceptData {
      .conceptMappingName(conceptReferenceTerm.getName())
       .build();
 
-    public String id1 =  "055673";
+    public String idForVerification =  "000839";
     public ConceptReferenceTerm conceptReferenceTermForVerification = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
-            .code("J19."+id1)
-            .name("Viral pneumonia "+id1)
+            .code("J19."+ idForVerification)
+            .name("Viral pneumonia "+ idForVerification)
             .source("ICD10-BD [ICD10-BD]")
             .description("Viral pneumonia, unspecified\n" +
                     "Excl.:\n" +
-                    id1)
+                    idForVerification)
             .version("1.0")
             .build();
 
     public Concept conceptForDiagnosisForVerification = new Concept.ConceptBuilder()
-     .name("Viral pneumonia " + id1)
-     .synonyms1("Viral pneumonia "+id1+" Syn")
-     .synonyms2("Viral pneumonia "+id1+" Syn2")
-     .shortName("ViralPneumonia"+id1)
+     .name("Viral pneumonia " + idForVerification)
+     .synonyms1("Viral pneumonia "+ idForVerification +" Syn")
+     .synonyms2("Viral pneumonia "+ idForVerification +" Syn2")
+     .shortName("ViralPneumonia"+ idForVerification)
      .description("Viral pneumonia, unspecified \n "
-                   +id1)
+                   + idForVerification)
      .conceptClass("Diagnosis")
      .dataType("N/A")
      .version("1.0")

@@ -100,6 +100,7 @@ public class PatientDetailsPage extends Page{
         Assert.assertEquals(primaryPatient.getEducation(),  patientEducationSelectBox.getFirstSelectedOption().getText());
         Assert.assertEquals(primaryPatient.getOccupation(),  patientOccupationSelectBox.getFirstSelectedOption().getText());
         Assert.assertEquals(primaryPatient.getPrimaryContact(),  patientPrimaryContact.getAttribute("value")) ;
+        System.out.println("Patient with HID: "+ primaryPatient.getHid()+ " downloaded to Bahmni");
 
 
 
