@@ -1,5 +1,6 @@
 package pages;
 
+import domain.ConceptReferenceTerm;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,6 +14,9 @@ public class ReferenceTermManagementPage extends Page {
     @FindBy(linkText = "Add New Reference Term")
     private WebElement addNewReferenceTermLink;
 
+    @FindBy(id = "inputNode")
+    private WebElement referenceTermSearchBox;
+
 
     public WebDriver webDriver;
 
@@ -20,7 +24,6 @@ public class ReferenceTermManagementPage extends Page {
         super(webDriver);
         this.webDriver = webDriver;
     }
-
 
 
     @Override
@@ -35,6 +38,23 @@ public class ReferenceTermManagementPage extends Page {
 
     public ReferenceTermPage goToCreateReferenceTerm() {
         addNewReferenceTermLink.click();
+        return initialize(webDriver, ReferenceTermPage.class);
+    }
+
+    public ReferenceTermPage searchAndEditReferenceWithWait(ConceptReferenceTerm conceptReferenceTerm) {
+        System.out.println("Waiting 20 Secs for the Concept Sync to complete");
+        waitForMillis(20000);
+        setText(referenceTermSearchBox, conceptReferenceTerm.getCode());
+        String resultXpath = "//table[@id='openmrsSearchTable']//td[contains(text(),'" + conceptReferenceTerm.getCode() + "')]";
+        WebElement referenceTermName = this.waitFindElement(By.xpath(resultXpath));
+        referenceTermName.click();
+        return initialize(webDriver, ReferenceTermPage.class);
+    }
+    public ReferenceTermPage searchAndEditReference(ConceptReferenceTerm conceptReferenceTerm) {
+        setText(referenceTermSearchBox, conceptReferenceTerm.getCode());
+        String resultXpath = "//table[@id='openmrsSearchTable']//td[contains(text(),'" + conceptReferenceTerm.getCode() + "')]";
+        WebElement referenceTermName = this.waitFindElement(By.xpath(resultXpath));
+        referenceTermName.click();
         return initialize(webDriver, ReferenceTermPage.class);
     }
 }

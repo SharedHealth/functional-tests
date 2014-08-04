@@ -1,6 +1,7 @@
 package pages;
 
 import domain.ConceptReferenceTerm;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,7 +9,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 
-public class ReferenceTermPage extends Page{
+public class ReferenceTermPage extends Page {
 
     @FindBy(name = "conceptReferenceTerm.code")
     private WebElement code;
@@ -37,7 +38,6 @@ public class ReferenceTermPage extends Page{
     }
 
 
-
     @Override
     public void waitForPageToLoad() {
         wait.until(new ExpectedCondition<Boolean>() {
@@ -50,19 +50,48 @@ public class ReferenceTermPage extends Page{
 
     public ReferenceTermPage createReferenceTerm(ConceptReferenceTerm conceptReferenceTerm) {
 
-        Select conceptSourceSelectBox = new  Select(conceptSource);
+        Select conceptSourceSelectBox = new Select(conceptSource);
 
 
-        setText(code,conceptReferenceTerm.getCode());
-        setText(name,conceptReferenceTerm.getName());
-        setText(description,conceptReferenceTerm.getDescription());
-        setText(version,conceptReferenceTerm.getVersion());
+        setText(code, conceptReferenceTerm.getCode());
+        setText(name, conceptReferenceTerm.getName());
+        setText(description, conceptReferenceTerm.getDescription());
+        setText(version, conceptReferenceTerm.getVersion());
 
         conceptSourceSelectBox.selectByVisibleText(conceptReferenceTerm.getSource());
         saveButton.click();
 
-        System.out.println("Concept Code :"+conceptReferenceTerm.getCode()+ " Concept Name :"+conceptReferenceTerm.getName()+"  created");
+        System.out.println("Reference Term Code :" + conceptReferenceTerm.getCode() + "  created");
         return this;
 
+    }
+public ReferenceTermPage editReferenceTerm(ConceptReferenceTerm conceptReferenceTerm) {
+
+        Select conceptSourceSelectBox = new Select(conceptSource);
+
+
+        setText(code, conceptReferenceTerm.getCode());
+        setText(name, conceptReferenceTerm.getName());
+        setText(description, conceptReferenceTerm.getDescription());
+        setText(version, conceptReferenceTerm.getVersion());
+
+        conceptSourceSelectBox.selectByVisibleText(conceptReferenceTerm.getSource());
+        saveButton.click();
+
+        System.out.println("Reference Term Code :" + conceptReferenceTerm.getCode() +  "  edited");
+        return this;
+
+    }
+
+    public void verifyReferenceTerm(ConceptReferenceTerm conceptReferenceTerm) {
+
+        Select conceptSourceSelectBox = new Select(conceptSource);
+        Assert.assertEquals(conceptReferenceTerm.getCode(), code.getAttribute("value"));
+        Assert.assertEquals(conceptReferenceTerm.getName(), name.getAttribute("value"));
+        Assert.assertEquals(conceptReferenceTerm.getSource(), conceptSourceSelectBox.getFirstSelectedOption().getText());
+        Assert.assertEquals(conceptReferenceTerm.getDescription(), description.getAttribute("value"));
+        Assert.assertEquals(conceptReferenceTerm.getVersion(), version.getAttribute("value"));
+
+        System.out.println("Reference Term  :" + conceptReferenceTerm.getCode() + " verified in Bahmni OpenMRS");
     }
 }

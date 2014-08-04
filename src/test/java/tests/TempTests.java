@@ -23,8 +23,9 @@ public class TempTests {
     protected Concept concept;
 
 
-    @Test @Ignore
-    public void verifyPatientSearchByNID(){
+    @Test
+    @Ignore
+    public void verifyPatientSearchByNID() {
 
         driver.get(WebDriverProperties.getProperty("facilityTwoURL"));
 
@@ -33,19 +34,21 @@ public class TempTests {
         page.login().goToRegistrationPage().searchPatientByNID(primaryPatient.getNid()).viewPatientDetails().verifyPatientDetails(primaryPatient);
 
 
-
-    }
-    @Test @Ignore
-    public void generateTimeStamp(){
-
-        String id = String.valueOf(System.currentTimeMillis() );
-        System.out.println(id);
-        id=id.substring(7);
-        System.out.println(id);
     }
 
-    @Test @Ignore
-    public void verifyPatientSyncFromBahmni1(){
+    @Test
+    @Ignore
+    public void generateTimeStamp() {
+
+        String id = String.valueOf(System.currentTimeMillis());
+        System.out.println(id);
+        id = id.substring(7);
+        System.out.println(id);
+    }
+
+    @Test
+    @Ignore
+    public void verifyPatientSyncFromBahmni1() {
 
         driver.get(WebDriverProperties.getProperty("facilityOneExternalURL"));
 
@@ -59,10 +62,12 @@ public class TempTests {
         page.login("demo").goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).verifyPatientDetails(primaryPatient);
 
     }
-    @Test @Ignore
-    public void verifyPatientSyncFromBahmni2(){
 
-        driver.get(WebDriverProperties.getProperty("facilityOneExternalURL"));
+    @Test
+    @Ignore
+    public void verifyPatientSyncFromBahmni2() {
+
+        driver.get(WebDriverProperties.getProperty("facilityTwoExternalURL"));
 
         primaryPatient = PatientData.newPatient2;
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
@@ -76,8 +81,9 @@ public class TempTests {
     }
 
 
-@Test  @Ignore
-    public void verifyConceptDetails(){
+    @Test
+    @Ignore
+    public void verifyConceptDetails() {
 
         driver.get(WebDriverProperties.getProperty("facilityOneOpenMRSInternalURL"));
 
@@ -87,12 +93,12 @@ public class TempTests {
 
 
         TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
-        page.login("admin","test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
+        page.login("admin", "test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
 
     }
 
-    @Test  @Ignore
-    public void createReferenceTerm(){
+    @Test
+    public void createReferenceTerm() {
 
         driver.get(WebDriverProperties.getProperty("trExternalURL"));
         ConceptData dataStore = new ConceptData();
@@ -100,20 +106,17 @@ public class TempTests {
         concept = dataStore.conceptForDiagnosis;
 
         TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
-        page.login("admin","Admin123").goToAdministrationPage().goToReferenceTermManagementPage().goToCreateReferenceTerm().createReferenceTerm(conceptReferenceTerm);
+        page.login("admin", "Admin123").goToAdministrationPage().goToReferenceTermManagementPage().goToCreateReferenceTerm().createReferenceTerm(conceptReferenceTerm);
 
 
     }
-
-
 
 
 
     @After
-    public void tearDown(){
+    public void tearDown() {
 //        driver.quit();
     }
-
 
 
 }
