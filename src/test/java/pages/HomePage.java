@@ -13,6 +13,9 @@ public class HomePage extends Page {
     @FindBy(linkText = "Registration")
     private WebElement registrationButton;
 
+    @FindBy(linkText = "Clinical")
+    private WebElement clinicalButton;
+
     @FindBy(linkText = "National Registry")
     private WebElement nationalRegistrySearchButton;
 
@@ -31,12 +34,18 @@ public class HomePage extends Page {
                 return null != webDriver.findElement(By.linkText("Registration"));
             }
         });
-      }
+    }
 
     public PatientSearchPage goToRegistrationPage() {
         registrationButton.click();
         return initialize(webDriver, PatientSearchPage.class);
     }
+
+    public ClinicalPage goToClinicalPage() {
+        clinicalButton.click();
+        return initialize(webDriver, ClinicalPage.class);
+    }
+
     public MCIPatientSearchPage goToNationalRegistry() {
 
         System.out.println("Waiting 60 Secs for the sync to complete");

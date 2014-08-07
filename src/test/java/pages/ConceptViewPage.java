@@ -5,15 +5,12 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.Select;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class ConceptViewPage extends Page{
-
+public class ConceptViewPage extends Page {
 
 
     public ConceptViewPage(WebDriver driver) {
@@ -32,20 +29,18 @@ public class ConceptViewPage extends Page{
     }
 
 
-
-    public void readCurrentConcept(Concept concept){
+    public void readCurrentConcept(Concept concept) {
         List<WebElement> allConceptRowElements = webDriver.findElement(By.id("conceptTable")).findElements(By.tagName("tr"));
 
-        HashMap<String,String> headerToDataMap = new HashMap<>();
+        HashMap<String, String> headerToDataMap = new HashMap<>();
         for (WebElement allConceptRowElement : allConceptRowElements) {
             if (!allConceptRowElement.getAttribute("id").equals("conceptMappingsHeadersRow")
-                    && !allConceptRowElement.getAttribute("class").equals("evenRow") )
-            {
-            WebElement conceptRowHeader = allConceptRowElement.findElement(By.tagName("th"));
-            String conceptRowHeaderText = conceptRowHeader.getText();
-            String conceptRowDataText = allConceptRowElement.findElement(By.tagName("td")).getText();
-            headerToDataMap.put(conceptRowHeaderText,conceptRowDataText);
-                if(conceptRowHeaderText.equals("Version"))
+                    && !allConceptRowElement.getAttribute("class").equals("evenRow")) {
+                WebElement conceptRowHeader = allConceptRowElement.findElement(By.tagName("th"));
+                String conceptRowHeaderText = conceptRowHeader.getText();
+                String conceptRowDataText = allConceptRowElement.findElement(By.tagName("td")).getText();
+                headerToDataMap.put(conceptRowHeaderText, conceptRowDataText);
+                if (conceptRowHeaderText.equals("Version"))
                     break;
             }
         }
@@ -53,8 +48,8 @@ public class ConceptViewPage extends Page{
         List<WebElement> conceptMappingHeaderRowElements = webDriver.findElement(By.id("conceptMappingsHeadersRow")).findElements(By.tagName("th"));
         List<WebElement> conceptMappingDataRowElements = webDriver.findElement(By.className("evenRow")).findElements(By.tagName("td"));
 
-        for (int counter = 0 ; counter < 4 ; counter++)
-            headerToDataMap.put(conceptMappingHeaderRowElements.get(counter).getText(),conceptMappingDataRowElements.get(counter).getText());
+        for (int counter = 0; counter < 4; counter++)
+            headerToDataMap.put(conceptMappingHeaderRowElements.get(counter).getText(), conceptMappingDataRowElements.get(counter).getText());
 //        System.out.println(headerToDataMap);
 
         Concept conceptForDiagnosisForVerification = new Concept.ConceptBuilder()
@@ -72,18 +67,18 @@ public class ConceptViewPage extends Page{
                 .build();
 
         Assert.assertEquals(concept.getName(), conceptForDiagnosisForVerification.getName());
-        Assert.assertEquals(concept.getSynonyms1(),conceptForDiagnosisForVerification.getSynonyms1());
-        Assert.assertEquals(concept.getShortName() ,conceptForDiagnosisForVerification.getShortName() );
-//        Assert.assertEquals(concept.getDescription(),               conceptForDiagnosisForVerification.getDescription());
-        Assert.assertEquals(concept.getConceptClass(),conceptForDiagnosisForVerification.getConceptClass());
-        Assert.assertEquals(concept.getDataType(),conceptForDiagnosisForVerification.getDataType());
+        Assert.assertEquals(concept.getSynonyms1(), conceptForDiagnosisForVerification.getSynonyms1());
+        Assert.assertEquals(concept.getShortName(), conceptForDiagnosisForVerification.getShortName());
+//        Assert.assertEquals(concept.getStatus(),conceptForDiagnosisForVerification.getStatus());
+        Assert.assertEquals(concept.getConceptClass(), conceptForDiagnosisForVerification.getConceptClass());
+        Assert.assertEquals(concept.getDataType(), conceptForDiagnosisForVerification.getDataType());
         Assert.assertEquals(concept.getVersion(), conceptForDiagnosisForVerification.getVersion());
-        Assert.assertEquals(concept.getConceptMappingRelationship(),conceptForDiagnosisForVerification.getConceptMappingRelationship());
-        Assert.assertEquals(concept.getConceptMappingSource(),conceptForDiagnosisForVerification.getConceptMappingSource());
-        Assert.assertEquals(concept.getConceptMappingCode(),conceptForDiagnosisForVerification.getConceptMappingCode());
-        Assert.assertEquals(concept.getConceptMappingName(),conceptForDiagnosisForVerification.getConceptMappingName());
+        Assert.assertEquals(concept.getConceptMappingRelationship(), conceptForDiagnosisForVerification.getConceptMappingRelationship());
+        Assert.assertEquals(concept.getConceptMappingSource(), conceptForDiagnosisForVerification.getConceptMappingSource());
+        Assert.assertEquals(concept.getConceptMappingCode(), conceptForDiagnosisForVerification.getConceptMappingCode());
+        Assert.assertEquals(concept.getConceptMappingName(), conceptForDiagnosisForVerification.getConceptMappingName());
 
-        System.out.println("Concept name :"+concept.getName()+" found in Bahmni OpenMRS");
+        System.out.println("Concept name :" + concept.getName() + " found in Bahmni OpenMRS");
 
 
     }

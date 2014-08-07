@@ -98,6 +98,7 @@ public class TempTests {
     }
 
     @Test
+    @Ignore
     public void createReferenceTerm() {
 
         driver.get(WebDriverProperties.getProperty("trExternalURL"));
@@ -111,7 +112,20 @@ public class TempTests {
 
     }
 
+    @Test
+    @Ignore
+    public void createAllTypeOfConcepts() {
 
+        driver.get(WebDriverProperties.getProperty("trExternalURL"));
+        ConceptData dataStore = new ConceptData();
+        conceptReferenceTerm = dataStore.conceptReferenceTerm;
+        concept = dataStore.conceptForDiagnosis;
+
+        TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
+        page.login("admin", "Admin123").goToAdministrationPage().goToReferenceTermManagementPage().goToCreateReferenceTerm().createReferenceTerm(conceptReferenceTerm).goToTRAdministrationPage()
+                .goToConceptDictionaryMaintenancePage().goToCreateNewConcept().createMultipleConcept(concept);
+
+    }
 
     @After
     public void tearDown() {

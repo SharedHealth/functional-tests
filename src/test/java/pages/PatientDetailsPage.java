@@ -3,11 +3,15 @@ package pages;
 import domain.Patient;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
+
+import java.util.List;
 
 import static utils.PageFactoryWithWait.initialize;
 
@@ -57,9 +61,11 @@ public class PatientDetailsPage extends Page{
     @FindBy(id = "primaryContact")
     private WebElement patientPrimaryContact;
 
-
     @FindBy(xpath = "//button[text()='Start OPD visit']")
     private WebElement startLabVisit;
+
+    @FindBy(xpath = "//button[text()='Enter Visit Details']")
+    private WebElement enterVisitDetails;
 
 
 
@@ -135,6 +141,18 @@ public class PatientDetailsPage extends Page{
         return initialize(webDriver, PatientVisitInformationPage.class);
 
 
+
+    }
+
+
+    public PatientVisitInformationPage startVisit(Patient primaryPatient) {
+
+        this.waitForMillis(1000);
+
+        patientPrimaryContact.click();
+        patientPrimaryContact.sendKeys(Keys.RETURN);
+
+        return initialize(webDriver, PatientVisitInformationPage.class);
 
     }
 }

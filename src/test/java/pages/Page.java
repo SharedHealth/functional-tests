@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -32,6 +31,7 @@ public abstract class Page {
             throw new RuntimeException(e);
         }
     }
+
     public void setText(WebElement webElement, String inputText) {
         if (inputText == null) return;
         webElement.clear();
@@ -42,6 +42,18 @@ public abstract class Page {
         } else {
             webElement.sendKeys(" ");
             webElement.clear();
+        }
+    }
+
+    public void selectRadioButton(WebElement radioButtons, String valueToSelect) {
+
+        List<WebElement> radioButtonOptions = radioButtons.findElements(By.tagName("button"));
+        for (WebElement option : radioButtonOptions) {
+            if (option.getText().equals(valueToSelect)) {
+                option.click();
+
+                break;
+            }
         }
     }
 
@@ -74,6 +86,13 @@ public abstract class Page {
         administrationLink.click();
         return initialize(webDriver, TRAdministrationPage.class);
 
+
+    }
+
+    public HomePage goToHomePage() {
+        WebElement homeLogo = webDriver.findElement(By.className("header-logo"));
+        homeLogo.click();
+        return initialize(webDriver, HomePage.class);
 
     }
 }

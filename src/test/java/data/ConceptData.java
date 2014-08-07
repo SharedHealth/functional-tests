@@ -18,7 +18,7 @@ public class ConceptData {
 
     public ConceptReferenceTerm conceptReferenceTermForEdit = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
             .code("J19." + id)
-            .name("Viral pneumonia " + id+" Changed")
+            .name("Viral pneumonia " + id + " Changed")
             .source("ICD10-BD [ICD10-BD-A]")
             .description("Viral pneumonia, unspecified\n" +
                     "Excl.: Changed \n" +
@@ -95,6 +95,43 @@ public class ConceptData {
                     "Excl.:\n" +
                     id2)
             .version("1.0")
+            .build();
+
+
+    public ConceptReferenceTerm referenceTermForEncounterSync = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
+            .code("S40")
+            .name("Superficial injury of shoulder and upper arm")
+            .source("ICD10-BD [ICD10-BD-A]")
+            .description("Superficial injury of shoulder and upper arm")
+            .version("1.0")
+            .build();
+
+    public Concept conceptWithReferenceTermForEncounterSync = new Concept.ConceptBuilder()
+            .name("Superficial injury of shoulder and upper arm")
+            .synonyms1("Shoulder Injury")
+            .synonyms2("Upper Arm pneumonia")
+            .shortName("Superficial shoulder injury")
+            .description("Superficial injury of shoulder and upper arm ")
+            .conceptClass("Diagnosis")
+            .dataType("N/A")
+            .version("1.0")
+            .conceptMappingRelationship("SAME-AS")
+            .conceptMappingSource("ICD10-BD")
+            .conceptMappingCode(referenceTermForEncounterSync.getCode())
+            .conceptMappingName(referenceTermForEncounterSync.getName())
+            .build();
+
+    public Concept conceptWithOutReferenceTermForEncounterSync = new Concept.ConceptBuilder()
+            .name("Fracture in upper arm")
+            .synonyms1("Arm Fracture")
+            .synonyms2("Hand Fracture")
+            .shortName("Arm Fracture")
+            .description("Fracture in upper arm ")
+            .conceptClass("Diagnosis")
+            .dataType("N/A")
+            .version("1.0")
+            .conceptMappingRelationship("SAME-AS")
+            .conceptMappingSource("ICD10-BD")
             .build();
 
 }
