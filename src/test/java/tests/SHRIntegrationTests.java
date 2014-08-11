@@ -68,7 +68,7 @@ public class SHRIntegrationTests {
         given().pathParam("hid", primaryPatient.getHid())
                 .when().get("/patients/{hid}")
                 .then().statusCode(200);
-
+        System.out.println("Patient with NID " + primaryPatient.getNid() + " created in MCI");
     }
 
     @Test

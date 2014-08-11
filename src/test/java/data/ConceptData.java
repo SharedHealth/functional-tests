@@ -26,6 +26,48 @@ public class ConceptData {
             .version("1.1")
             .build();
 
+    public ConceptReferenceTerm conceptReferenceTermForFinding = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
+            .code("M54." + id)
+            .name("Back pain " + id)
+            .source("ICD10-BD [ICD10-BD-A]")
+            .description("Lower Back Pain ")
+            .version("1.0")
+            .build();
+
+
+    public Concept conceptForFindingEdit = new Concept.ConceptBuilder()
+            .name("Back Pain " + id)
+            .synonyms1("Back Pain " + id + " Syn Changed")
+            .synonyms2("Back Pain " + id + " Syn2")
+            .shortName("BackPain" + id +" Changed")
+            .description("Back Pain"+ id)
+//            .conceptClass("Findings")
+            .conceptClass("Symptom")
+//            .conceptClass("Symptom/Finding")
+            .dataType("N/A")
+            .version("1.1")
+            .conceptMappingRelationship("SAME-AS")
+            .conceptMappingSource("ICD10-BD")
+            .conceptMappingCode(conceptReferenceTermForFinding.getCode())
+            .conceptMappingName(conceptReferenceTermForFinding.getName())
+            .build();
+
+    public Concept conceptForFinding = new Concept.ConceptBuilder()
+            .name("Back Pain " + id)
+            .synonyms1("Back Pain " + id + " Syn")
+            .synonyms2("Back Pain " + id + " Syn2")
+            .shortName("BackPain" + id)
+            .description("Back Pain"+ id)
+//            .conceptClass("Findings")
+            .conceptClass("Symptom")
+//            .conceptClass("Symptom/Finding")
+            .dataType("N/A")
+            .version("1.0")
+            .conceptMappingRelationship("SAME-AS")
+            .conceptMappingSource("ICD10-BD")
+            .conceptMappingCode(conceptReferenceTermForFinding.getCode())
+            .conceptMappingName(conceptReferenceTermForFinding.getName())
+            .build();
 
     public Concept conceptForDiagnosis = new Concept.ConceptBuilder()
             .name("Viral pneumonia " + id)

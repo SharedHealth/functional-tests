@@ -38,14 +38,14 @@ public class SmokeTest {
     @Test
     public void verifyPatientSync() {
 
-        driver.get(WebDriverProperties.getProperty("facilityOneExternalURL"));
+        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
 
         primaryPatient = PatientData.newPatient1;
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login().goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).logout();
 
 
-        driver.get(WebDriverProperties.getProperty("facilityTwoExternalURL"));
+        driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login().goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).verifyPatientDetails(primaryPatient);
 
@@ -54,7 +54,7 @@ public class SmokeTest {
     @Test
     public void verifyConceptSyncFromTR() {
 
-        driver.get(WebDriverProperties.getProperty("trExternalURL"));
+        driver.get(WebDriverProperties.getProperty("trInternalURL"));
         ConceptData dataStore = new ConceptData();
         conceptReferenceTerm = dataStore.conceptReferenceTerm;
         concept = dataStore.conceptForDiagnosis;

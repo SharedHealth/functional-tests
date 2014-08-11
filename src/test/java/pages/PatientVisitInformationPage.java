@@ -74,6 +74,7 @@ public class PatientVisitInformationPage extends Page {
         setText(weight, "60");
         setText(comments, "First Visit");
         setText(consultationFee, "10");
+        waitForMillis(1000);
         saveButton.click();
         return initialize(webDriver, PatientSearchPage.class);
 

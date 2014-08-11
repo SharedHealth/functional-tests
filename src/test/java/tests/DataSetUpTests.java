@@ -23,7 +23,7 @@ public class DataSetUpTests {
     @Ignore
     public void crateDataForEncounterSyncTest() {
 
-        driver.get(WebDriverProperties.getProperty("trExternalURL"));
+        driver.get(WebDriverProperties.getProperty("trInternalURL"));
         ConceptData dataStore = new ConceptData();
         conceptReferenceTerm = dataStore.referenceTermForEncounterSync;
         concept = dataStore.conceptWithReferenceTermForEncounterSync;
@@ -44,7 +44,7 @@ public class DataSetUpTests {
     @Ignore
     public void crateDataForEncounterSyncTest2() {
 
-        driver.get(WebDriverProperties.getProperty("trExternalURL"));
+        driver.get(WebDriverProperties.getProperty("trInternalURL"));
         ConceptData dataStore = new ConceptData();
         concept = dataStore.conceptWithOutReferenceTermForEncounterSync;
 
