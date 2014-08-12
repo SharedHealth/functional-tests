@@ -48,6 +48,29 @@ public class ConceptEditPage extends Page {
     @FindBy(id = "newConcept")
     private WebElement newConceptButton;
 
+    @FindBy(name = "hiAbsolute")
+    private WebElement absoluteHigh;
+
+    @FindBy(name = "hiCritical")
+    private WebElement criticalHigh;
+
+    @FindBy(name = "hiNormal")
+    private WebElement normalHigh;
+
+    @FindBy(name = "lowAbsolute")
+    private WebElement absoluteLow;
+
+    @FindBy(name = "lowCritical")
+    private WebElement criticalLow;
+
+    @FindBy(name = "lowNormal")
+    private WebElement normalLow;
+
+    @FindBy(name = "units")
+    private WebElement units;
+
+    @FindBy(name = "precise")
+    private WebElement isPreciseCheckBox;
 
     public ConceptEditPage(WebDriver driver) {
         super(driver);
@@ -97,12 +120,25 @@ public class ConceptEditPage extends Page {
         waitForMillis(1000);
         WebElement addressOption = webDriver.findElement(By.xpath("(//span[@class='autocompleteresult'])[1]"));
         addressOption.click();
+
+        if(concept.getDataType().equalsIgnoreCase("Numeric"))
+            enterNumericRanges(concept);
         saveButton.click();
         waitForMillis(1000);
         saveButton.click();
 
         System.out.println("Concept name :" + concept.getName() + " Created");
 
+    }
+
+    private void enterNumericRanges(Concept concept) {
+        setText(criticalHigh,concept.getNumericCriticalHigh());
+        setText(absoluteHigh,concept.getNumericAbsoluteHigh());
+        setText(normalHigh,concept.getNumericNormalHigh());
+        setText(normalLow,concept.getNumericNormalLow());
+        setText(criticalLow,concept.getNumericCriticalLow());
+        setText(absoluteLow,concept.getNumericAbsoluteLow());
+        setText(units,concept.getNumericUnit());
     }
 
     public void createConceptWithOutReferenceTerm(Concept concept) {

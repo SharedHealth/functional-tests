@@ -42,8 +42,8 @@ public class ReferenceTermManagementPage extends Page {
     }
 
     public ReferenceTermPage searchAndEditReferenceWithWait(ConceptReferenceTerm conceptReferenceTerm) {
-        System.out.println("Waiting 20 Secs for the Concept Sync to complete");
-        waitForMillis(20000);
+        System.out.println("Waiting 40 Secs for the Concept Sync to complete");
+        waitForMillis(40000);
         setText(referenceTermSearchBox, conceptReferenceTerm.getCode());
         String resultXpath = "//table[@id='openmrsSearchTable']//td[contains(text(),'" + conceptReferenceTerm.getCode() + "')]";
         WebElement referenceTermName = this.waitFindElement(By.xpath(resultXpath));

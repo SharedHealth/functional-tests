@@ -34,8 +34,11 @@ public class ConceptViewPage extends Page {
 
         HashMap<String, String> headerToDataMap = new HashMap<>();
         for (WebElement allConceptRowElement : allConceptRowElements) {
-            if (!allConceptRowElement.getAttribute("id").equals("conceptMappingsHeadersRow")
-                    && !allConceptRowElement.getAttribute("class").equals("evenRow")) {
+            if (!allConceptRowElement.getAttribute("id").equals("conceptMappingsHeadersRow")     //Skip the Mapping Header Row
+                    && !allConceptRowElement.getAttribute("class").equals("evenRow")             //Skip the Mapping Data Row
+                    && !allConceptRowElement.getText().contains("range values are inclusive")) //Skip the Extra Cell
+            {
+
                 WebElement conceptRowHeader = allConceptRowElement.findElement(By.tagName("th"));
                 String conceptRowHeaderText = conceptRowHeader.getText();
                 String conceptRowDataText = allConceptRowElement.findElement(By.tagName("td")).getText();
@@ -69,7 +72,6 @@ public class ConceptViewPage extends Page {
         Assert.assertEquals(concept.getName(), conceptForDiagnosisForVerification.getName());
         Assert.assertEquals(concept.getSynonyms1(), conceptForDiagnosisForVerification.getSynonyms1());
         Assert.assertEquals(concept.getShortName(), conceptForDiagnosisForVerification.getShortName());
-//        Assert.assertEquals(concept.getStatus(),conceptForDiagnosisForVerification.getStatus());
         Assert.assertEquals(concept.getConceptClass(), conceptForDiagnosisForVerification.getConceptClass());
         Assert.assertEquals(concept.getDataType(), conceptForDiagnosisForVerification.getDataType());
         Assert.assertEquals(concept.getVersion(), conceptForDiagnosisForVerification.getVersion());
@@ -78,9 +80,39 @@ public class ConceptViewPage extends Page {
         Assert.assertEquals(concept.getConceptMappingCode(), conceptForDiagnosisForVerification.getConceptMappingCode());
         Assert.assertEquals(concept.getConceptMappingName(), conceptForDiagnosisForVerification.getConceptMappingName());
 
+        if(concept.getDataType().equalsIgnoreCase("Numeric"))
+            verifyNumericRanges(concept);
+
         System.out.println("Concept name :" + concept.getName() + " found in Bahmni OpenMRS");
 
 
+    }
+
+    private void verifyNumericRanges(Concept concept) {
+
+        List<WebElement> allNumericRangeElements = webDriver.findElement(By.xpath("//table[@border=0]")).findElements(By.tagName("tr"));
+        HashMap<String, String> headerToDataMap = new HashMap<>();
+        for (WebElement allNumericRangeElement : allNumericRangeElements) {
+            if ( !allNumericRangeElement.getText().contains("range values are inclusive")) //Skip the Extra Cell
+            {
+                WebElement NumericRangeHeader = allNumericRangeElement.findElement(By.tagName("th"));
+                String numericRangeHeaderText = NumericRangeHeader.getText();
+
+                String numericRangeDataText = allNumericRangeElement.findElement(By.tagName("td")).getText();
+//                System.out.println(numericRangeHeaderText + "-" + numericRangeDataText);
+                headerToDataMap.put(numericRangeHeaderText, numericRangeDataText);
+                if (numericRangeHeaderText.equals("Precise?"))
+                    break;
+            }
+        }
+
+        Assert.assertEquals(concept.getNumericAbsoluteHigh(),headerToDataMap.get("Absolute High"));
+        Assert.assertEquals(concept.getNumericCriticalHigh(),headerToDataMap.get("Critical High"));
+        Assert.assertEquals(concept.getNumericNormalHigh(),headerToDataMap.get("Normal High"));
+        Assert.assertEquals(concept.getNumericNormalLow(),headerToDataMap.get("Normal Low"));
+        Assert.assertEquals(concept.getNumericCriticalLow(),headerToDataMap.get("Critical Low"));
+        Assert.assertEquals(concept.getNumericAbsoluteLow(),headerToDataMap.get("Absolute Low"));
+        Assert.assertEquals(concept.getNumericUnit(),headerToDataMap.get("F"));
     }
 
 }

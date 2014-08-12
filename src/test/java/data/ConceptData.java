@@ -69,6 +69,35 @@ public class ConceptData {
             .conceptMappingName(conceptReferenceTermForFinding.getName())
             .build();
 
+    public ConceptReferenceTerm conceptReferenceTermForNumericConcept = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
+            .code("T87273009-" + id)
+            .name("Temperature normaL " + id)
+            .source("SNOMED-BD [SNOMED-BD]")
+            .description("Normal Body Temperature  (finding) ")
+            .version("1.0")
+            .build();
+
+    public Concept conceptForNumericConcept = new Concept.ConceptBuilder()
+            .name("Temperature normal " + id)
+            .synonyms1("Temperature normal " + id + " Syn")
+            .synonyms2("Temperature normal " + id + " Syn2")
+            .shortName("BodyTemperature" + id)
+            .description("Normal Body Temperature  (finding) "+ id)
+            .conceptClass("Misc")
+            .dataType("Numeric")
+            .version("1.0")
+            .conceptMappingRelationship("SAME-AS")
+            .conceptMappingSource("SNOMED-BD")
+            .conceptMappingCode(conceptReferenceTermForNumericConcept.getCode())
+            .conceptMappingName(conceptReferenceTermForNumericConcept.getName())
+            .numericAbsoluteHigh("102.5")
+            .numericCriticalHigh("101.3")
+            .numericNormalHigh("100.2")
+            .numericNormalLow("98.0")
+            .numericCriticalLow("97.2")
+            .numericAbsoluteLow("96.5")
+            .build();
+
     public Concept conceptForDiagnosis = new Concept.ConceptBuilder()
             .name("Viral pneumonia " + id)
             .synonyms1("Viral pneumonia " + id + " Syn")

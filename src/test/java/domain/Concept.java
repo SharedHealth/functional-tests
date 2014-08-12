@@ -14,7 +14,13 @@ public class Concept {
     private String conceptMappingSource;
     private String conceptMappingCode;
     private String conceptMappingName;
-
+    private String numericAbsoluteHigh;
+    private String numericCriticalHigh;
+    private String numericNormalHigh;
+    private String numericAbsoluteLow;
+    private String numericCriticalLow;
+    private String numericNormalLow;
+    private String numericUnit;
 
 
     public String getSynonyms1() {
@@ -65,24 +71,57 @@ public class Concept {
         return conceptMappingCode;
     }
 
+    public String getNumericAbsoluteHigh() {
+        return numericAbsoluteHigh;
+    }
+
+    public String getNumericCriticalHigh() {
+        return numericCriticalHigh;
+    }
+
+    public String getNumericNormalHigh() {
+        return numericNormalHigh;
+    }
+
+    public String getNumericAbsoluteLow() {
+        return numericAbsoluteLow;
+    }
+
+    public String getNumericCriticalLow() {
+        return numericCriticalLow;
+    }
+
+    public String getNumericNormalLow() {
+        return numericNormalLow;
+    }
 
 
     private Concept(ConceptBuilder builder) {
 
-       this.name= builder.name;
-       this.synonyms1= builder.synonyms1;
-       this.synonyms2= builder.synonyms2;
-       this.shortName= builder.shortName;
-       this.description= builder.description;
-       this.conceptClass= builder.conceptClass;
-       this.dataType= builder.dataType;
-       this.version= builder.version;
-       this.conceptMappingRelationship=builder.conceptMappingRelationship;
-       this.conceptMappingSource=builder.conceptMappingSource;
-       this.conceptMappingCode=builder.conceptMappingCode;
-       this.conceptMappingName=builder.conceptMappingName;
+        this.name = builder.name;
+        this.synonyms1 = builder.synonyms1;
+        this.synonyms2 = builder.synonyms2;
+        this.shortName = builder.shortName;
+        this.description = builder.description;
+        this.conceptClass = builder.conceptClass;
+        this.dataType = builder.dataType;
+        this.version = builder.version;
+        this.conceptMappingRelationship = builder.conceptMappingRelationship;
+        this.conceptMappingSource = builder.conceptMappingSource;
+        this.conceptMappingCode = builder.conceptMappingCode;
+        this.conceptMappingName = builder.conceptMappingName;
+        this.numericAbsoluteHigh = builder.numericAbsoluteHigh;
+        this.numericCriticalHigh = builder.numericCriticalHigh;
+        this.numericNormalHigh = builder.numericNormalHigh;
+        this.numericAbsoluteLow = builder.numericAbsoluteLow;
+        this.numericCriticalLow = builder.numericCriticalLow;
+        this.numericNormalLow = builder.numericNormalLow;
 
 
+    }
+
+    public String getNumericUnit() {
+        return numericUnit;
     }
 
     public static class ConceptBuilder {
@@ -99,7 +138,13 @@ public class Concept {
         private String conceptMappingSource;
         private String conceptMappingCode;
         private String conceptMappingName;
-
+        private String numericAbsoluteHigh;
+        private String numericCriticalHigh;
+        private String numericNormalHigh;
+        private String numericAbsoluteLow;
+        private String numericCriticalLow;
+        private String numericNormalLow;
+        private String numericUnit;
 
 
         public ConceptBuilder name(String name) {
@@ -136,24 +181,64 @@ public class Concept {
             this.dataType = dataType;
             return this;
         }
+
         public ConceptBuilder version(String version) {
             this.version = version;
             return this;
         }
-        public ConceptBuilder conceptMappingRelationship (String conceptMappingRelationship) {
+
+        public ConceptBuilder conceptMappingRelationship(String conceptMappingRelationship) {
             this.conceptMappingRelationship = conceptMappingRelationship;
             return this;
         }
+
         public ConceptBuilder conceptMappingSource(String conceptMappingSource) {
             this.conceptMappingSource = conceptMappingSource;
             return this;
         }
+
         public ConceptBuilder conceptMappingCode(String conceptMappingCode) {
             this.conceptMappingCode = conceptMappingCode;
             return this;
         }
+
         public ConceptBuilder conceptMappingName(String conceptMappingName) {
             this.conceptMappingName = conceptMappingName;
+            return this;
+        }
+
+        public ConceptBuilder numericCriticalHigh(String numericCriticalHigh) {
+            this.numericCriticalHigh = numericCriticalHigh;
+            return this;
+        }
+
+        public ConceptBuilder numericAbsoluteHigh(String numericAbsoluteHigh) {
+            this.numericAbsoluteHigh = numericAbsoluteHigh;
+            return this;
+        }
+
+        public ConceptBuilder numericNormalHigh(String numericNormalHigh) {
+            this.numericNormalHigh = numericNormalHigh;
+            return this;
+        }
+
+        public ConceptBuilder numericAbsoluteLow(String numericAbsoluteLow) {
+            this.numericAbsoluteLow = numericAbsoluteLow;
+            return this;
+        }
+
+        public ConceptBuilder numericCriticalLow(String numericCriticalLow) {
+            this.numericCriticalLow = numericCriticalLow;
+            return this;
+        }
+
+        public ConceptBuilder numericNormalLow(String numericNormalLow) {
+            this.numericNormalLow = numericNormalLow;
+            return this;
+        }
+
+        public ConceptBuilder numericUnit(String numericUnit) {
+            this.numericUnit = numericUnit;
             return this;
         }
 

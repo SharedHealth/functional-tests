@@ -42,8 +42,8 @@ public class ConceptDictionaryMaintenancePage extends Page {
 
     public ConceptViewPage searchAndViewConceptWithWait(Concept concept) {
 
-        System.out.println("Waiting 20 Secs for the Concept Sync to complete");
-        waitForMillis(20000);
+        System.out.println("Waiting 25 Secs for the Concept Sync to complete");
+        waitForMillis(25000);
         setText(conceptSearchBox, concept.getName());
         WebElement conceptName = this.waitFindElement(By.xpath("//table[@id='openmrsSearchTable']//td//span"));
         conceptName.click();
