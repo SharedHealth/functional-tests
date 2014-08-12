@@ -12,6 +12,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.3.2'
     testCompile group: 'com.jayway.restassured', name: 'json-path', version: '2.3.2'
+    testCompile group: 'com.google.code.gson',   name: 'gson', version: '2.2.4'
     testCompile 'com.thoughtworks.xstream:xstream:1.4.7'
     testCompile 'org.seleniumhq.selenium:selenium-java:2.42.0'
 }
