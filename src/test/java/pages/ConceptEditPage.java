@@ -246,6 +246,8 @@ public class ConceptEditPage extends Page {
         dataTypeSelectBox.selectByVisibleText(concept.getDataType());
 
         setText(synonyms1, concept.getSynonyms1());
+        if(concept.getDataType().equalsIgnoreCase("Numeric"))
+            enterNumericRanges(concept);
 
         saveButton.click();
 
