@@ -1,10 +1,13 @@
 package tests;
 
+import data.ChiefComplainData;
 import data.DiagnosisData;
 import data.PatientData;
+import domain.ChiefComplain;
 import domain.Diagnosis;
 import domain.Patient;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -14,11 +17,19 @@ import utils.WebDriverProperties;
 
 public class EncounterSyncTests {
 
-    static WebDriver driver = new FirefoxDriver();
+    static WebDriver driver;
     protected Patient primaryPatient;
     protected Diagnosis firstDiagnosis;
     protected Diagnosis secondDiagnosis;
+    protected ChiefComplain firstChiefComplain;
+    protected ChiefComplain secondChiefComplain;
+    protected ChiefComplain thirdChiefComplain;
 
+
+    @Before
+    public void setUp() {
+        driver = new FirefoxDriver();
+    }
 
     @Test
     public void verifyEncounterSync() {
@@ -43,6 +54,35 @@ public class EncounterSyncTests {
         page.login("demo").goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
                 .saveVisitInfo().goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .ValidateEncounterData(firstDiagnosis).ValidateEncounterData(secondDiagnosis);
+
+    }
+
+    @Test
+    public void verifyChiefComplainSync() {
+
+
+        primaryPatient = PatientData.newPatient1;
+        firstChiefComplain = ChiefComplainData.ChiefComplainWithReferenceTermForEncounterSync;
+        secondChiefComplain = ChiefComplainData.ChiefComplainWithOutReferenceTermForEncounterSync;
+        thirdChiefComplain = ChiefComplainData.NonCodedChiefComplainForEncounterSync;
+
+        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
+        LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login("demo")
+                .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).saveVisitInfoForNewPatient().goToHomePage()
+                .goToClinicalPage().goToPatientDashboard(primaryPatient)
+                .goToConsultationPage().goToObservationPage()
+                .enterChiefComplainDetails(firstChiefComplain, secondChiefComplain, thirdChiefComplain);
+
+        driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
+
+        page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+
+        page.login("demo")
+                .goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient).saveVisitInfo()
+                .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).goToConsultationPage()
+                .validateChiefComplainData(firstChiefComplain).validateChiefComplainData(secondChiefComplain);
+//                .validateChiefComplainData(thirdChiefComplain);  Commented the Non coded chief complain verification for now because of the spacing issue
 
     }
 

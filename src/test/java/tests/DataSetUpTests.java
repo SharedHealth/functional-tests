@@ -36,7 +36,8 @@ public class DataSetUpTests {
         driver.get(WebDriverProperties.getProperty("facilityOneOpenMRSInternalURL"));
 
         page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
-        page.login("admin", "test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
+        page.login("admin", "test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage()
+                .searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
     }
 
 
@@ -49,7 +50,43 @@ public class DataSetUpTests {
         concept = dataStore.conceptWithOutReferenceTermForEncounterSync;
 
         TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
-        page.login("admin", "Admin123").goToAdministrationPage().goToConceptDictionaryMaintenancePage().goToCreateNewConcept().createConceptWithOutReferenceTerm(concept);
+        page.login("admin", "Admin123").goToAdministrationPage().goToConceptDictionaryMaintenancePage()
+                .goToCreateNewConcept().createConceptWithOutReferenceTerm(concept);
+    }
+
+    @Test
+    @Ignore
+    public void crateDataForChiefComplainSyncTest() {
+
+        driver.get(WebDriverProperties.getProperty("trInternalURL"));
+        ConceptData dataStore = new ConceptData();
+        conceptReferenceTerm = dataStore.referenceTermForChiefComplainSync;
+        concept = dataStore.conceptWithReferenceTermForChiefComplainSync;
+
+        TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
+        page.login("admin", "Admin123").goToAdministrationPage().goToReferenceTermManagementPage()
+                .goToCreateReferenceTerm().createReferenceTerm(conceptReferenceTerm)
+                .goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().goToCreateNewConcept().createConcept(concept);
+
+        driver.get(WebDriverProperties.getProperty("facilityOneOpenMRSInternalURL"));
+
+        page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
+        page.login("admin", "test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage()
+                .searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
+    }
+
+
+    @Test
+    @Ignore
+    public void crateDataForChiefComplainTest2() {
+
+        driver.get(WebDriverProperties.getProperty("trInternalURL"));
+        ConceptData dataStore = new ConceptData();
+        concept = dataStore.conceptWithOutReferenceTermForChiefComplainSync;
+
+        TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
+        page.login("admin", "Admin123").goToAdministrationPage().goToConceptDictionaryMaintenancePage()
+                .goToCreateNewConcept().createConceptWithOutReferenceTerm(concept);
     }
 
     @After
