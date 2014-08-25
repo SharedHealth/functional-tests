@@ -1,5 +1,6 @@
 package tests;
 
+import categories.ShrTest;
 import com.jayway.restassured.RestAssured;
 import static com.jayway.restassured.RestAssured.basic;
 import static com.jayway.restassured.RestAssured.given;
@@ -15,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+@Category(ShrTest.class)
 public class SHRIntegrationTests {
 
     protected static Patient primaryPatient;

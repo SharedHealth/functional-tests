@@ -1,5 +1,6 @@
 package tests;
 
+import categories.ShrTest;
 import data.ChiefComplainData;
 import data.DiagnosisData;
 import data.PatientData;
@@ -9,13 +10,15 @@ import domain.Patient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.LoginPage;
 import utils.PageFactoryWithWait;
 import utils.WebDriverProperties;
 
-public class EncounterSyncTests {
+@Category(ShrTest.class)
+public class BahmniEncounterSyncTests {
 
     static WebDriver driver;
     protected Patient primaryPatient;
@@ -43,7 +46,7 @@ public class EncounterSyncTests {
 
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
-        page.login("demo").goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).saveVisitInfoForNewPatient()
+        page.login("demo").goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .goToConsultationPage().goToDiagnosisPage().enterDiagnosisDetails(firstDiagnosis, secondDiagnosis);
 
@@ -52,7 +55,7 @@ public class EncounterSyncTests {
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
         page.login("demo").goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
-                .saveVisitInfo().goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
+                .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .ValidateEncounterData(firstDiagnosis).ValidateEncounterData(secondDiagnosis);
 
     }
@@ -69,7 +72,7 @@ public class EncounterSyncTests {
         driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login("demo")
-                .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).saveVisitInfoForNewPatient().goToHomePage()
+                .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .goToConsultationPage().goToObservationPage()
                 .enterChiefComplainDetails(firstChiefComplain, secondChiefComplain, thirdChiefComplain);
@@ -79,7 +82,7 @@ public class EncounterSyncTests {
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
         page.login("demo")
-                .goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient).saveVisitInfo()
+                .goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).goToConsultationPage()
                 .validateChiefComplainData(firstChiefComplain).validateChiefComplainData(secondChiefComplain);
 //                .validateChiefComplainData(thirdChiefComplain);  Commented the Non coded chief complain verification for now because of the spacing issue

@@ -102,7 +102,7 @@ public class PatientDetailsPage extends Page{
         Assert.assertEquals(primaryPatient.getAddress().getDistrict(), patientAddressDistrict.getAttribute("value")) ;
         Assert.assertEquals(primaryPatient.getAddress().getDivision(), patientAddressDivision.getAttribute("value")) ;
         Assert.assertEquals(primaryPatient.getNid(), patientNID.getAttribute("value")) ;
-        Assert.assertEquals(primaryPatient.getHid(), patientHID.getAttribute("value")) ;
+        Assert.assertNotNull(patientHID.getAttribute("value"));
         Assert.assertEquals(primaryPatient.getEducation(),  patientEducationSelectBox.getFirstSelectedOption().getText());
         Assert.assertEquals(primaryPatient.getOccupation(),  patientOccupationSelectBox.getFirstSelectedOption().getText());
         Assert.assertEquals(primaryPatient.getPrimaryContact(),  patientPrimaryContact.getAttribute("value")) ;
@@ -114,7 +114,7 @@ public class PatientDetailsPage extends Page{
 
     public PatientVisitInformationPage createPatient(Patient primaryPatient) {
 
-        String addressOptions = "//a[text()='"+primaryPatient.getAddress().getUnion()+", "+primaryPatient.getAddress().getUpazilla()+"']";
+        String addressOptions = "//a[text()='"+primaryPatient.getAddress().getUnion()+", "+primaryPatient.getAddress().getCityCorporation()+"']";
 
         Select patientEducationSelectBox = new  Select(patientEducation);
         Select patientGenderSelectBox = new  Select(patientGender);
@@ -130,14 +130,13 @@ public class PatientDetailsPage extends Page{
         WebElement addressOption = driver.findElement(By.xpath(addressOptions));
         addressOption.click();
         setText(patientNID,primaryPatient.getNid());
-        setText(patientHID,primaryPatient.getHid());
         setText(patientPrimaryContact,primaryPatient.getPrimaryContact());
 
         patientEducationSelectBox.selectByVisibleText(primaryPatient.getEducation());
         patientGenderSelectBox.selectByVisibleText(primaryPatient.getGender());
         patientOccupationSelectBox.selectByVisibleText(primaryPatient.getOccupation());
         startLabVisit.click();
-        System.out.println("Patient Created with HID: "+primaryPatient.getHid()+" NID: "+primaryPatient.getNid());
+        System.out.println("Patient Created with NID: "+primaryPatient.getNid());
         return initialize(webDriver, PatientVisitInformationPage.class);
 
 

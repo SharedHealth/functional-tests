@@ -20,3 +20,21 @@ dependencies {
 task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
 }
+
+task testShr(type: Test) {
+    useJUnit {
+        includeCategories 'categories.ShrTest'
+    }
+}
+
+task testTRServer(type: Test) {
+    useJUnit {
+        includeCategories 'categories.TRServerTest'
+    }
+}
+
+task testMCI(type: Test) {
+    useJUnit {
+        includeCategories 'categories.MCITest'
+    }
+}

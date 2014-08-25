@@ -5,6 +5,7 @@ public class Address {
     private String division;
     private String district;
     private String upazilla;
+    private String cityCorporation;
     private String union;
     private String addressLine1;
 
@@ -34,6 +35,7 @@ public class Address {
         this.division = builder.division;
         this.district = builder.district;
         this.upazilla = builder.upazilla;
+        this.cityCorporation = builder.cityCorporation;
         this.union = builder.union;
         this.addressLine1 = builder.addressLine1;
     }
@@ -50,6 +52,10 @@ public class Address {
         return sb.toString();
     }
 
+    public String getCityCorporation() {
+        return cityCorporation;
+    }
+
     public static class AddressBuilder {
 
         private String division;
@@ -57,6 +63,7 @@ public class Address {
         private String upazilla;
         private String union;
         private String addressLine1;
+        private String cityCorporation;
 
         public AddressBuilder division(String division) {
             this.division = division;
@@ -75,6 +82,11 @@ public class Address {
 
         public AddressBuilder union(String union) {
             this.union = union;
+            return this;
+        }
+
+        public AddressBuilder cityCorporation(String cityCorporation) {
+            this.cityCorporation = cityCorporation;
             return this;
         }
 

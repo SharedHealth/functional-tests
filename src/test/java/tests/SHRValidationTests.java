@@ -1,11 +1,13 @@
 package tests;
 
+import categories.ShrTest;
 import com.jayway.restassured.RestAssured;
 import data.EncounterBundleData;
 import data.PatientData;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import repo.PatientRepo;
 
 import java.util.Map;
@@ -15,6 +17,7 @@ import static data.EncounterBundleData.validEncounter;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+@Category(ShrTest.class)
 public class SHRValidationTests {
 
     private static final Integer ENCOUNTER_UUID_LENGTH = 36;
