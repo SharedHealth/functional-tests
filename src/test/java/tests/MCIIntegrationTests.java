@@ -129,34 +129,34 @@ public class MCIIntegrationTests {
             person.put("nationality", "bangladeshi");
             person.put("disability", 1);
             present_address.put("address_line", primaryPatient.getAddress().getAddressLine1());
-            present_address.put("division_id", 40);
-            present_address.put("district_id", 18);
-            present_address.put("union_id", 01);
-            present_address.put("upazilla_id", 23);
-            present_address.put("holding_number", "444444444");
-            present_address.put("street", "Dhaka");
-            present_address.put("area_mouja", "Kallayanpur");
+            present_address.put("division_id", 10);
+            present_address.put("district_id", "04");
+//            present_address.put("union_id", null);
+            present_address.put("upazilla_id", "09");
+            present_address.put("holding_number", "Bhaban-4th floor");
+            present_address.put("street", "2BAvenue");
+            present_address.put("area_mouja", "123");
             present_address.put("village", 12);
             present_address.put("post_office", "Dhaka");
             present_address.put("post_code", "1207");
-            present_address.put("ward", 13);
-            present_address.put("thana", 45);
-            present_address.put("city_corporation", 12);
+            present_address.put("ward", "01");
+//            present_address.put("thana", 45);
+            present_address.put("city_corporation", 20);
             present_address.put("country", "050");
             person.put("present_address", present_address);
             permanent_address.put("address_line", "xyz");
             permanent_address.put("division_id", 10);
-            permanent_address.put("district_id", 10);
-            permanent_address.put("union_id", 10);
-            permanent_address.put("upazilla_id", 10);
-            permanent_address.put("holding_number", "444444444");
+            permanent_address.put("district_id", "04");
+//            permanent_address.put("union_id", 10);
+            permanent_address.put("upazilla_id", "09");
+            permanent_address.put("holding_number", "Ho44444");
             permanent_address.put("street", "Dhaka");
-            permanent_address.put("area_mouja", "Kallayanpur");
+            permanent_address.put("area_mouja", "123");
             permanent_address.put("village", 12);
             permanent_address.put("post_office", "Dhaka");
             permanent_address.put("post_code", "1207");
-            permanent_address.put("ward", 13);
-            permanent_address.put("thana", 45);
+            permanent_address.put("ward", "01");
+//            permanent_address.put("thana", 45);
             permanent_address.put("city_corporation", 12);
             permanent_address.put("country", "050");
             person.put("permanent_address", present_address);
@@ -186,19 +186,19 @@ public class MCIIntegrationTests {
                 .body("edu_level", Matchers.equalTo("01"))
                 .body("fathers_first_name", Matchers.equalTo("Akhtar"))
                 .body("present_address.address_line", Matchers.equalTo(primaryPatient.getAddress().getAddressLine1()))
-                .body("present_address.division_id", Matchers.equalTo("40"))
-                .body("present_address.district_id", Matchers.equalTo("18"))
-                .body("present_address.upazilla_id", Matchers.equalTo("23"))
-                .body("present_address.city_corporation", Matchers.equalTo("12"))
+                .body("present_address.division_id", Matchers.equalTo("10"))
+                .body("present_address.district_id", Matchers.equalTo("04"))
+//                .body("present_address.upazilla_id", Matchers.equalTo("23"))
+                .body("present_address.city_corporation", Matchers.equalTo("20"))
                 .body("present_address.ward", Matchers.equalTo("01"))
-                .body("present_address.holding_number", Matchers.equalTo("444444444"))
-                .body("present_address.street", Matchers.equalTo("Dhaka"))
-                .body("present_address.area_mouja", Matchers.equalTo("Kallayanpur"))
+                .body("present_address.holding_number", Matchers.equalTo("Bhaban-4th floor"))
+                .body("present_address.street", Matchers.equalTo("2BAvenue"))
+                .body("present_address.area_mouja", Matchers.equalTo("123"))
                 .body("present_address.village", Matchers.equalTo("12"))
                 .body("present_address.post_office", Matchers.equalTo("Dhaka"))
                 .body("present_address.post_code", Matchers.equalTo("1207"))
-                .body("present_address.ward", Matchers.equalTo("13"))
-                .body("present_address.thana", Matchers.equalTo("45"))
+                .body("present_address.ward", Matchers.equalTo("01"))
+//                .body("present_address.thana", Matchers.equalTo("45"))
                 .body("present_address.country", Matchers.equalTo("050"))
 
                 .body("nid", Matchers.equalTo(primaryPatient.getNid()))
