@@ -1,4 +1,4 @@
 package categories;
 
-public interface TrUiTest {
+public interface TrUiTest extends UiTest{
 }

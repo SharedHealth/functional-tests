@@ -12,6 +12,7 @@ import domain.Patient;
 import org.hamcrest.Matchers;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -318,8 +319,9 @@ public class MCIIntegrationTests {
         System.out.println("Patient with NID " + primaryPatient.getNid() + " verified in MCI");
     }
 
+    @After
     public void tearDown() {
-
+        RestAssured.reset();
     }
 
 }

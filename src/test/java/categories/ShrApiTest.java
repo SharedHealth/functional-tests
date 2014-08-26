@@ -1,4 +1,4 @@
 package categories;
 
-public interface ShrApiTest {
+public interface ShrApiTest extends ApiTest{
 }

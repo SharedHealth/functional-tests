@@ -1,4 +1,4 @@
 package categories;
 
-public interface MciApiTest {
+public interface MciApiTest extends ApiTest{
 }

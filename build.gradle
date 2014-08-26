@@ -50,3 +50,15 @@ task runTrUiTests(type: Test) {
         includeCategories 'categories.TrUiTest'
     }
 }
+
+task runUiTests(type: Test) {
+    useJUnit {
+        includeCategories 'categories.UiTest'
+    }
+}
+
+task runApiTests(type: Test) {
+    useJUnit {
+        includeCategories 'categories.ApiTest'
+    }
+}

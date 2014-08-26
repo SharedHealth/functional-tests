@@ -1,4 +1,4 @@
 package categories;
 
-public interface MciUiTest {
+public interface MciUiTest extends UiTest{
 }

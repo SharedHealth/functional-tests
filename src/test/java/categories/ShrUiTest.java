@@ -1,4 +1,4 @@
 package categories;
 
-public interface ShrUiTest {
+public interface ShrUiTest extends UiTest{
 }
