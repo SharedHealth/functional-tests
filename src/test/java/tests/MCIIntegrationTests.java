@@ -93,7 +93,7 @@ public class MCIIntegrationTests {
     public void verifyCreatePatientWithAllData() {
 
 
-        primaryPatient = PatientData.newPatient3;
+        primaryPatient = new PatientData().newPatient3;
 
         JSONObject person = new JSONObject();
         JSONObject present_address = new JSONObject();
@@ -270,8 +270,8 @@ public class MCIIntegrationTests {
     @Test
     public void verifyCreatePatient() {
 
-
-        primaryPatient = PatientData.newPatient1;
+        PatientData dataStore = new PatientData();
+        primaryPatient = dataStore.newPatient1;
 
         JSONObject person = new JSONObject();
         JSONObject present_address = new JSONObject();

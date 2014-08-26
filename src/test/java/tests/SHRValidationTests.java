@@ -28,7 +28,7 @@ public class SHRValidationTests {
     public void setUp() throws Exception {
         RestAssured.baseURI = "http://172.18.46.54";
         RestAssured.port = 8080;
-        hid = patientRepo.create(PatientData.newPatient1);
+        hid = patientRepo.create(new PatientData().newPatient1);
     }
 
     @Test

@@ -38,7 +38,8 @@ public class SHRIntegrationTests {
         RestAssured.authentication = basic("mci", "password");
         RestAssured.rootPath = "";
 
-        primaryPatient = PatientData.newPatient1;
+        PatientData dataStore = new PatientData();
+        primaryPatient = dataStore.newPatient1;
 
         JSONObject person = new JSONObject();
         JSONObject present_address = new JSONObject();

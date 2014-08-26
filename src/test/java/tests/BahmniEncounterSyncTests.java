@@ -2,6 +2,7 @@ package tests;
 
 import categories.ShrTest;
 import data.ChiefComplainData;
+import data.ConceptData;
 import data.DiagnosisData;
 import data.PatientData;
 import domain.ChiefComplain;
@@ -37,8 +38,8 @@ public class BahmniEncounterSyncTests {
     @Test
     public void verifyEncounterSync() {
 
-
-        primaryPatient = PatientData.newPatient1;
+        PatientData dataStore = new PatientData();
+        primaryPatient = dataStore.newPatient1;
         firstDiagnosis = DiagnosisData.DiagnosisWithReferenceTermForEncounterSync;
         secondDiagnosis = DiagnosisData.DiagnosisWithOutReferenceTermForEncounterSync;
 
@@ -63,8 +64,8 @@ public class BahmniEncounterSyncTests {
     @Test
     public void verifyChiefComplainSync() {
 
-
-        primaryPatient = PatientData.newPatient1;
+        PatientData dataStore = new PatientData();
+        primaryPatient = dataStore.newPatient1;
         firstChiefComplain = ChiefComplainData.ChiefComplainWithReferenceTermForEncounterSync;
         secondChiefComplain = ChiefComplainData.ChiefComplainWithOutReferenceTermForEncounterSync;
         thirdChiefComplain = ChiefComplainData.NonCodedChiefComplainForEncounterSync;

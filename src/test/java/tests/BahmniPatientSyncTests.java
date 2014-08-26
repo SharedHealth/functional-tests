@@ -28,7 +28,8 @@ public class BahmniPatientSyncTests {
 
         driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
 
-        primaryPatient = PatientData.newPatient1;
+        PatientData dataStore = new PatientData();
+        primaryPatient = dataStore.newPatient1;
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login().goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).logout();
 

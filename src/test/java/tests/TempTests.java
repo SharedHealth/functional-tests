@@ -29,7 +29,9 @@ public class TempTests {
 
         driver.get(WebDriverProperties.getProperty("facilityTwoURL"));
 
-        primaryPatient = PatientData.defaultPatient;
+        PatientData dataStore = new PatientData();
+        primaryPatient = dataStore.newPatient1;
+
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login().goToRegistrationPage().searchPatientByNID(primaryPatient.getNid()).viewPatientDetails().verifyPatientDetails(primaryPatient);
 
@@ -52,7 +54,9 @@ public class TempTests {
 
         driver.get(WebDriverProperties.getProperty("facilityOneExternalURL"));
 
-        primaryPatient = PatientData.newPatient1;
+        PatientData dataStore = new PatientData();
+        primaryPatient = dataStore.newPatient1;
+
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login("demo").goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).logout();
 
@@ -69,7 +73,9 @@ public class TempTests {
 
         driver.get(WebDriverProperties.getProperty("facilityTwoExternalURL"));
 
-        primaryPatient = PatientData.newPatient2;
+        PatientData dataStore = new PatientData();
+        primaryPatient = dataStore.newPatient2;
+
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login("demo").goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).logout();
 
