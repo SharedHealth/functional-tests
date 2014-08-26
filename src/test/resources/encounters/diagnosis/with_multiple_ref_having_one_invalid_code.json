@@ -5,6 +5,36 @@
     "updated": "2014-07-25T16:50:29+05:30",
     "entry": [
         {
+            "title": "Composition",
+            "id": "Encounter - dfbc9b30-ceef-473e-9q22-4ee31qfceqdd",
+            "content": {
+                "resourceType": "Composition",
+                "identifier": {
+                    "value": "Encounter - dfbc9b30-ceef-473e-9q22-4ee31qfceqdd"
+                },
+                "date": "2014-07-25T16:50:29+05:30",
+                "status": "final",
+                "encounter": {
+                    "reference": "dfbc9b30-ceef-473e-9q22-4ee31qfceqdd",
+                    "display": "encounter"
+                },
+                "section": [
+                    {
+                        "content": {
+                            "reference": "dfbc9b30-ceef-473e-9q22-4ee31qfceqdd",
+                            "display": "Encounter"
+                        }
+                    },
+                    {
+                        "content": {
+                            "reference": "5f982a33-4454-4b74-9236-b8157aa8effd",
+                            "display": "Diagnosis"
+                        }
+                    }
+                ]
+            }
+        },
+        {
             "title": "Encounter",
             "id": "dfbc9b30-ceef-473e-9q22-4ee31qfceqdd",
             "content": {
@@ -22,7 +52,7 @@
                     }
                 ],
                 "subject": {
-                    "reference": "5893922485019082753"
+                    "reference": "${healthIdPlaceholder}"
                 },
                 "participant": [
                     {
@@ -51,7 +81,7 @@
                     }
                 ],
                 "subject": {
-                    "reference": "5893922485019082753"
+                    "reference": "${healthIdPlaceholder}"
                 },
                 "encounter": {
                     "reference": "dfbc9b30-ceef-473e-9q22-4ee31qfceqdd",

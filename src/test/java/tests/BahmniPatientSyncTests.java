@@ -1,6 +1,6 @@
 package tests;
 
-import categories.MCITest;
+import categories.MciUiTest;
 import data.PatientData;
 import domain.Patient;
 import org.junit.After;
@@ -13,16 +13,17 @@ import pages.LoginPage;
 import utils.PageFactoryWithWait;
 import utils.WebDriverProperties;
 
-@Category(MCITest.class)
+@Category(MciUiTest.class)
 public class BahmniPatientSyncTests {
 
     protected Patient primaryPatient;
-    private static WebDriver driver;
+    private WebDriver driver;
 
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
     }
+
     @Test
     public void verifyPatientSync() {
 

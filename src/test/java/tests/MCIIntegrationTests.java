@@ -1,28 +1,22 @@
 package tests;
 
 
-import categories.MCITest;
+import categories.MciApiTest;
 import com.jayway.restassured.RestAssured;
+import static com.jayway.restassured.RestAssured.basic;
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 import com.jayway.restassured.config.RestAssuredConfig;
 import data.PatientData;
 import domain.Patient;
 import org.hamcrest.Matchers;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static com.jayway.restassured.RestAssured.basic;
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.WebDriver;
-import pages.LoginPage;
-import utils.PageFactoryWithWait;
-import utils.WebDriverProperties;
 
-@Category(MCITest.class)
 public class MCIIntegrationTests {
 
     protected Patient primaryPatient;
@@ -40,7 +34,6 @@ public class MCIIntegrationTests {
     }
 
     @Test
-
     public void verifyGetPatientByNID() {
         given().pathParam("nid", "9000000794053")
                 .when().get("/patients?nid={nid}")
@@ -61,7 +54,7 @@ public class MCIIntegrationTests {
                 .body("present_address.city_corporation", Matchers.equalTo("16"))
                 .body("present_address.ward", Matchers.equalTo("01"));
 
-        System.out.println("Patient with NID " +"9000000351311" + " verified in MCI");
+        System.out.println("Patient with NID " + "9000000351311" + " verified in MCI");
 
     }
 
@@ -85,10 +78,10 @@ public class MCIIntegrationTests {
                 .body("present_address.upazilla_id", Matchers.equalTo("401823"))
                 .body("present_address.union_id", Matchers.equalTo("40010801"));
 
-        System.out.println("Patient with HID " +"9000000000000351311" + " verified in MCI");
+        System.out.println("Patient with HID " + "9000000000000351311" + " verified in MCI");
     }
 
-    @Category(MCITest.class)
+    @Category(MciApiTest.class)
     @Test
     public void verifyCreatePatientWithAllData() {
 
@@ -266,7 +259,7 @@ public class MCIIntegrationTests {
 
     }
 
-    @Category(MCITest.class)
+    @Category(MciApiTest.class)
     @Test
     public void verifyCreatePatient() {
 
@@ -304,7 +297,7 @@ public class MCIIntegrationTests {
         System.out.println("Patient with NID " + primaryPatient.getNid() + " created in MCI ");
 
         given().pathParam("nid", primaryPatient.getNid())
-                .when().get("/patients/?nid={nid}")
+                .when().get("/patients?nid={nid}")
                 .then().body("gender", Matchers.equalTo("1"))
                 .body("hid", Matchers.notNullValue())
                 .body("nid", Matchers.equalTo(primaryPatient.getNid()))
@@ -325,7 +318,7 @@ public class MCIIntegrationTests {
         System.out.println("Patient with NID " + primaryPatient.getNid() + " verified in MCI");
     }
 
-    public void tearDown(){
+    public void tearDown() {
 
     }
 

@@ -21,20 +21,32 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
 }
 
-task testShr(type: Test) {
+task runShrUiTests(type: Test) {
     useJUnit {
-        includeCategories 'categories.ShrTest'
+        includeCategories 'categories.ShrUiTest'
     }
 }
 
-task testTRServer(type: Test) {
+task runShrApiTests(type: Test) {
     useJUnit {
-        includeCategories 'categories.TRServerTest'
+        includeCategories 'categories.ShrApiTest'
     }
 }
 
-task testMCI(type: Test) {
+task runMciUiTests(type: Test) {
     useJUnit {
-        includeCategories 'categories.MCITest'
+        includeCategories 'categories.MciUiTest'
+    }
+}
+
+task runMciApiTests(type: Test) {
+    useJUnit {
+        includeCategories 'categories.MciApiTest'
+    }
+}
+
+task runTrUiTests(type: Test) {
+    useJUnit {
+        includeCategories 'categories.TrUiTest'
     }
 }

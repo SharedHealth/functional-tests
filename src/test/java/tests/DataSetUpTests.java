@@ -14,7 +14,7 @@ import utils.WebDriverProperties;
 
 public class DataSetUpTests {
 
-    static WebDriver driver = new FirefoxDriver();
+    private WebDriver driver = new FirefoxDriver();
     protected ConceptReferenceTerm conceptReferenceTerm;
     protected Concept concept;
 

@@ -1,6 +1,6 @@
 package tests;
 
-import categories.TRServerTest;
+import categories.TrUiTest;
 import data.ConceptData;
 import domain.Concept;
 import domain.ConceptReferenceTerm;
@@ -20,7 +20,7 @@ import utils.WebDriverProperties;
 import java.io.IOException;
 import java.net.URL;
 
-@Category(TRServerTest.class)
+@Category(TrUiTest.class)
 public class TerminologyRegistryTests {
 
     static WebDriver driver;
@@ -220,7 +220,6 @@ public class TerminologyRegistryTests {
         page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
         page.login("admin", "test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
     }
-
 
 
     @After

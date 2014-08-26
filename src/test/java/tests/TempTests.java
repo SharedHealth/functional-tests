@@ -17,7 +17,7 @@ import utils.WebDriverProperties;
 
 public class TempTests {
 
-    static WebDriver driver = new FirefoxDriver();
+    private WebDriver driver = new FirefoxDriver();
     protected Patient primaryPatient;
     protected ConceptReferenceTerm conceptReferenceTerm;
     protected Concept concept;

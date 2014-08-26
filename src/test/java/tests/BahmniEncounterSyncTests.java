@@ -1,8 +1,7 @@
 package tests;
 
-import categories.ShrTest;
+import categories.ShrUiTest;
 import data.ChiefComplainData;
-import data.ConceptData;
 import data.DiagnosisData;
 import data.PatientData;
 import domain.ChiefComplain;
@@ -18,17 +17,16 @@ import pages.LoginPage;
 import utils.PageFactoryWithWait;
 import utils.WebDriverProperties;
 
-@Category(ShrTest.class)
+@Category(ShrUiTest.class)
 public class BahmniEncounterSyncTests {
 
-    static WebDriver driver;
+    private WebDriver driver;
     protected Patient primaryPatient;
     protected Diagnosis firstDiagnosis;
     protected Diagnosis secondDiagnosis;
     protected ChiefComplain firstChiefComplain;
     protected ChiefComplain secondChiefComplain;
     protected ChiefComplain thirdChiefComplain;
-
 
     @Before
     public void setUp() {
@@ -37,7 +35,6 @@ public class BahmniEncounterSyncTests {
 
     @Test
     public void verifyEncounterSync() {
-
         PatientData dataStore = new PatientData();
         primaryPatient = dataStore.newPatient1;
         firstDiagnosis = DiagnosisData.DiagnosisWithReferenceTermForEncounterSync;
@@ -58,12 +55,10 @@ public class BahmniEncounterSyncTests {
         page.login("demo").goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .ValidateEncounterData(firstDiagnosis).ValidateEncounterData(secondDiagnosis);
-
     }
 
     @Test
     public void verifyChiefComplainSync() {
-
         PatientData dataStore = new PatientData();
         primaryPatient = dataStore.newPatient1;
         firstChiefComplain = ChiefComplainData.ChiefComplainWithReferenceTermForEncounterSync;
@@ -87,13 +82,10 @@ public class BahmniEncounterSyncTests {
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).goToConsultationPage()
                 .validateChiefComplainData(firstChiefComplain).validateChiefComplainData(secondChiefComplain);
 //                .validateChiefComplainData(thirdChiefComplain);  Commented the Non coded chief complain verification for now because of the spacing issue
-
     }
 
     @After
     public void tearDown() {
         driver.quit();
     }
-
-
 }
