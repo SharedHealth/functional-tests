@@ -1,12 +1,14 @@
 package pages;
 
 import domain.ChiefComplain;
+import domain.Vitals;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
+import java.util.List;
 
 public class ClinicalObservationsPage extends Page {
 
@@ -14,6 +16,9 @@ public class ClinicalObservationsPage extends Page {
 
     @FindBy(xpath = "//button[text()='Save']")
     private WebElement saveButton;
+
+    @FindBy(xpath = "//strong[text()='Vitals']")
+    private WebElement vitalsSection;
 
 
     public ClinicalObservationsPage(WebDriver driver) {
@@ -70,5 +75,27 @@ public class ClinicalObservationsPage extends Page {
 
     }
 
+    public void enterVitals(Vitals patientVitals) {
+        vitalsSection.click();
+        waitForMillis(1000);
+        List<WebElement> vitalsList = driver.findElements(By.cssSelector(".form-field-group"));
+        enterVital(vitalsList, "Systolic BD (mm Hg)", patientVitals.getSystolicBloodPressure());
+        enterVital(vitalsList, "Diastolic BD (mm Hg)", patientVitals.getDiastolicBloodPressure());
+        enterVital(vitalsList, "Pulse-BD (/min)", patientVitals.getPulse());
+        enterVital(vitalsList, "Temperature-BD", patientVitals.getTemperature());
+        saveButton.click();
+        System.out.println("Chief Complain Data Entered for Patient.");
+
+    }
+
+    private void enterVital(List<WebElement> vitalsList, String vitalName, String vitalValue) {
+        for (WebElement vital : vitalsList) {
+            if (vital.getText().equals(vitalName)) {
+                WebElement vitalInput = vital.findElement(By.tagName("input"));
+                setText(vitalInput, vitalValue);
+            }
+
+        }
+    }
 }
 

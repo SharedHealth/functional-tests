@@ -4,9 +4,11 @@ import categories.ShrUiTest;
 import data.ChiefComplainData;
 import data.DiagnosisData;
 import data.PatientData;
+import data.VitalsData;
 import domain.ChiefComplain;
 import domain.Diagnosis;
 import domain.Patient;
+import domain.Vitals;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +29,7 @@ public class BahmniEncounterSyncTests {
     protected ChiefComplain firstChiefComplain;
     protected ChiefComplain secondChiefComplain;
     protected ChiefComplain thirdChiefComplain;
+    protected Vitals patientVitals;
 
     @Before
     public void setUp() {
@@ -82,6 +85,28 @@ public class BahmniEncounterSyncTests {
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).goToConsultationPage()
                 .validateChiefComplainData(firstChiefComplain).validateChiefComplainData(secondChiefComplain);
 //                .validateChiefComplainData(thirdChiefComplain);  Commented the Non coded chief complain verification for now because of the spacing issue
+    }
+
+    @Test
+    public void verifyVitalSync() {
+        PatientData dataStore = new PatientData();
+        primaryPatient = dataStore.newPatient1;
+        patientVitals = VitalsData.patientVitals;
+
+        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
+        LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login("demo")
+                .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
+                .goToClinicalPage().goToPatientDashboard(primaryPatient)
+                .goToConsultationPage().goToObservationPage()
+                .enterVitals(patientVitals);
+
+        driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
+        page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login("demo")
+                .goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
+                .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
+                .validateVitals(patientVitals);
     }
 
     @After
