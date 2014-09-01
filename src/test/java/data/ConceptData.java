@@ -5,11 +5,13 @@ import domain.ConceptReferenceTerm;
 
 public class ConceptData {
 
+    public static final String CONCEPT_SOURCE = "ICD10-BD [ICD10-BD]";
+//    public static final String CONCEPT_SOURCE = "ICD10-BD [ICD10-BD-A]";
     private String id = String.valueOf(System.currentTimeMillis()).substring(7);
     public ConceptReferenceTerm conceptReferenceTerm = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
             .code("J19." + id)
             .name("Viral pneumonia " + id)
-            .source("ICD10-BD [ICD10-BD-A]")
+            .source(CONCEPT_SOURCE)
             .description("Viral pneumonia, unspecified\n" +
                     "Excl.:\n" +
                     id)
@@ -19,7 +21,7 @@ public class ConceptData {
     public ConceptReferenceTerm conceptReferenceTermForEdit = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
             .code("J19." + id)
             .name("Viral pneumonia " + id + " Changed")
-            .source("ICD10-BD [ICD10-BD-A]")
+            .source(CONCEPT_SOURCE)
             .description("Viral pneumonia, unspecified\n" +
                     "Excl.: Changed \n" +
                     id)
@@ -29,7 +31,7 @@ public class ConceptData {
     public ConceptReferenceTerm conceptReferenceTermForFinding = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
             .code("M54." + id)
             .name("Back pain " + id)
-            .source("ICD10-BD [ICD10-BD-A]")
+            .source(CONCEPT_SOURCE)
             .description("Lower Back Pain ")
             .version("1.0")
             .build();
@@ -182,7 +184,7 @@ public class ConceptData {
     public ConceptReferenceTerm getConceptReferenceTermForVerification = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
             .code("J19." + id2)
             .name("Viral pneumonia " + id2)
-            .source("ICD10-BD [ICD10-BD-A]")
+            .source(CONCEPT_SOURCE)
             .description("Viral pneumonia, unspecified\n" +
                     "Excl.:\n" +
                     id2)
@@ -193,7 +195,7 @@ public class ConceptData {
     public ConceptReferenceTerm referenceTermForEncounterSync = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
             .code("S40")
             .name("Superficial injury of shoulder and upper arm")
-            .source("ICD10-BD [ICD10-BD-A]")
+            .source(CONCEPT_SOURCE)
             .description("Superficial injury of shoulder and upper arm")
             .version("1.0")
             .build();
@@ -229,7 +231,7 @@ public class ConceptData {
     public ConceptReferenceTerm referenceTermForChiefComplainSync = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
             .code("R07")
             .name("Pain in throat and chest")
-            .source("ICD10-BD [ICD10-BD-A]")
+            .source(CONCEPT_SOURCE)
             .description("Pain in throat and chest")
             .version("1.0")
             .build();

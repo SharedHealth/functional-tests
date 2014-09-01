@@ -5,7 +5,6 @@ import data.ConceptData;
 import domain.Concept;
 import domain.ConceptReferenceTerm;
 import domain.Feed;
-import static junit.framework.TestCase.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +18,8 @@ import utils.WebDriverProperties;
 
 import java.io.IOException;
 import java.net.URL;
+
+import static junit.framework.TestCase.assertTrue;
 
 @Category(TrUiTest.class)
 public class TerminologyRegistryTests {
@@ -53,12 +54,12 @@ public class TerminologyRegistryTests {
     @Test
     public void verifyThatConceptIsPublishedToFeed() throws IOException {
 
-        driver.get(WebDriverProperties.getProperty("trExternalURL"));
+        driver.get(WebDriverProperties.getProperty("trInternalURL"));
         ConceptData dataStore = new ConceptData();
         conceptReferenceTerm = dataStore.conceptReferenceTerm;
         concept = dataStore.conceptForDiagnosis;
 
-        Feed previous = new FeedParser().parse(new URL("http://172.18.46.53:9080/openmrs/ws/atomfeed/" + concept.getConceptClass() + "/recent").openConnection().getInputStream());
+        Feed previous = new FeedParser().parse(new URL(WebDriverProperties.getProperty("trInternalURL") + "/ws/atomfeed/" + concept.getConceptClass() + "/recent").openConnection().getInputStream());
 
         TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
         page.login("admin", "Admin123")
@@ -71,7 +72,7 @@ public class TerminologyRegistryTests {
                 .goToCreateNewConcept()
                 .createConcept(concept);
 
-        Feed current = new FeedParser().parse(new URL("http://172.18.46.53:9080/openmrs/ws/atomfeed/" + concept.getConceptClass() + "/recent").openConnection().getInputStream());
+        Feed current = new FeedParser().parse(new URL(WebDriverProperties.getProperty("trInternalURL") + "/ws/atomfeed/" + concept.getConceptClass() + "/recent").openConnection().getInputStream());
 
         assertTrue(current.hasMoreEntriesThan(previous));
     }
@@ -79,7 +80,7 @@ public class TerminologyRegistryTests {
     @Test
     public void verifyEditConceptSyncFromTR() {
 
-        driver.get(WebDriverProperties.getProperty("trExternalURL"));
+        driver.get(WebDriverProperties.getProperty("trInternalURL"));
 
         ConceptData dataStore = new ConceptData();
         conceptReferenceTerm = dataStore.conceptReferenceTerm;
@@ -143,7 +144,7 @@ public class TerminologyRegistryTests {
     @Test
     public void verifyReferenceTermSyncFromTR() {
 
-        driver.get(WebDriverProperties.getProperty("trExternalURL"));
+        driver.get(WebDriverProperties.getProperty("trInternalURL"));
         ConceptData dataStore = new ConceptData();
         conceptReferenceTerm = dataStore.conceptReferenceTerm;
 
@@ -160,7 +161,7 @@ public class TerminologyRegistryTests {
     @Test
     public void verifyEditReferenceTermSyncFromTR() {
 
-        driver.get(WebDriverProperties.getProperty("trExternalURL"));
+        driver.get(WebDriverProperties.getProperty("trInternalURL"));
 
         ConceptData dataStore = new ConceptData();
         conceptReferenceTerm = dataStore.conceptReferenceTerm;

@@ -52,7 +52,7 @@ public class ClinicalDashboardPage extends Page {
 
         for (WebElement diagnosis : diagnosisListElements)
             diagnosisList.add(diagnosis.getText());
-        Assert.assertEquals(true, diagnosisList.contains(expectedDiagnosis.getDiagnosisName()));
+        Assert.assertEquals("Diagnosis data not downloaded to Bahmni :" + expectedDiagnosis.getDiagnosisName(), true, diagnosisList.contains(expectedDiagnosis.getDiagnosisName()));
         System.out.println("Diagnosis Data verified for Patient :" + expectedDiagnosis.getDiagnosisName());
         return this;
 
