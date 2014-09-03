@@ -1,13 +1,17 @@
 package pages;
 
 import domain.ChiefComplain;
+import domain.FamilyHistory;
 import domain.Vitals;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
+
 import java.util.List;
 
 public class ClinicalObservationsPage extends Page {
@@ -19,6 +23,9 @@ public class ClinicalObservationsPage extends Page {
 
     @FindBy(xpath = "//strong[text()='Vitals']")
     private WebElement vitalsSection;
+
+    @FindBy(xpath = "//strong[text()='Family History']")
+    private WebElement familyHistorySection;
 
 
     public ClinicalObservationsPage(WebDriver driver) {
@@ -79,23 +86,61 @@ public class ClinicalObservationsPage extends Page {
         vitalsSection.click();
         waitForMillis(1000);
         List<WebElement> vitalsList = driver.findElements(By.cssSelector(".form-field-group"));
-        enterVital(vitalsList, "Systolic BD (mm Hg)", patientVitals.getSystolicBloodPressure());
-        enterVital(vitalsList, "Diastolic BD (mm Hg)", patientVitals.getDiastolicBloodPressure());
-        enterVital(vitalsList, "Pulse-BD (/min)", patientVitals.getPulse());
-        enterVital(vitalsList, "Temperature-BD", patientVitals.getTemperature());
+        enterObservation(vitalsList, "Systolic BD (mm Hg)", patientVitals.getSystolicBloodPressure());
+        enterObservation(vitalsList, "Diastolic BD (mm Hg)", patientVitals.getDiastolicBloodPressure());
+        enterObservation(vitalsList, "Pulse-BD (/min)", patientVitals.getPulse());
+        enterObservation(vitalsList, "Temperature-BD", patientVitals.getTemperature());
         saveButton.click();
         System.out.println("Chief Complain Data Entered for Patient.");
 
     }
 
-    private void enterVital(List<WebElement> vitalsList, String vitalName, String vitalValue) {
-        for (WebElement vital : vitalsList) {
-            if (vital.getText().equals(vitalName)) {
-                WebElement vitalInput = vital.findElement(By.tagName("input"));
-                setText(vitalInput, vitalValue);
-            }
+    public void enterFamilyHistory(FamilyHistory familyHistory) {
+        familyHistorySection.click();
+        waitForMillis(1000);
 
+        List<WebElement> familyHistoryList = driver.findElements(By.cssSelector(".form-field-group"));
+
+        enterObservation(familyHistoryList, "Relationship", familyHistory.getRelationShip());
+        selectFromFamilyHistoryAutoComplete(familyHistory.getRelationShip());
+
+        enterObservation(familyHistoryList, "Born On", familyHistory.getBornOnDate());
+        enterObservation(familyHistoryList, "Onset Age (years)", familyHistory.getOnsetAge());
+        enterObservationNotes(familyHistoryList, "Relationship Notes", familyHistory.getRelationshipNotes());
+
+        enterObservation(familyHistoryList, "Relationship Diagnosis", familyHistory.getRelationshipDiagnosis());
+        selectFromFamilyHistoryAutoComplete(familyHistory.getRelationshipDiagnosis());
+
+        saveButton.click();
+        System.out.println("Family History data Entered for Patient.");
+    }
+
+    private void selectFromFamilyHistoryAutoComplete(String value) {
+        waitForMillis(1000);
+        WebElement relationshipAutoCompleteOption = webDriver.findElement(By.linkText(value));
+        Actions builder = new Actions(webDriver);
+        Action seriesOfActions = builder.moveToElement(relationshipAutoCompleteOption).clickAndHold().release().build();
+        seriesOfActions.perform();
+    }
+
+    private void enterObservation(List<WebElement> observationList, String observationName, String observationValue) {
+        for (WebElement vital : observationList) {
+            if (vital.getText().equals(observationName)) {
+                WebElement vitalInput = vital.findElement(By.tagName("input"));
+                setText(vitalInput, observationValue);
+            }
         }
     }
+
+    private void enterObservationNotes(List<WebElement> observationList, String observationName, String observationValue) {
+        for (WebElement vital : observationList) {
+            if (vital.getText().equals(observationName)) {
+                WebElement vitalInput = vital.findElement(By.tagName("textarea"));
+                setText(vitalInput, observationValue);
+            }
+        }
+    }
+
+
 }
 

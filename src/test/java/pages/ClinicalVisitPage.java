@@ -1,6 +1,7 @@
 package pages;
 
 import domain.ChiefComplain;
+import domain.FamilyHistory;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -9,6 +10,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static utils.PageFactoryWithWait.initialize;
@@ -64,6 +66,30 @@ public class ClinicalVisitPage extends Page {
         Assert.assertEquals("Can not find Chief Complain " + expectedChiefComplainDetails, true, chiefComplainList.contains(expectedChiefComplainDetails));
         System.out.println("Chief Complain Data verified for Patient: " + expectedChiefComplain.getChiefComplainName());
         return this;
+
+    }
+
+    public void validateFamilyHistoryData(FamilyHistory expectedFamilyHistory) {
+
+        WebElement familyHistoryTable = webDriver.findElement(By.xpath("//table[contains(., 'Family History')]"));
+
+        HashMap<String, String> familyHistory = new HashMap<String, String>();
+        List<WebElement> familyHistoryNames = familyHistoryTable.findElements(By.cssSelector(".name"));
+        List<WebElement> familyHistoryValues = familyHistoryTable.findElements(By.cssSelector(".chief-notes"));
+
+        for (int i = 0; i < familyHistoryNames.size(); i++) {
+            String name = familyHistoryNames.get(i).getText();
+            String value = familyHistoryValues.get(i).getText().trim();
+            familyHistory.put(name, value);
+        }
+
+        Assert.assertEquals("Relationship", expectedFamilyHistory.getRelationShip(), familyHistory.get("Relationship"));
+        Assert.assertEquals("Born On", expectedFamilyHistory.getBornOnDate(), familyHistory.get("Born On"));
+        Assert.assertEquals("Onset Age", expectedFamilyHistory.getOnsetAge() + " years", familyHistory.get("Onset Age"));
+        Assert.assertEquals("Relationship Notes", expectedFamilyHistory.getRelationshipNotes(), familyHistory.get("Relationship Notes"));
+        Assert.assertEquals("Relationship Diagnosis", expectedFamilyHistory.getRelationshipDiagnosis(), familyHistory.get("Relationship Diagnosis"));
+
+        System.out.println("Family History data verified for Patient");
 
     }
 }
