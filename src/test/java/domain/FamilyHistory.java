@@ -2,18 +2,28 @@ package domain;
 
 public class FamilyHistory {
 
-    private String relationShip;
+    private String relationShipName;
+    private String relationShipDisplayText;
     private String bornOnDate;
+    private String bornOnDateDisplayText;
     private String onsetAge;
     private String relationshipNotes;
     private String relationshipDiagnosis;
 
-    public String getRelationShip() {
-        return relationShip;
+    public String getRelationShipName() {
+        return relationShipName;
+    }
+
+    public String getRelationShipDisplayText() {
+        return relationShipDisplayText;
     }
 
     public String getBornOnDate() {
         return bornOnDate;
+    }
+
+    public String getBornOnDateDisplayText() {
+        return bornOnDateDisplayText;
     }
 
     public String getOnsetAge() {
@@ -23,13 +33,16 @@ public class FamilyHistory {
     public String getRelationshipNotes() {
         return relationshipNotes;
     }
+
     public String getRelationshipDiagnosis() {
         return relationshipDiagnosis;
     }
 
     private FamilyHistory(FamilyHistoryBuilder builder) {
-        this.relationShip = builder.relationShip;
+        this.relationShipName = builder.relationShipName;
+        this.relationShipDisplayText = builder.relationShipDisplayText;
         this.bornOnDate = builder.bornOnDate;
+        this.bornOnDateDisplayText = builder.bornOnDateDisplayText;
         this.onsetAge = builder.onsetAge;
         this.relationshipNotes = builder.relationshipNotes;
         this.relationshipDiagnosis = builder.relationshipDiagnosis;
@@ -38,19 +51,31 @@ public class FamilyHistory {
 
     public static class FamilyHistoryBuilder {
 
-        private String relationShip;
+        private String relationShipName;
+        private String relationShipDisplayText;
         private String bornOnDate;
+        private String bornOnDateDisplayText;
         private String onsetAge;
         private String relationshipNotes;
         private String relationshipDiagnosis;
 
-        public FamilyHistoryBuilder relationShip(String relationShip) {
-            this.relationShip = relationShip;
+        public FamilyHistoryBuilder relationShipName(String relationShipName) {
+            this.relationShipName = relationShipName;
+            return this;
+        }
+
+        public FamilyHistoryBuilder relationShipDisplayText(String relationShipDisplayText) {
+            this.relationShipDisplayText = relationShipDisplayText;
             return this;
         }
 
         public FamilyHistoryBuilder bornOnDate(String bornOnDate) {
             this.bornOnDate = bornOnDate;
+            return this;
+        }
+
+        public FamilyHistoryBuilder bornOnDateDisplayText(String bornOnDateDisplayText) {
+            this.bornOnDateDisplayText = bornOnDateDisplayText;
             return this;
         }
 

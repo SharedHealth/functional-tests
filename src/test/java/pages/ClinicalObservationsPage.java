@@ -14,6 +14,8 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 
+import static utils.PageFactoryWithWait.initialize;
+
 public class ClinicalObservationsPage extends Page {
 
     public WebDriver driver;
@@ -26,6 +28,10 @@ public class ClinicalObservationsPage extends Page {
 
     @FindBy(xpath = "//strong[text()='Family History']")
     private WebElement familyHistorySection;
+
+    @FindBy(linkText = "Visit")
+    private WebElement visitButton;
+
 
 
     public ClinicalObservationsPage(WebDriver driver) {
@@ -86,10 +92,10 @@ public class ClinicalObservationsPage extends Page {
 //        vitalsSection.click();
 //        waitForMillis(1000);
         List<WebElement> vitalsList = driver.findElements(By.cssSelector(".form-field-group"));
-        enterObservation(vitalsList, "Systolic (mm Hg)", patientVitals.getSystolicBloodPressure());
-        enterObservation(vitalsList, "Diastolic (mm Hg)", patientVitals.getDiastolicBloodPressure());
-        enterObservation(vitalsList, "Pulse (/min)", patientVitals.getPulse());
-        enterObservation(vitalsList, "Temperature", patientVitals.getTemperature());
+        enterVitalObservation(vitalsList, "Systolic (mm Hg)", patientVitals.getSystolicBloodPressure());
+        enterVitalObservation(vitalsList, "Diastolic (mm Hg)", patientVitals.getDiastolicBloodPressure());
+        enterVitalObservation(vitalsList, "Pulse (/min)", patientVitals.getPulse());
+        enterVitalObservation(vitalsList, "Temperature", patientVitals.getTemperature());
         saveButton.click();
         System.out.println("Vitals Data Entered for Patient.");
 
@@ -101,8 +107,8 @@ public class ClinicalObservationsPage extends Page {
 
         List<WebElement> familyHistoryList = driver.findElements(By.cssSelector(".form-field-group"));
 
-        enterObservation(familyHistoryList, "Relationship", familyHistory.getRelationShip());
-        selectFromFamilyHistoryAutoComplete(familyHistory.getRelationShip());
+        enterObservation(familyHistoryList, "Relationship", familyHistory.getRelationShipName());
+        selectFromFamilyHistoryAutoComplete(familyHistory.getRelationShipName());
 
         enterObservation(familyHistoryList, "Born On", familyHistory.getBornOnDate());
         enterObservation(familyHistoryList, "Onset Age (years)", familyHistory.getOnsetAge());
@@ -123,9 +129,17 @@ public class ClinicalObservationsPage extends Page {
         seriesOfActions.perform();
     }
 
-    private void enterObservation(List<WebElement> observationList, String observationName, String observationValue) {
+    private void enterVitalObservation(List<WebElement> observationList, String observationName, String observationValue) {
         for (WebElement vital : observationList) {
             if (vital.getText().startsWith(observationName)) {
+                WebElement vitalInput = vital.findElement(By.tagName("input"));
+                setText(vitalInput, observationValue);
+            }
+        }
+    }
+    private void enterObservation(List<WebElement> observationList, String observationName, String observationValue) {
+        for (WebElement vital : observationList) {
+            if (vital.getText().equals(observationName)) {
                 WebElement vitalInput = vital.findElement(By.tagName("input"));
                 setText(vitalInput, observationValue);
             }
@@ -142,5 +156,9 @@ public class ClinicalObservationsPage extends Page {
     }
 
 
+    public ClinicalVisitPage goToVisitPage() {
+        visitButton.click();
+        return initialize(webDriver, ClinicalVisitPage.class);
+    }
 }
 

@@ -70,7 +70,7 @@ public class ClinicalVisitPage extends Page {
     }
 
     public void validateFamilyHistoryData(FamilyHistory expectedFamilyHistory) {
-
+        waitForMillis(1000);
         WebElement familyHistoryTable = webDriver.findElement(By.xpath("//table[contains(., 'Family History')]"));
 
         HashMap<String, String> familyHistory = new HashMap<String, String>();
@@ -83,8 +83,8 @@ public class ClinicalVisitPage extends Page {
             familyHistory.put(name, value);
         }
 
-        Assert.assertEquals("Relationship", expectedFamilyHistory.getRelationShip(), familyHistory.get("Relationship"));
-        Assert.assertEquals("Born On", expectedFamilyHistory.getBornOnDate(), familyHistory.get("Born On"));
+        Assert.assertEquals("Relationship", expectedFamilyHistory.getRelationShipDisplayText(), familyHistory.get("Relationship"));
+        Assert.assertEquals("Born On", expectedFamilyHistory.getBornOnDateDisplayText(), familyHistory.get("Born On"));
         Assert.assertEquals("Onset Age", expectedFamilyHistory.getOnsetAge() + " years", familyHistory.get("Onset Age"));
         Assert.assertEquals("Relationship Notes", expectedFamilyHistory.getRelationshipNotes(), familyHistory.get("Relationship Notes"));
         Assert.assertEquals("Relationship Diagnosis", expectedFamilyHistory.getRelationshipDiagnosis(), familyHistory.get("Relationship Diagnosis"));

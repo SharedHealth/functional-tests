@@ -116,16 +116,17 @@ public class BahmniEncounterSyncTests {
         page.login("demo")
                 .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient)
-                .goToConsultationPage().goToObservationPage()
-                .enterFamilyHistory(patientFamilyHistory);
+                .startConsultation().enterFamilyHistory(patientFamilyHistory);
 
         driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login("demo")
                 .goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
-                .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).goToConsultationPage()
+                .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
+                .startConsultation().goToVisitPage()
                 .validateFamilyHistoryData(patientFamilyHistory);
     }
+
 
     @After
     public void tearDown() {
