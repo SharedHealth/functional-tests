@@ -69,8 +69,7 @@ public class BahmniEncounterSyncTests {
         page.login("demo")
                 .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient)
-                .goToConsultationPage().goToObservationPage()
-                .enterChiefComplainDetails(firstChiefComplain, secondChiefComplain, thirdChiefComplain);
+                .startConsultation().enterChiefComplainDetails(firstChiefComplain, secondChiefComplain, thirdChiefComplain);
 
         driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
 
@@ -78,10 +77,11 @@ public class BahmniEncounterSyncTests {
 
         page.login("demo")
                 .goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
-                .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).goToConsultationPage()
+                .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).startConsultation().goToVisitPage()
                 .validateChiefComplainData(firstChiefComplain).validateChiefComplainData(secondChiefComplain)
                 .validateChiefComplainData(thirdChiefComplain);
     }
+
 
     @Test
     public void verifyVitalSync() {

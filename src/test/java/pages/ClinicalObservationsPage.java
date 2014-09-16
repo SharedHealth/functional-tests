@@ -29,9 +29,11 @@ public class ClinicalObservationsPage extends Page {
     @FindBy(xpath = "//strong[text()='Family History']")
     private WebElement familyHistorySection;
 
+    @FindBy(xpath = "//strong[text()='History and Examination']")
+    private WebElement chiefComplainSection;
+
     @FindBy(linkText = "Visit")
     private WebElement visitButton;
-
 
 
     public ClinicalObservationsPage(WebDriver driver) {
@@ -54,6 +56,8 @@ public class ClinicalObservationsPage extends Page {
 
     public void enterChiefComplainDetails(ChiefComplain firstChiefComplain, ChiefComplain secondChiefComplain, ChiefComplain nonCodedChiefComplain) {
 
+        chiefComplainSection.click();
+        waitForMillis(1000);
 
         enterChiefComplainData(firstChiefComplain, 1);
         enterChiefComplainData(secondChiefComplain, 2);
@@ -74,15 +78,15 @@ public class ClinicalObservationsPage extends Page {
             WebElement chiefComplainAutoCompleteOption = webDriver.findElement(By.linkText(chiefComplain.getChiefComplainName()));
             chiefComplainAutoCompleteOption.click();
         } else {
-            WebElement addNewNonCodedChiefComplainCheckBox = webDriver.findElement(By.cssSelector(".add-new"));
+            WebElement addNewNonCodedChiefComplainCheckBox = webDriver.findElements(By.cssSelector(".accept-btn")).get(index);
             addNewNonCodedChiefComplainCheckBox.click();
 
         }
 
-        WebElement chiefComplainDuration = driver.findElements(By.cssSelector("[type=number]")).get(index);
+        WebElement chiefComplainDuration = driver.findElements(By.cssSelector(".duration-value")).get(index);
         setText(chiefComplainDuration, chiefComplain.getDuration());
 
-        WebElement chiefComplainUnit = driver.findElements(By.cssSelector(".duration-label")).get(index);
+        WebElement chiefComplainUnit = driver.findElements(By.cssSelector(".duration-unit")).get(index);
         Select chiefComplainUnitSelect = new Select(chiefComplainUnit);
         chiefComplainUnitSelect.selectByVisibleText(chiefComplain.getDurationUnit());
 
@@ -137,6 +141,7 @@ public class ClinicalObservationsPage extends Page {
             }
         }
     }
+
     private void enterObservation(List<WebElement> observationList, String observationName, String observationValue) {
         for (WebElement vital : observationList) {
             if (vital.getText().equals(observationName)) {

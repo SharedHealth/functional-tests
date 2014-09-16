@@ -54,6 +54,7 @@ public class ClinicalVisitPage extends Page {
     }
 
     public ClinicalVisitPage validateChiefComplainData(ChiefComplain expectedChiefComplain) {
+        waitFindElement(By.xpath("//h2[text()='Observations']"));
 
         List<WebElement> chiefComplainListElements = driver.findElements(By.cssSelector(".chief-notes"));
         ArrayList<String> chiefComplainList = new ArrayList<String>();
