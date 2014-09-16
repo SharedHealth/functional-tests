@@ -52,14 +52,14 @@ public class PatientDetailsPage extends Page{
     @FindBy(id = "Health ID")
     private WebElement patientHID;
 
-    @FindBy(id = "education")
-    private WebElement patientEducation;
+//    @FindBy(id = "education")
+//    private WebElement patientEducation;
 
     @FindBy(id = "occupation")
     private WebElement patientOccupation;
 
-    @FindBy(id = "primaryContact")
-    private WebElement patientPrimaryContact;
+//    @FindBy(id = "primaryContact")
+//    private WebElement patientPrimaryContact;
 
     @FindBy(xpath = "//button[text()='Start OPD visit']")
     private WebElement startLabVisit;
@@ -87,7 +87,7 @@ public class PatientDetailsPage extends Page{
     public void verifyPatientDetails(Patient primaryPatient) {
         this.waitForMillis(1000);
 
-        Select patientEducationSelectBox = new  Select(patientEducation);
+//        Select patientEducationSelectBox = new  Select(patientEducation);
         Select patientGenderSelectBox = new  Select(patientGender);
         Select patientOccupationSelectBox = new  Select(patientOccupation);
 
@@ -103,9 +103,9 @@ public class PatientDetailsPage extends Page{
         Assert.assertEquals(primaryPatient.getAddress().getDivision(), patientAddressDivision.getAttribute("value")) ;
         Assert.assertEquals(primaryPatient.getNid(), patientNID.getAttribute("value")) ;
         Assert.assertNotNull(patientHID.getAttribute("value"));
-        Assert.assertEquals(primaryPatient.getEducation(),  patientEducationSelectBox.getFirstSelectedOption().getText());
+//        Assert.assertEquals(primaryPatient.getEducation(),  patientEducationSelectBox.getFirstSelectedOption().getText());
         Assert.assertEquals(primaryPatient.getOccupation(),  patientOccupationSelectBox.getFirstSelectedOption().getText());
-        Assert.assertEquals(primaryPatient.getPrimaryContact(),  patientPrimaryContact.getAttribute("value")) ;
+//        Assert.assertEquals(primaryPatient.getPrimaryContact(),  patientPrimaryContact.getAttribute("value")) ;
         System.out.println("Patient with NID: "+ primaryPatient.getNid()+ " downloaded to Bahmni");
 
 
@@ -116,7 +116,7 @@ public class PatientDetailsPage extends Page{
 
         String addressOptions = "//a[text()='"+primaryPatient.getAddress().getUnion()+", "+primaryPatient.getAddress().getCityCorporation()+"']";
 
-        Select patientEducationSelectBox = new  Select(patientEducation);
+//        Select patientEducationSelectBox = new  Select(patientEducation);
         Select patientGenderSelectBox = new  Select(patientGender);
         Select patientOccupationSelectBox = new  Select(patientOccupation);
 
@@ -130,9 +130,9 @@ public class PatientDetailsPage extends Page{
         WebElement addressOption = driver.findElement(By.xpath(addressOptions));
         addressOption.click();
         setText(patientNID,primaryPatient.getNid());
-        setText(patientPrimaryContact,primaryPatient.getPrimaryContact());
+//        setText(patientPrimaryContact,primaryPatient.getPrimaryContact());
 
-        patientEducationSelectBox.selectByVisibleText(primaryPatient.getEducation());
+//        patientEducationSelectBox.selectByVisibleText(primaryPatient.getEducation());
         patientGenderSelectBox.selectByVisibleText(primaryPatient.getGender());
         patientOccupationSelectBox.selectByVisibleText(primaryPatient.getOccupation());
         startLabVisit.click();
@@ -148,8 +148,8 @@ public class PatientDetailsPage extends Page{
 
         this.waitForMillis(1000);
 
-        patientPrimaryContact.click();
-        patientPrimaryContact.sendKeys(Keys.RETURN);
+        patientNID.click();
+        patientNID.sendKeys(Keys.RETURN);
 
         return initialize(webDriver, PatientVisitInformationPage.class);
 

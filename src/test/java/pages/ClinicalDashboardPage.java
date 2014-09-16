@@ -46,6 +46,11 @@ public class ClinicalDashboardPage extends Page {
         return initialize(webDriver, ClinicalVisitPage.class);
     }
 
+    public ClinicalObservationsPage startConsultation() {
+        consultationButton.click();
+        return initialize(webDriver, ClinicalObservationsPage.class);
+    }
+
     public ClinicalDashboardPage ValidateEncounterData(Diagnosis expectedDiagnosis) {
         List<WebElement> diagnosisListElements = driver.findElements(By.xpath("//h4[@class='diagnosis-name ng-binding']"));
         ArrayList<String> diagnosisList = new ArrayList<String>();
@@ -70,11 +75,10 @@ public class ClinicalDashboardPage extends Page {
             vitals.put(vitalName, vitalValue);
 
         }
-
-        Assert.assertEquals("Vital Verification Temperature ", vitals.get("Temperature-BD"), patientVitals.getTemperature());
-        Assert.assertEquals("Vital Verification Pulse ", vitals.get("Pulse-BD"), patientVitals.getPulse());
-        Assert.assertEquals("Vital Verification Diastolic BP ", vitals.get("Diastolic BD"), patientVitals.getDiastolicBloodPressure());
-        Assert.assertEquals("Vital Verification Systolic BP ", vitals.get("Systolic BD"), patientVitals.getSystolicBloodPressure());
+        Assert.assertEquals("Vital Verification Temperature ", patientVitals.getTemperature(), vitals.get("Temperature"));
+        Assert.assertEquals("Vital Verification Pulse ", patientVitals.getPulse(), vitals.get("Pulse"));
+        Assert.assertEquals("Vital Verification Diastolic BP ", patientVitals.getDiastolicBloodPressure(), vitals.get("Diastolic"));
+        Assert.assertEquals("Vital Verification Systolic BP ", patientVitals.getSystolicBloodPressure(), vitals.get("Systolic"));
         System.out.println("Vitals Data verified for the Patient ");
     }
 }

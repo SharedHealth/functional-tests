@@ -14,7 +14,7 @@ dependencies {
     testCompile group: 'com.jayway.restassured', name: 'json-path', version: '2.3.2'
     testCompile group: 'com.google.code.gson',   name: 'gson', version: '2.2.4'
     testCompile 'com.thoughtworks.xstream:xstream:1.4.7'
-    testCompile 'org.seleniumhq.selenium:selenium-java:2.42.0'
+    testCompile 'org.seleniumhq.selenium:selenium-java:2.43.0'
 }
 
 task wrapper(type: Wrapper) {

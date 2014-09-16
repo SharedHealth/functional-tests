@@ -39,7 +39,7 @@ public class ClinicalObservationsPage extends Page {
         wait.until(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
-                return null != (webDriver.findElement(By.cssSelector(".concept-name")));
+                return null != (webDriver.findElement(By.xpath("//span[text()='Temperature']")));
             }
         });
 
@@ -83,15 +83,15 @@ public class ClinicalObservationsPage extends Page {
     }
 
     public void enterVitals(Vitals patientVitals) {
-        vitalsSection.click();
-        waitForMillis(1000);
+//        vitalsSection.click();
+//        waitForMillis(1000);
         List<WebElement> vitalsList = driver.findElements(By.cssSelector(".form-field-group"));
-        enterObservation(vitalsList, "Systolic BD (mm Hg)", patientVitals.getSystolicBloodPressure());
-        enterObservation(vitalsList, "Diastolic BD (mm Hg)", patientVitals.getDiastolicBloodPressure());
-        enterObservation(vitalsList, "Pulse-BD (/min)", patientVitals.getPulse());
-        enterObservation(vitalsList, "Temperature-BD", patientVitals.getTemperature());
+        enterObservation(vitalsList, "Systolic (mm Hg)", patientVitals.getSystolicBloodPressure());
+        enterObservation(vitalsList, "Diastolic (mm Hg)", patientVitals.getDiastolicBloodPressure());
+        enterObservation(vitalsList, "Pulse (/min)", patientVitals.getPulse());
+        enterObservation(vitalsList, "Temperature", patientVitals.getTemperature());
         saveButton.click();
-        System.out.println("Chief Complain Data Entered for Patient.");
+        System.out.println("Vitals Data Entered for Patient.");
 
     }
 
@@ -125,7 +125,7 @@ public class ClinicalObservationsPage extends Page {
 
     private void enterObservation(List<WebElement> observationList, String observationName, String observationValue) {
         for (WebElement vital : observationList) {
-            if (vital.getText().equals(observationName)) {
+            if (vital.getText().startsWith(observationName)) {
                 WebElement vitalInput = vital.findElement(By.tagName("input"));
                 setText(vitalInput, observationValue);
             }

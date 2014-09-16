@@ -55,6 +55,7 @@ public class BahmniEncounterSyncTests {
                 .ValidateEncounterData(firstDiagnosis).ValidateEncounterData(secondDiagnosis);
     }
 
+
     @Test
     public void verifyChiefComplainSync() {
         PatientData dataStore = new PatientData();
@@ -93,8 +94,7 @@ public class BahmniEncounterSyncTests {
         page.login("demo")
                 .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient)
-                .goToConsultationPage().goToObservationPage()
-                .enterVitals(patientVitals);
+                .startConsultation().enterVitals(patientVitals);
 
         driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
@@ -103,6 +103,7 @@ public class BahmniEncounterSyncTests {
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .validateVitals(patientVitals);
     }
+
 
     @Test
     public void verifyFamilyHistorySync() {
