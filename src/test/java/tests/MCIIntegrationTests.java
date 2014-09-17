@@ -26,7 +26,7 @@ public class MCIIntegrationTests {
     @Before
     public void setUp() {
 
-        RestAssured.baseURI = "http://172.18.46.53";
+        RestAssured.baseURI = "http://172.18.46.56";
         RestAssured.port = 8081;
         RestAssured.basePath = "/api/v1";
         RestAssured.authentication = basic("mci", "password");
@@ -36,26 +36,25 @@ public class MCIIntegrationTests {
 
     @Test
     public void verifyGetPatientByNID() {
-        given().pathParam("nid", "9000000794053")
+        given().pathParam("nid", "9000000184693")
                 .when().get("/patients?nid={nid}")
-                .then().body("gender", Matchers.equalTo("1"))
-                .body("hid", Matchers.notNullValue())
-                .body("nid", Matchers.equalTo("9000000794053"))
-                .body("first_name", Matchers.equalTo("A794053"))
-                .body("last_name", Matchers.equalTo("ATEST"))
+                .then()
+                .body("hid", Matchers.equalTo("5912415956172275713"))
+                .body("nid", Matchers.equalTo("9000000184693"))
+                .body("given_name", Matchers.equalTo("A184693"))
+                .body("sur_name", Matchers.equalTo("ATEST"))
                 .body("date_of_birth", Matchers.equalTo("2000-03-01"))
-                .body("gender", Matchers.equalTo("1"))
+                .body("gender", Matchers.equalTo("M"))
                 .body("occupation", Matchers.equalTo("02"))
                 .body("edu_level", Matchers.equalTo("02"))
-                .body("fathers_first_name", Matchers.equalTo("Primary One"))
                 .body("present_address.address_line", Matchers.equalTo("Test"))
                 .body("present_address.division_id", Matchers.equalTo("10"))
                 .body("present_address.district_id", Matchers.equalTo("09"))
                 .body("present_address.upazilla_id", Matchers.equalTo("18"))
-                .body("present_address.city_corporation", Matchers.equalTo("16"))
-                .body("present_address.ward", Matchers.equalTo("01"));
+                .body("present_address.city_corporation_id", Matchers.equalTo("16"))
+                .body("present_address.ward_id", Matchers.equalTo("01"));
 
-        System.out.println("Patient with NID " + "9000000351311" + " verified in MCI");
+        System.out.println("Patient with NID " + "9000000184693" + " verified in MCI");
 
     }
 
@@ -271,26 +270,24 @@ public class MCIIntegrationTests {
         JSONObject present_address = new JSONObject();
         try {
             person.put("nid", primaryPatient.getNid());
-            person.put("first_name", primaryPatient.getFirstName());
-            person.put("last_name", primaryPatient.getLastName());
+            person.put("given_name", primaryPatient.getFirstName());
+            person.put("sur_name", primaryPatient.getLastName());
             person.put("date_of_birth", "2000-03-01");
-            person.put("gender", "1");
+            person.put("gender", "M");
             person.put("occupation", "02");
             person.put("edu_level", "02");
-            person.put("fathers_first_name", primaryPatient.getPrimaryContact());
             present_address.put("address_line", primaryPatient.getAddress().getAddressLine1());
             present_address.put("division_id", "10");
             present_address.put("district_id", "09");
             present_address.put("upazilla_id", "18");
-            present_address.put("city_corporation", "16");
-            present_address.put("ward", "01");
+            present_address.put("city_corporation_id", "16");
+            present_address.put("ward_id", "01");
             person.put("present_address", present_address);
 
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         given().contentType("application/json")
                 .body(person.toString())
                 .when().post("/patients")
@@ -299,22 +296,21 @@ public class MCIIntegrationTests {
 
         given().pathParam("nid", primaryPatient.getNid())
                 .when().get("/patients?nid={nid}")
-                .then().body("gender", Matchers.equalTo("1"))
+                .then()
                 .body("hid", Matchers.notNullValue())
                 .body("nid", Matchers.equalTo(primaryPatient.getNid()))
-                .body("first_name", Matchers.equalTo(primaryPatient.getFirstName()))
-                .body("last_name", Matchers.equalTo(primaryPatient.getLastName()))
+                .body("given_name", Matchers.equalTo(primaryPatient.getFirstName()))
+                .body("sur_name", Matchers.equalTo(primaryPatient.getLastName()))
                 .body("date_of_birth", Matchers.equalTo("2000-03-01"))
-                .body("gender", Matchers.equalTo("1"))
+                .body("gender", Matchers.equalTo("M"))
                 .body("occupation", Matchers.equalTo("02"))
                 .body("edu_level", Matchers.equalTo("02"))
-                .body("fathers_first_name", Matchers.equalTo(primaryPatient.getPrimaryContact()))
                 .body("present_address.address_line", Matchers.equalTo(primaryPatient.getAddress().getAddressLine1()))
                 .body("present_address.division_id", Matchers.equalTo("10"))
                 .body("present_address.district_id", Matchers.equalTo("09"))
                 .body("present_address.upazilla_id", Matchers.equalTo("18"))
-                .body("present_address.city_corporation", Matchers.equalTo("16"))
-                .body("present_address.ward", Matchers.equalTo("01"));
+                .body("present_address.city_corporation_id", Matchers.equalTo("16"))
+                .body("present_address.ward_id", Matchers.equalTo("01"));
 
         System.out.println("Patient with NID " + primaryPatient.getNid() + " verified in MCI");
     }
