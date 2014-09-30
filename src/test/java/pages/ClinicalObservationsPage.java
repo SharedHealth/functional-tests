@@ -62,7 +62,9 @@ public class ClinicalObservationsPage extends Page {
         enterChiefComplainData(firstChiefComplain, 1);
         enterChiefComplainData(secondChiefComplain, 2);
         enterChiefComplainData(nonCodedChiefComplain, 3);
+        waitForMillis(1000);
         saveButton.click();
+        waitForMillis(1000);
         System.out.println("Chief Complain Data Entered for Patient.");
 
     }

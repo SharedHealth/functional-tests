@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.WebDriver;
+import utils.WebDriverProperties;
 
 public class MCIIntegrationTests {
 
@@ -27,6 +28,7 @@ public class MCIIntegrationTests {
     public void setUp() {
 
         RestAssured.baseURI = "http://172.18.46.56";
+        RestAssured.baseURI = WebDriverProperties.getProperty("mciURL");
         RestAssured.port = 8081;
         RestAssured.basePath = "/api/v1";
         RestAssured.authentication = basic("mci", "password");
@@ -39,7 +41,31 @@ public class MCIIntegrationTests {
         given().pathParam("nid", "9000000184693")
                 .when().get("/patients?nid={nid}")
                 .then()
-                .body("hid", Matchers.equalTo("5912415956172275713"))
+                .body("results.hid[0]", Matchers.equalTo("5917031305635168257"))
+                .body("results.nid[0]", Matchers.equalTo("9000000184693"))
+                .body("results.given_name[0]", Matchers.equalTo("A184693"))
+                .body("results.sur_name[0]", Matchers.equalTo("ATEST"))
+                .body("results.date_of_birth[0]", Matchers.equalTo("2000-03-01"))
+                .body("results.gender[0]", Matchers.equalTo("M"))
+                .body("results.occupation[0]", Matchers.equalTo("02"))
+                .body("results.edu_level[0]", Matchers.equalTo("02"))
+                .body("results.present_address.address_line[0]", Matchers.equalTo("Test"))
+                .body("results.present_address.division_id[0]", Matchers.equalTo("10"))
+                .body("results.present_address.district_id[0]", Matchers.equalTo("09"))
+                .body("results.present_address.upazilla_id[0]", Matchers.equalTo("18"))
+                .body("results.present_address.city_corporation_id[0]", Matchers.equalTo("16"))
+                .body("results.present_address.ward_id[0]", Matchers.equalTo("01"));
+
+        System.out.println("Patient with NID " + "9000000184693" + " verified in MCI");
+
+    }
+
+
+    @Test
+    public void verifyGetPatientByHID() {
+        given().pathParam("hid", "5917031305635168257")
+                .when().get("/patients/{hid}")
+                .then().body("hid", Matchers.equalTo("5917031305635168257"))
                 .body("nid", Matchers.equalTo("9000000184693"))
                 .body("given_name", Matchers.equalTo("A184693"))
                 .body("sur_name", Matchers.equalTo("ATEST"))
@@ -54,31 +80,7 @@ public class MCIIntegrationTests {
                 .body("present_address.city_corporation_id", Matchers.equalTo("16"))
                 .body("present_address.ward_id", Matchers.equalTo("01"));
 
-        System.out.println("Patient with NID " + "9000000184693" + " verified in MCI");
-
-    }
-
-
-    @Test
-    public void verifyGetPatientByHID() {
-        given().pathParam("hid", "9000000000000351311")
-                .when().get("/patients/{hid}")
-                .then().body("hid", Matchers.equalTo("9000000000000351311"))
-                .body("nid", Matchers.equalTo("9000000351311"))
-                .body("first_name", Matchers.equalTo("A351311"))
-                .body("last_name", Matchers.equalTo("ATEST"))
-                .body("date_of_birth", Matchers.equalTo("2000-03-01"))
-                .body("gender", Matchers.equalTo("1"))
-                .body("occupation", Matchers.equalTo("02"))
-                .body("edu_level", Matchers.equalTo("02"))
-                .body("fathers_first_name", Matchers.equalTo("Primary One"))
-                .body("present_address.address_line", Matchers.equalTo("Test"))
-                .body("present_address.division_id", Matchers.equalTo("40"))
-                .body("present_address.district_id", Matchers.equalTo("4018"))
-                .body("present_address.upazilla_id", Matchers.equalTo("401823"))
-                .body("present_address.union_id", Matchers.equalTo("40010801"));
-
-        System.out.println("Patient with HID " + "9000000000000351311" + " verified in MCI");
+        System.out.println("Patient with HID " + "5912415956172275713" + " verified in MCI");
     }
 
     @Category(MciApiTest.class)
@@ -165,7 +167,7 @@ public class MCIIntegrationTests {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        System.out.println(person.toString());
         given().contentType("application/json")
                 .body(person.toString())
                 .when().post("/patients")
@@ -297,20 +299,20 @@ public class MCIIntegrationTests {
         given().pathParam("nid", primaryPatient.getNid())
                 .when().get("/patients?nid={nid}")
                 .then()
-                .body("hid", Matchers.notNullValue())
-                .body("nid", Matchers.equalTo(primaryPatient.getNid()))
-                .body("given_name", Matchers.equalTo(primaryPatient.getFirstName()))
-                .body("sur_name", Matchers.equalTo(primaryPatient.getLastName()))
-                .body("date_of_birth", Matchers.equalTo("2000-03-01"))
-                .body("gender", Matchers.equalTo("M"))
-                .body("occupation", Matchers.equalTo("02"))
-                .body("edu_level", Matchers.equalTo("02"))
-                .body("present_address.address_line", Matchers.equalTo(primaryPatient.getAddress().getAddressLine1()))
-                .body("present_address.division_id", Matchers.equalTo("10"))
-                .body("present_address.district_id", Matchers.equalTo("09"))
-                .body("present_address.upazilla_id", Matchers.equalTo("18"))
-                .body("present_address.city_corporation_id", Matchers.equalTo("16"))
-                .body("present_address.ward_id", Matchers.equalTo("01"));
+                .body("results.hid[0]", Matchers.notNullValue())
+                .body("results.nid[0]", Matchers.equalTo(primaryPatient.getNid()))
+                .body("results.given_name[0]", Matchers.equalTo(primaryPatient.getFirstName()))
+                .body("results.sur_name[0]", Matchers.equalTo(primaryPatient.getLastName()))
+                .body("results.date_of_birth[0]", Matchers.equalTo("2000-03-01"))
+                .body("results.gender[0]", Matchers.equalTo("M"))
+                .body("results.occupation[0]", Matchers.equalTo("02"))
+                .body("results.edu_level[0]", Matchers.equalTo("02"))
+                .body("results.present_address.address_line[0]", Matchers.equalTo(primaryPatient.getAddress().getAddressLine1()))
+                .body("results.present_address.division_id[0]", Matchers.equalTo("10"))
+                .body("results.present_address.district_id[0]", Matchers.equalTo("09"))
+                .body("results.present_address.upazilla_id[0]", Matchers.equalTo("18"))
+                .body("results.present_address.city_corporation_id[0]", Matchers.equalTo("16"))
+                .body("results.present_address.ward_id[0]", Matchers.equalTo("01"));
 
         System.out.println("Patient with NID " + primaryPatient.getNid() + " verified in MCI");
     }
