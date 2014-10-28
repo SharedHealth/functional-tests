@@ -30,43 +30,27 @@ public class ConceptViewPage extends Page {
 
 
     public void readCurrentConcept(Concept concept) {
-        List<WebElement> allConceptRowElements = webDriver.findElement(By.id("conceptTable")).findElements(By.tagName("tr"));
-
-        HashMap<String, String> headerToDataMap = new HashMap<>();
-        for (WebElement allConceptRowElement : allConceptRowElements) {
-            if (!allConceptRowElement.getAttribute("id").equals("conceptMappingsHeadersRow")     //Skip the Mapping Header Row
-                    && !allConceptRowElement.getAttribute("class").equals("evenRow")             //Skip the Mapping Data Row
-                    && !allConceptRowElement.getText().contains("range values are inclusive")) //Skip the Extra Cell
-            {
-
-                WebElement conceptRowHeader = allConceptRowElement.findElement(By.tagName("th"));
-                String conceptRowHeaderText = conceptRowHeader.getText();
-                String conceptRowDataText = allConceptRowElement.findElement(By.tagName("td")).getText();
-                headerToDataMap.put(conceptRowHeaderText, conceptRowDataText);
-                if (conceptRowHeaderText.equals("Version"))
-                    break;
-            }
-        }
+        HashMap<String, String> headerDataMap = getHeaderDataMap();
 
         List<WebElement> conceptMappingHeaderRowElements = webDriver.findElement(By.id("conceptMappingsHeadersRow")).findElements(By.tagName("th"));
         List<WebElement> conceptMappingDataRowElements = webDriver.findElement(By.className("evenRow")).findElements(By.tagName("td"));
 
         for (int counter = 0; counter < 4; counter++)
-            headerToDataMap.put(conceptMappingHeaderRowElements.get(counter).getText(), conceptMappingDataRowElements.get(counter).getText());
+            headerDataMap.put(conceptMappingHeaderRowElements.get(counter).getText(), conceptMappingDataRowElements.get(counter).getText());
 //        System.out.println(headerToDataMap);
 
         Concept conceptForDiagnosisForVerification = new Concept.ConceptBuilder()
-                .name(headerToDataMap.get("Fully Specified Name"))
-                .synonyms1(headerToDataMap.get("Synonyms"))
-                .shortName(headerToDataMap.get("Short Name"))
-                .description(headerToDataMap.get("Description"))
-                .conceptClass(headerToDataMap.get("Class"))
-                .dataType(headerToDataMap.get("Datatype"))
-                .version(headerToDataMap.get("Version"))
-                .conceptMappingRelationship(headerToDataMap.get("Relationship"))
-                .conceptMappingSource(headerToDataMap.get("Source"))
-                .conceptMappingCode(headerToDataMap.get("Code"))
-                .conceptMappingName(headerToDataMap.get("Name"))
+                .name(headerDataMap.get("Fully Specified Name"))
+                .synonyms1(headerDataMap.get("Synonyms"))
+                .shortName(headerDataMap.get("Short Name"))
+                .description(headerDataMap.get("Description"))
+                .conceptClass(headerDataMap.get("Class"))
+                .dataType(headerDataMap.get("Datatype"))
+                .version(headerDataMap.get("Version"))
+                .conceptMappingRelationship(headerDataMap.get("Relationship"))
+                .conceptMappingSource(headerDataMap.get("Source"))
+                .conceptMappingCode(headerDataMap.get("Code"))
+                .conceptMappingName(headerDataMap.get("Name"))
                 .build();
 
         Assert.assertEquals(concept.getName(), conceptForDiagnosisForVerification.getName());
@@ -86,6 +70,31 @@ public class ConceptViewPage extends Page {
         System.out.println("Concept name :" + concept.getName() + " found in Bahmni OpenMRS");
 
 
+    }
+
+    public String readCurrentConceptAttr(String attr) {
+        return getHeaderDataMap().get(attr);
+    }
+
+    private HashMap<String, String> getHeaderDataMap() {
+        List<WebElement> allConceptRowElements = webDriver.findElement(By.id("conceptTable")).findElements(By.tagName("tr"));
+
+        HashMap<String, String> headerDataMap = new HashMap<>();
+        for (WebElement allConceptRowElement : allConceptRowElements) {
+            if (!allConceptRowElement.getAttribute("id").equals("conceptMappingsHeadersRow")     //Skip the Mapping Header Row
+                    && !allConceptRowElement.getAttribute("class").equals("evenRow")             //Skip the Mapping Data Row
+                    && !allConceptRowElement.getText().contains("range values are inclusive")) //Skip the Extra Cell
+            {
+
+                WebElement conceptRowHeader = allConceptRowElement.findElement(By.tagName("th"));
+                String conceptRowHeaderText = conceptRowHeader.getText();
+                String conceptRowDataText = allConceptRowElement.findElement(By.tagName("td")).getText();
+                headerDataMap.put(conceptRowHeaderText, conceptRowDataText);
+                if (conceptRowHeaderText.equals("Version"))
+                    break;
+            }
+        }
+        return headerDataMap;
     }
 
     private void verifyNumericRanges(Concept concept) {

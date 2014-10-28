@@ -1,6 +1,7 @@
 package tests;
 
 import categories.TrUiTest;
+import com.jayway.restassured.RestAssured;
 import data.ConceptData;
 import domain.Concept;
 import domain.ConceptReferenceTerm;
@@ -19,6 +20,9 @@ import utils.WebDriverProperties;
 import java.io.IOException;
 import java.net.URL;
 
+import static com.jayway.restassured.RestAssured.basic;
+import static com.jayway.restassured.RestAssured.get;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 @Category(TrUiTest.class)
@@ -31,6 +35,10 @@ public class TerminologyRegistryTests {
     @Before
     public void setUp() {
         driver = new FirefoxDriver();
+
+        RestAssured.baseURI = "http://172.18.46.56";
+        RestAssured.port = 9080;
+        RestAssured.authentication = basic("admin", "Admin123");
     }
 
     @Test
@@ -75,6 +83,23 @@ public class TerminologyRegistryTests {
         Feed current = new FeedParser().parse(new URL(WebDriverProperties.getProperty("trInternalURL") + "/ws/atomfeed/" + concept.getConceptClass() + "/recent").openConnection().getInputStream());
 
         assertTrue(current.hasMoreEntriesThan(previous));
+    }
+
+    @Test
+    public void verifyGetConceptByUuidEndpoint() throws IOException {
+        String trInternalUrl = WebDriverProperties.getProperty("trInternalURL");
+        driver.get(trInternalUrl);
+        Concept concept = new Concept.ConceptBuilder().name("true").build();
+        TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
+
+        String uuid = page.login("admin", "Admin123")
+                .goToTRAdministrationPage()
+                .goToConceptDictionaryMaintenancePage()
+                .searchAndViewConceptWithWait(concept)
+                .readCurrentConceptAttr("UUID");
+
+        String url = trInternalUrl + "/ws/rest/v1/tr/concepts/" + uuid;
+        assertEquals(200, get(url).getStatusCode());
     }
 
     @Test
