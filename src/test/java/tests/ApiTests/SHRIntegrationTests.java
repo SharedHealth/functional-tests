@@ -1,4 +1,4 @@
-package tests;
+package tests.ApiTests;
 
 import categories.ShrApiTest;
 import com.jayway.restassured.RestAssured;

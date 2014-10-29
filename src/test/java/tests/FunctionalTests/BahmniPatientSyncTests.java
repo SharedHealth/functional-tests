@@ -1,4 +1,4 @@
-package tests;
+package tests.FunctionalTests;
 
 import categories.MciUiTest;
 import data.PatientData;

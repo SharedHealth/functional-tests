@@ -1,4 +1,4 @@
-package tests;
+package tests.ApiTests;
 
 
 import categories.MciApiTest;

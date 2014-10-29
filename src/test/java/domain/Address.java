@@ -25,11 +25,11 @@ public class Address {
         return union;
     }
 
-    public String getAddressLine1() {
-        return addressLine1;
+    public String getCityCorporation() {
+        return cityCorporation;
     }
 
-
+    public String getAddressLine1() { return addressLine1; }
 
     private Address(AddressBuilder builder) {
         this.division = builder.division;
@@ -50,10 +50,6 @@ public class Address {
         sb.append(", addressLine1='").append(addressLine1).append('\'');
         sb.append('}');
         return sb.toString();
-    }
-
-    public String getCityCorporation() {
-        return cityCorporation;
     }
 
     public static class AddressBuilder {

@@ -1,4 +1,4 @@
-package tests;
+package tests.FunctionalTests;
 
 import categories.ShrUiTest;
 import data.*;
