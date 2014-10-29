@@ -1,4 +1,4 @@
-package tests;
+package tests.functional;
 
 import data.ConceptData;
 import domain.Concept;
