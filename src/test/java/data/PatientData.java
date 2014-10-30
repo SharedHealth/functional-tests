@@ -15,6 +15,15 @@ public class PatientData {
             .addressLine1("Test")
             .build();
 
+    public static Address addressForFacilityOne = new Address.AddressBuilder()
+            .division("DHAKA")
+            .district("DHAKA")
+            .upazilla("DOHAR")
+            .cityCorporation("BILASPUR")
+            .union("MUKSUDPUR")
+            .addressLine1("Test")
+            .build();
+
     private  String id1 = String.valueOf(System.currentTimeMillis()).substring(7);
     private  String id3 = String.valueOf(System.currentTimeMillis() + 1).substring(7);
 
@@ -22,7 +31,7 @@ public class PatientData {
     public  Patient defaultPatient = new Patient.PatientBuilder()
             .firstName("A" + id1).lastName("ATEST")
             .gender("Male").dateOfBirth("01-03-2000")
-            .address(defaultAddress)
+            .address(addressForFacilityOne)
             .nid("9000000" + id1)
             .education("5th Pass and Below")
             .occupation("Agriculture")
