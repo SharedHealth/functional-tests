@@ -3,20 +3,16 @@ package tests.functional;
 import categories.ShrUiTest;
 import data.*;
 import domain.*;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.LoginPage;
 import utils.PageFactoryWithWait;
+import utils.TestSetup;
 import utils.WebDriverProperties;
 
 @Category(ShrUiTest.class)
-public class BahmniEncounterSyncTests {
+public class BahmniEncounterSyncTests extends TestSetup {
 
-    private WebDriver driver;
     protected Patient primaryPatient;
     protected Diagnosis firstDiagnosis;
     protected Diagnosis secondDiagnosis;
@@ -25,11 +21,6 @@ public class BahmniEncounterSyncTests {
     protected ChiefComplain thirdChiefComplain;
     protected Vitals patientVitals;
     protected FamilyHistory patientFamilyHistory;
-
-    @Before
-    public void setUp() {
-        driver = new FirefoxDriver();
-    }
 
     @Test
     public void verifyDiagnosisSync() {
@@ -54,7 +45,6 @@ public class BahmniEncounterSyncTests {
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .ValidateEncounterData(firstDiagnosis).ValidateEncounterData(secondDiagnosis);
     }
-
 
     @Test
     public void verifyChiefComplainSync() {
@@ -82,7 +72,6 @@ public class BahmniEncounterSyncTests {
                 .validateChiefComplainData(thirdChiefComplain);
     }
 
-
     @Test
     public void verifyVitalSync() {
         PatientData dataStore = new PatientData();
@@ -104,7 +93,6 @@ public class BahmniEncounterSyncTests {
                 .validateVitals(patientVitals);
     }
 
-
     @Test
     public void verifyFamilyHistorySync() {
         PatientData dataStore = new PatientData();
@@ -125,11 +113,5 @@ public class BahmniEncounterSyncTests {
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().goToVisitPage()
                 .validateFamilyHistoryData(patientFamilyHistory);
-    }
-
-
-    @After
-    public void tearDown() {
-        driver.quit();
     }
 }

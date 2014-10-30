@@ -22,7 +22,6 @@ import utils.WebDriverProperties;
 public class MCIIntegrationTests {
 
     protected Patient primaryPatient;
-    private static WebDriver driver;
 
     @Before
     public void setUp() {
