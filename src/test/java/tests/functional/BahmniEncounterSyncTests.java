@@ -21,15 +21,17 @@ public class BahmniEncounterSyncTests extends TestSetup {
     protected ChiefComplain thirdChiefComplain;
     protected Vitals patientVitals;
     protected FamilyHistory patientFamilyHistory;
-
+    private String facilityOneInternalURL = WebDriverProperties.getProperty("facilityOneInternalURL");
+    private String facilityTwoInternalURL = WebDriverProperties.getProperty("facilityTwoInternalURL");
     @Test
     public void verifyDiagnosisSync() {
         PatientData dataStore = new PatientData();
-        primaryPatient = dataStore.newPatient1;
+        primaryPatient = dataStore.defaultPatient;
         firstDiagnosis = DiagnosisData.DiagnosisWithReferenceTermForEncounterSync;
         secondDiagnosis = DiagnosisData.DiagnosisWithOutReferenceTermForEncounterSync;
 
-        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
+
+        driver.get(facilityOneInternalURL);
 
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
@@ -37,7 +39,8 @@ public class BahmniEncounterSyncTests extends TestSetup {
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .goToConsultationPage().goToDiagnosisPage().enterDiagnosisDetails(firstDiagnosis, secondDiagnosis);
 
-        driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
+
+        driver.get(facilityTwoInternalURL);
 
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
@@ -49,19 +52,19 @@ public class BahmniEncounterSyncTests extends TestSetup {
     @Test
     public void verifyChiefComplainSync() {
         PatientData dataStore = new PatientData();
-        primaryPatient = dataStore.newPatient1;
+        primaryPatient = dataStore.defaultPatient;
         firstChiefComplain = ChiefComplainData.ChiefComplainWithReferenceTermForEncounterSync;
         secondChiefComplain = ChiefComplainData.ChiefComplainWithOutReferenceTermForEncounterSync;
         thirdChiefComplain = ChiefComplainData.NonCodedChiefComplainForEncounterSync;
 
-        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
+        driver.get(facilityOneInternalURL);
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login("demo")
                 .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().enterChiefComplainDetails(firstChiefComplain, secondChiefComplain, thirdChiefComplain);
 
-        driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
+        driver.get(facilityTwoInternalURL);
 
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
@@ -75,17 +78,17 @@ public class BahmniEncounterSyncTests extends TestSetup {
     @Test
     public void verifyVitalSync() {
         PatientData dataStore = new PatientData();
-        primaryPatient = dataStore.newPatient1;
+        primaryPatient = dataStore.defaultPatient;
         patientVitals = VitalsData.patientVitals;
 
-        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
+        driver.get(facilityOneInternalURL);
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login("demo")
                 .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().enterVitals(patientVitals);
 
-        driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
+        driver.get(facilityTwoInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login("demo")
                 .goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
@@ -96,17 +99,17 @@ public class BahmniEncounterSyncTests extends TestSetup {
     @Test
     public void verifyFamilyHistorySync() {
         PatientData dataStore = new PatientData();
-        primaryPatient = dataStore.newPatient1;
+        primaryPatient = dataStore.defaultPatient;
         patientFamilyHistory = FamilyHistoryData.familyHistory;
 
-        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
+        driver.get(facilityOneInternalURL);
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login("demo")
                 .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().enterFamilyHistory(patientFamilyHistory);
 
-        driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
+        driver.get(facilityTwoInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login("demo")
                 .goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)

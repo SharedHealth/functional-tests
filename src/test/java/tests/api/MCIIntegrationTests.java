@@ -16,7 +16,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.openqa.selenium.WebDriver;
 import utils.WebDriverProperties;
 
 public class MCIIntegrationTests {
@@ -87,7 +86,7 @@ public class MCIIntegrationTests {
     public void verifyCreatePatientWithAllData() {
 
 
-        primaryPatient = new PatientData().newPatient3;
+        primaryPatient = new PatientData().patientWithAllFieldDetails;
 
         JSONObject person = new JSONObject();
         JSONObject present_address = new JSONObject();
@@ -265,7 +264,7 @@ public class MCIIntegrationTests {
     public void verifyCreatePatient() {
 
         PatientData dataStore = new PatientData();
-        primaryPatient = dataStore.newPatient1;
+        primaryPatient = dataStore.defaultPatient;
 
         JSONObject person = new JSONObject();
         JSONObject present_address = new JSONObject();

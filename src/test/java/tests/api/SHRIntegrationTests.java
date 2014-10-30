@@ -37,7 +37,7 @@ public class SHRIntegrationTests {
         RestAssured.authentication = basic("shr", "password");
 
         PatientData dataStore = new PatientData();
-        hid = patientRepo.create(dataStore.newPatient1);
+        hid = patientRepo.create(dataStore.defaultPatient);
         System.out.println("Patient with hid " + hid + " is created.");
     }
 
