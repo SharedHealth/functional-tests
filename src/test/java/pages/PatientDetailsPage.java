@@ -111,6 +111,24 @@ public class PatientDetailsPage extends Page{
 
 
     }
+    public PatientVisitInformationPage editPatientDetails(Patient primaryPatient) {
+        this.waitForMillis(1000);
+
+        setText(patientFirstName,primaryPatient.getFirstName());
+        setText(patientLastName,primaryPatient.getLastName());
+        setText(patientAddressLine1,primaryPatient.getAddress().getAddressLine1());
+//        enterVisitDetails.click();
+        patientNID.click();
+        patientNID.sendKeys(Keys.RETURN);
+        System.out.println("Patient with NID: "+ primaryPatient.getNid()+ " updated in Bahmni");
+        return initialize(webDriver, PatientVisitInformationPage.class);
+
+
+
+
+
+
+    }
 
     public PatientVisitInformationPage createPatient(Patient primaryPatient) {
 

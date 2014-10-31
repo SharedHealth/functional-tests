@@ -33,7 +33,7 @@ public class MCIPatientSearchPage extends Page{
 
     }
 
-    public PatientDetailsPage searchPatientByNID(String nid) {
+    public PatientDetailsPage searchPatientByNIDAndDownload(String nid) {
         setText(patientNID,nid);
         patientNID.sendKeys(Keys.ENTER);
         WebElement downloadButton = this.waitFindElement(By.xpath("//button[@class='download-btn btn']")) ;

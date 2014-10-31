@@ -37,6 +37,15 @@ public class PatientData {
             .occupation("Agriculture")
             .primaryContact("Primary One").build();
 
+    public  Patient defaultPatientWithEditedName = new Patient.PatientBuilder()
+            .firstName("A" + id1+"Edit").lastName("ATESTEdit")
+            .gender("Male").dateOfBirth("01-03-2000")
+            .address(addressForFacilityOne)
+            .nid("9000000" + id1)
+            .education("5th Pass and Below")
+            .occupation("Agriculture")
+            .primaryContact("Primary One").build();
+
     public  Patient patientWithAllFieldDetails = new Patient.PatientBuilder()
             .firstName("A" + id3).lastName("ATEST")
             .gender("Male").dateOfBirth("01-03-2000")

@@ -28,7 +28,28 @@ public class BahmniPatientSyncTests extends TestSetup{
 
         driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login().goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).verifyPatientDetails(primaryPatient);
+        page.login().goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).verifyPatientDetails(primaryPatient);
+
+    }
+
+    @Test
+    public void verifySyncForUpdatePatient () {
+
+        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
+
+        PatientData dataStore = new PatientData();
+        primaryPatient = dataStore.defaultPatient;
+        LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login().goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).logout();
+
+        primaryPatient = dataStore.defaultPatientWithEditedName;
+        driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
+        page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login().goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).editPatientDetails(primaryPatient);
+
+        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
+        page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login().goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).verifyPatientDetails(primaryPatient);
 
     }
 }

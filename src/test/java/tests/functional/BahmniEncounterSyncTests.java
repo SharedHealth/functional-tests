@@ -44,7 +44,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
 
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
-        page.login("demo").goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
+        page.login("demo").goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .ValidateEncounterData(firstDiagnosis).ValidateEncounterData(secondDiagnosis);
     }
@@ -69,7 +69,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
         page.login("demo")
-                .goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
+                .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).startConsultation().goToVisitPage()
                 .validateChiefComplainData(firstChiefComplain).validateChiefComplainData(secondChiefComplain)
                 .validateChiefComplainData(thirdChiefComplain);
@@ -91,7 +91,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
         driver.get(facilityTwoInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login("demo")
-                .goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
+                .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .validateVitals(patientVitals);
     }
@@ -112,7 +112,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
         driver.get(facilityTwoInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login("demo")
-                .goToNationalRegistry().searchPatientByNID(primaryPatient.getNid()).startVisit(primaryPatient)
+                .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().goToVisitPage()
                 .validateFamilyHistoryData(patientFamilyHistory);
