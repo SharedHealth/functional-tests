@@ -51,7 +51,7 @@ public class ClinicalDashboardPage extends Page {
         return initialize(webDriver, ClinicalObservationsPage.class);
     }
 
-    public ClinicalDashboardPage ValidateEncounterData(Diagnosis expectedDiagnosis) {
+    public ClinicalDashboardPage verifyEncounterData(Diagnosis expectedDiagnosis) {
         List<WebElement> diagnosisListElements = driver.findElements(By.xpath("//h4[@class='diagnosis-name ng-binding']"));
         ArrayList<String> diagnosisList = new ArrayList<String>();
 
@@ -64,7 +64,7 @@ public class ClinicalDashboardPage extends Page {
     }
 
 
-    public void validateVitals(Vitals patientVitals) {
+    public void verifyVitals(Vitals patientVitals) {
         waitForMillis(1000);
 
         List<WebElement> vitalsList = driver.findElements(By.cssSelector(".form-field"));

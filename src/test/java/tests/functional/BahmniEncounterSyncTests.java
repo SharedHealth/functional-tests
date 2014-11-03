@@ -23,6 +23,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
     protected FamilyHistory patientFamilyHistory;
     private String facilityOneInternalURL = WebDriverProperties.getProperty("facilityOneInternalURL");
     private String facilityTwoInternalURL = WebDriverProperties.getProperty("facilityTwoInternalURL");
+
     @Test
     public void verifyDiagnosisSync() {
         PatientData dataStore = new PatientData();
@@ -30,9 +31,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
         firstDiagnosis = DiagnosisData.DiagnosisWithReferenceTermForEncounterSync;
         secondDiagnosis = DiagnosisData.DiagnosisWithOutReferenceTermForEncounterSync;
 
-
         driver.get(facilityOneInternalURL);
-
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
         page.login("demo").goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient)
@@ -46,7 +45,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
 
         page.login("demo").goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
-                .ValidateEncounterData(firstDiagnosis).ValidateEncounterData(secondDiagnosis);
+                .verifyEncounterData(firstDiagnosis).verifyEncounterData(secondDiagnosis);
     }
 
     @Test
@@ -65,14 +64,14 @@ public class BahmniEncounterSyncTests extends TestSetup {
                 .startConsultation().enterChiefComplainDetails(firstChiefComplain, secondChiefComplain, thirdChiefComplain);
 
         driver.get(facilityTwoInternalURL);
-
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
         page.login("demo")
                 .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).startConsultation().goToVisitPage()
-                .validateChiefComplainData(firstChiefComplain).validateChiefComplainData(secondChiefComplain)
-                .validateChiefComplainData(thirdChiefComplain);
+                .verifyCheifComplainData(firstChiefComplain)
+                .verifyCheifComplainData(secondChiefComplain)
+                .verifyCheifComplainData(thirdChiefComplain);
     }
 
     @Test
@@ -93,7 +92,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
         page.login("demo")
                 .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
-                .validateVitals(patientVitals);
+                .verifyVitals(patientVitals);
     }
 
     @Test
@@ -115,6 +114,6 @@ public class BahmniEncounterSyncTests extends TestSetup {
                 .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().goToVisitPage()
-                .validateFamilyHistoryData(patientFamilyHistory);
+                .verifyFamilyHistoryData(patientFamilyHistory);
     }
 }

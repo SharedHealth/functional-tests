@@ -53,7 +53,7 @@ public class ClinicalVisitPage extends Page {
         return initialize(driver, ClinicalObservationsPage.class);
     }
 
-    public ClinicalVisitPage validateChiefComplainData(ChiefComplain expectedChiefComplain) {
+    public ClinicalVisitPage verifyCheifComplainData(ChiefComplain expectedChiefComplain) {
         waitFindElement(By.xpath("//h2[text()='Observations']"));
 
         List<WebElement> chiefComplainListElements = driver.findElements(By.cssSelector(".chief-notes"));
@@ -70,7 +70,7 @@ public class ClinicalVisitPage extends Page {
 
     }
 
-    public void validateFamilyHistoryData(FamilyHistory expectedFamilyHistory) {
+    public void verifyFamilyHistoryData(FamilyHistory expectedFamilyHistory) {
         waitForMillis(1000);
         WebElement familyHistoryTable = webDriver.findElement(By.xpath("//table[contains(., 'Family History')]"));
 
