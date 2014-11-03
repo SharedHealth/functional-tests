@@ -1,4 +1,4 @@
-package tests.functional;
+package tests.datasetup;
 
 import data.ConceptData;
 import domain.Concept;
