@@ -13,43 +13,69 @@ import utils.WebDriverProperties;
 @Category(MciUiTest.class)
 public class BahmniPatientSyncTests extends TestSetup{
 
+    private String facilityOneInternalURL = WebDriverProperties.getProperty("facilityOneInternalURL");
+    private String facilityTwoInternalURL = WebDriverProperties.getProperty("facilityTwoInternalURL");
     protected Patient primaryPatient;
-
 
     @Test
     public void verifyPatientSync() {
 
-        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
+        driver.get(facilityOneInternalURL);
 
         PatientData dataStore = new PatientData();
         primaryPatient = dataStore.defaultPatient;
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login().goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).logout();
+        page.
+                login()
+                .goToRegistrationPage()
+                .goToCreatePatientPage()
+                .createPatient(primaryPatient)
+                .logout();
 
-        driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
+        driver.get(facilityTwoInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login().goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).verifyPatientDetails(primaryPatient);
+
+        page.
+                login()
+                .goToNationalRegistry()
+                .searchPatientByNIDAndDownload(primaryPatient.getNid())
+                .verifyPatientDetails(primaryPatient);
 
     }
 
     @Test
     public void verifySyncForUpdatePatient () {
 
-        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
+        driver.get(facilityOneInternalURL);
 
         PatientData dataStore = new PatientData();
         primaryPatient = dataStore.defaultPatient;
+
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login().goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).logout();
+        page.
+                login()
+                .goToRegistrationPage()
+                .goToCreatePatientPage()
+                .createPatient(primaryPatient)
+                .logout();
 
         primaryPatient = dataStore.defaultPatientWithEditedName;
-        driver.get(WebDriverProperties.getProperty("facilityTwoInternalURL"));
-        page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login().goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).editPatientDetails(primaryPatient);
+        driver.get(facilityOneInternalURL);
 
-        driver.get(WebDriverProperties.getProperty("facilityOneInternalURL"));
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login().goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).verifyPatientDetails(primaryPatient);
+        page.
+                login()
+                .goToNationalRegistry()
+                .searchPatientByNIDAndDownload(primaryPatient.getNid())
+                .editPatientDetails(primaryPatient);
+
+        driver.get(facilityOneInternalURL);
+        page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page
+                .login()
+                .goToNationalRegistry()
+                .searchPatientByNIDAndDownload(primaryPatient.getNid())
+                .verifyPatientDetails(primaryPatient);
 
     }
 }
