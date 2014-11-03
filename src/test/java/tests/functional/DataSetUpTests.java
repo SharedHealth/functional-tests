@@ -18,6 +18,10 @@ public class DataSetUpTests {
     protected ConceptReferenceTerm conceptReferenceTerm;
     protected Concept concept;
 
+    /**
+     * These tests will remain ignored
+     * These would be used as a one time run to setup data on any environment on need basis.
+     */
 
     @Test
     @Ignore
