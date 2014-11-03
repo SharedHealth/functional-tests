@@ -1,6 +1,6 @@
 package tests.functional;
 
-import categories.MciUiTest;
+import categories.FunctionalTest;
 import data.PatientData;
 import domain.Patient;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import utils.PageFactoryWithWait;
 import utils.TestSetup;
 import utils.WebDriverProperties;
 
-@Category(MciUiTest.class)
+@Category(FunctionalTest.class)
 public class BahmniPatientSyncTests extends TestSetup{
 
     private String facilityOneInternalURL = WebDriverProperties.getProperty("facilityOneInternalURL");

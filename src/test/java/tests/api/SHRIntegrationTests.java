@@ -1,5 +1,6 @@
 package tests.api;
 
+import categories.ApiTest;
 import categories.ShrApiTest;
 import com.jayway.restassured.RestAssured;
 import static com.jayway.restassured.RestAssured.basic;
@@ -23,7 +24,7 @@ import repo.PatientRepo;
 import java.util.HashMap;
 import java.util.Map;
 
-@Category(ShrApiTest.class)
+@Category(ApiTest.class)
 public class SHRIntegrationTests {
 
     private PatientRepo patientRepo = new PatientRepo();

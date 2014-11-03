@@ -24,39 +24,9 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
 }
 
-task runShrUiTests(type: Test) {
-    useJUnit {
-        includeCategories 'categories.ShrUiTest'
-    }
-}
-
-task runShrApiTests(type: Test) {
-    useJUnit {
-        includeCategories 'categories.ShrApiTest'
-    }
-}
-
-task runMciUiTests(type: Test) {
-    useJUnit {
-        includeCategories 'categories.MciUiTest'
-    }
-}
-
-task runMciApiTests(type: Test) {
-    useJUnit {
-        includeCategories 'categories.MciApiTest'
-    }
-}
-
-task runTrUiTests(type: Test) {
-    useJUnit {
-        includeCategories 'categories.TrUiTest'
-    }
-}
-
-task runUiTests(type: Test) {
-    useJUnit {
-        includeCategories 'categories.UiTest'
+task runFunctionalTest(type: Test){
+    useJUnit{
+        includeCategories 'categories.FunctionalTest'
     }
 }
 

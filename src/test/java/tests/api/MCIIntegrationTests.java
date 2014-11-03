@@ -1,11 +1,9 @@
 package tests.api;
 
 
+import categories.ApiTest;
 import categories.MciApiTest;
 import com.jayway.restassured.RestAssured;
-import static com.jayway.restassured.RestAssured.basic;
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 import com.jayway.restassured.config.RestAssuredConfig;
 import data.PatientData;
 import domain.Patient;
@@ -18,6 +16,11 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import utils.WebDriverProperties;
 
+import static com.jayway.restassured.RestAssured.basic;
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
+
+@Category(ApiTest.class)
 public class MCIIntegrationTests {
 
     protected Patient primaryPatient;

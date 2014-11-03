@@ -1,6 +1,6 @@
 package tests.functional;
 
-import categories.ShrUiTest;
+import categories.FunctionalTest;
 import data.*;
 import domain.*;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import utils.PageFactoryWithWait;
 import utils.TestSetup;
 import utils.WebDriverProperties;
 
-@Category(ShrUiTest.class)
+@Category(FunctionalTest.class)
 public class BahmniEncounterSyncTests extends TestSetup {
 
     protected Patient primaryPatient;
