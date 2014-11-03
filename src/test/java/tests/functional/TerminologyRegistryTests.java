@@ -1,4 +1,4 @@
-package tests.api;
+package tests.functional;
 
 import com.jayway.restassured.RestAssured;
 import data.ConceptData;
