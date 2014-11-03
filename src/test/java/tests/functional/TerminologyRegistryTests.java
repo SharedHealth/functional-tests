@@ -1,5 +1,6 @@
 package tests.functional;
 
+import categories.FunctionalTest;
 import com.jayway.restassured.RestAssured;
 import data.ConceptData;
 import domain.Concept;
@@ -8,6 +9,7 @@ import domain.Feed;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.TRLoginPage;
@@ -38,6 +40,7 @@ public class TerminologyRegistryTests {
         RestAssured.authentication = basic("admin", "Admin123");
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifyConceptSyncFromTR() {
 
@@ -56,6 +59,7 @@ public class TerminologyRegistryTests {
         page.login("admin", "test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifyThatConceptIsPublishedToFeed() throws IOException {
 
@@ -82,6 +86,7 @@ public class TerminologyRegistryTests {
         assertTrue(current.hasMoreEntriesThan(previous));
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifyGetConceptByUuidEndpoint() throws IOException {
         String trInternalUrl = WebDriverProperties.getProperty("trInternalURL");
@@ -99,6 +104,7 @@ public class TerminologyRegistryTests {
         assertEquals(200, get(url).getStatusCode());
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifyEditConceptSyncFromTR() {
 
@@ -122,6 +128,7 @@ public class TerminologyRegistryTests {
         page.login("admin", "test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifySyncOfFindingFromTR() {
         System.out.println("tr tests");
@@ -140,6 +147,7 @@ public class TerminologyRegistryTests {
         page.login("admin", "test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifySyncOfEditFindingFromTR() {
 
@@ -163,6 +171,7 @@ public class TerminologyRegistryTests {
         page.login("admin", "test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifyReferenceTermSyncFromTR() {
 
@@ -180,6 +189,7 @@ public class TerminologyRegistryTests {
                 .searchAndEditReferenceWithWait(conceptReferenceTerm).verifyReferenceTerm(conceptReferenceTerm);
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifyEditReferenceTermSyncFromTR() {
 
@@ -202,6 +212,7 @@ public class TerminologyRegistryTests {
 
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifySyncOfNumericConceptsFromTR() {
 
@@ -221,6 +232,7 @@ public class TerminologyRegistryTests {
         page.login("admin", "test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifySyncOfNumericConceptsEditFromTR() {
 
