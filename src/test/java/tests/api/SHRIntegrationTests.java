@@ -24,7 +24,6 @@ import repo.PatientRepo;
 import java.util.HashMap;
 import java.util.Map;
 
-@Category(ApiTest.class)
 public class SHRIntegrationTests {
 
     private PatientRepo patientRepo = new PatientRepo();
@@ -42,6 +41,7 @@ public class SHRIntegrationTests {
         System.out.println("Patient with hid " + hid + " is created.");
     }
 
+    @Category(ApiTest.class)
     @Test
     public void verifyGetEncounterBundle() {
         String json = replaceWithProperHid(validEncounter());
@@ -63,6 +63,7 @@ public class SHRIntegrationTests {
         System.out.println("Encounter Bundle created in shr with encounterId " + encounterId);
     }
 
+    @Category(ApiTest.class)
     @Test
     public void shouldAcceptValidEncounter() throws Exception {
         String json = replaceWithProperHid(validEncounter());
@@ -81,6 +82,7 @@ public class SHRIntegrationTests {
                 .then().extract().body().as(Map.class);
     }
 
+    @Category(ApiTest.class)
     @Test
     public void shouldRejectEncounterWithoutSystemForDiagnosis() {
         String json = replaceWithProperHid(EncounterBundleData.withMissingSystemForDiagnosis());
@@ -89,6 +91,7 @@ public class SHRIntegrationTests {
         assertThat(response.get("code").toString(), is("514"));
     }
 
+    @Category(ApiTest.class)
     @Test
     public void shouldRejectEncounterWithInvalidCodeForDiagnosis() throws Exception {
         String json = replaceWithProperHid(EncounterBundleData.withInvalidCodeForDiagnosis());
@@ -97,6 +100,7 @@ public class SHRIntegrationTests {
         assertThat(response.get("code").toString(), is("511"));
     }
 
+    @Category(ApiTest.class)
     @Test
     public void shouldRejectEncounterWithOneInvalidCodeForDiagnosis() throws Exception {
         String json = replaceWithProperHid(EncounterBundleData.withInvalidCodeForDiagnosis());

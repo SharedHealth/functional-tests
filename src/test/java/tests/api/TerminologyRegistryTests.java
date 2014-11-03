@@ -1,6 +1,5 @@
 package tests.api;
 
-import categories.ApiTest;
 import com.jayway.restassured.RestAssured;
 import data.ConceptData;
 import domain.Concept;
@@ -9,7 +8,6 @@ import domain.Feed;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.TRLoginPage;
@@ -25,7 +23,6 @@ import static com.jayway.restassured.RestAssured.get;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
-@Category(ApiTest.class)
 public class TerminologyRegistryTests {
 
     static WebDriver driver;

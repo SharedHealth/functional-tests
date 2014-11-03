@@ -10,7 +10,7 @@ import utils.PageFactoryWithWait;
 import utils.TestSetup;
 import utils.WebDriverProperties;
 
-@Category(FunctionalTest.class)
+
 public class BahmniEncounterSyncTests extends TestSetup {
 
     protected Patient primaryPatient;
@@ -24,6 +24,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
     private String facilityOneInternalURL = WebDriverProperties.getProperty("facilityOneInternalURL");
     private String facilityTwoInternalURL = WebDriverProperties.getProperty("facilityTwoInternalURL");
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifyDiagnosisSync() {
         PatientData dataStore = new PatientData();
@@ -48,6 +49,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
                 .verifyEncounterData(firstDiagnosis).verifyEncounterData(secondDiagnosis);
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifyChiefComplainSync() {
         PatientData dataStore = new PatientData();
@@ -74,6 +76,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
                 .verifyCheifComplainData(thirdChiefComplain);
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifyVitalSync() {
         PatientData dataStore = new PatientData();
@@ -95,6 +98,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
                 .verifyVitals(patientVitals);
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifyFamilyHistorySync() {
         PatientData dataStore = new PatientData();

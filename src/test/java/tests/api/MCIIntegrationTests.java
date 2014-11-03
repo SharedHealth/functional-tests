@@ -20,7 +20,7 @@ import static com.jayway.restassured.RestAssured.basic;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
 
-@Category(ApiTest.class)
+
 public class MCIIntegrationTests {
 
     protected Patient primaryPatient;
@@ -37,6 +37,7 @@ public class MCIIntegrationTests {
         RestAssured.config = new RestAssuredConfig().encoderConfig(encoderConfig().defaultContentCharset("UTF-8"));
     }
 
+    @Category(ApiTest.class)
     @Test
     public void verifyGetPatientByNID() {
         given().pathParam("nid", "9000000184693")
@@ -61,7 +62,7 @@ public class MCIIntegrationTests {
 
     }
 
-
+    @Category(ApiTest.class)
     @Test
     public void verifyGetPatientByHID() {
         given().pathParam("hid", "5917031305635168257")
@@ -84,7 +85,7 @@ public class MCIIntegrationTests {
         System.out.println("Patient with HID " + "5912415956172275713" + " verified in MCI");
     }
 
-    @Category(MciApiTest.class)
+    @Category(ApiTest.class)
     @Test
     public void verifyCreatePatientWithAllData() {
 
@@ -262,7 +263,7 @@ public class MCIIntegrationTests {
 
     }
 
-    @Category(MciApiTest.class)
+    @Category(ApiTest.class)
     @Test
     public void verifyCreatePatient() {
 

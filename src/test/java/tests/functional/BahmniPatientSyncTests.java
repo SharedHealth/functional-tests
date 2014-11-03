@@ -10,13 +10,14 @@ import utils.PageFactoryWithWait;
 import utils.TestSetup;
 import utils.WebDriverProperties;
 
-@Category(FunctionalTest.class)
+
 public class BahmniPatientSyncTests extends TestSetup{
 
     private String facilityOneInternalURL = WebDriverProperties.getProperty("facilityOneInternalURL");
     private String facilityTwoInternalURL = WebDriverProperties.getProperty("facilityTwoInternalURL");
     protected Patient primaryPatient;
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifyPatientSync() {
 
@@ -43,6 +44,7 @@ public class BahmniPatientSyncTests extends TestSetup{
 
     }
 
+    @Category(FunctionalTest.class)
     @Test
     public void verifySyncForUpdatePatient () {
 
