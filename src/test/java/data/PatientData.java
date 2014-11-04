@@ -24,6 +24,15 @@ public class PatientData {
             .addressLine1("Test")
             .build();
 
+    public static Address addressForFacilityTwo = new Address.AddressBuilder()
+            .division("DHAKA")
+            .district("DHAKA")
+            .upazilla("DHAMRAI")
+            .cityCorporation("AMTA")
+            .union("SUTI PARA")
+            .addressLine1("Test")
+            .build();
+
     private  String id1 = String.valueOf(System.currentTimeMillis()).substring(7);
     private  String id3 = String.valueOf(System.currentTimeMillis() + 1).substring(7);
 

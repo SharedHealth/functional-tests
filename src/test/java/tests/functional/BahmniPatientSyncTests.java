@@ -62,14 +62,15 @@ public class BahmniPatientSyncTests extends TestSetup{
                 .logout();
 
         primaryPatient = dataStore.defaultPatientWithEditedName;
-        driver.get(facilityOneInternalURL);
+        driver.get(facilityTwoInternalURL);
 
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.
                 login()
                 .goToNationalRegistry()
                 .searchPatientByNIDAndDownload(primaryPatient.getNid())
-                .editPatientDetails(primaryPatient);
+                .editPatientDetails(primaryPatient)
+                .logout();
 
         driver.get(facilityOneInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
