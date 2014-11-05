@@ -18,18 +18,18 @@ public class PatientData {
     public static Address addressForFacilityOne = new Address.AddressBuilder()
             .division("DHAKA")
             .district("DHAKA")
-            .upazilla("DOHAR")
-            .cityCorporation("BILASPUR")
-            .union("MUKSUDPUR")
+            .upazilla("DHAMRAI")
+            .cityCorporation("AMTA")
+            .union("SUTI PARA")
             .addressLine1("Test")
             .build();
 
     public static Address addressForFacilityTwo = new Address.AddressBuilder()
             .division("DHAKA")
             .district("DHAKA")
-            .upazilla("DHAMRAI")
-            .cityCorporation("AMTA")
-            .union("SUTI PARA")
+            .upazilla("DOHAR")
+            .cityCorporation("BILASPUR")
+            .union("MUKSUDPUR")
             .addressLine1("Test")
             .build();
 
@@ -45,11 +45,19 @@ public class PatientData {
             .education("5th Pass and Below")
             .occupation("Agriculture")
             .primaryContact("Primary One").build();
-
     public  Patient defaultPatientWithEditedName = new Patient.PatientBuilder()
             .firstName("A" + id1+"Edit").lastName("ATESTEdit")
             .gender("Male").dateOfBirth("01-03-2000")
             .address(addressForFacilityOne)
+            .nid("9000000" + id1)
+            .education("5th Pass and Below")
+            .occupation("Agriculture")
+            .primaryContact("Primary One").build();
+
+    public  Patient patientForFacilityTwoCatchment = new Patient.PatientBuilder()
+            .firstName("A" + id1).lastName("ATEST")
+            .gender("Male").dateOfBirth("01-03-2000")
+            .address(addressForFacilityTwo)
             .nid("9000000" + id1)
             .education("5th Pass and Below")
             .occupation("Agriculture")

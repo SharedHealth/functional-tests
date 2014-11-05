@@ -75,7 +75,6 @@ public class BahmniEncounterSyncTests extends TestSetup {
                 .verifyCheifComplainData(secondChiefComplain)
                 .verifyCheifComplainData(thirdChiefComplain);
     }
-
     @Category(FunctionalTest.class)
     @Test
     public void verifyVitalSync() {
@@ -119,5 +118,32 @@ public class BahmniEncounterSyncTests extends TestSetup {
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().goToVisitPage()
                 .verifyFamilyHistoryData(patientFamilyHistory);
+    }
+
+    @Category(FunctionalTest.class)
+    @Test
+    public void verifyEncounterSyncByCatchment() {
+        PatientData dataStore = new PatientData();
+        primaryPatient = dataStore.patientForFacilityTwoCatchment;
+        firstChiefComplain = ChiefComplainData.ChiefComplainWithReferenceTermForEncounterSync;
+        secondChiefComplain = ChiefComplainData.ChiefComplainWithOutReferenceTermForEncounterSync;
+        thirdChiefComplain = ChiefComplainData.NonCodedChiefComplainForEncounterSync;
+
+        driver.get(facilityOneInternalURL);
+        LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login("demo")
+                .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
+                .goToClinicalPage().goToPatientDashboard(primaryPatient)
+                .startConsultation().enterChiefComplainDetails(firstChiefComplain, secondChiefComplain, thirdChiefComplain);
+
+        driver.get(facilityTwoInternalURL);
+        page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+
+        page.login("demo")
+                .waitForCatchmentSync()
+                .goToClinicalPage().goToPatientDashboard(primaryPatient).startConsultation().goToVisitPage()
+                .verifyCheifComplainData(firstChiefComplain)
+                .verifyCheifComplainData(secondChiefComplain)
+                .verifyCheifComplainData(thirdChiefComplain);
     }
 }

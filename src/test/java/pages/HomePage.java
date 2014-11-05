@@ -53,4 +53,9 @@ public class HomePage extends Page {
         nationalRegistrySearchButton.click();
         return initialize(webDriver, MCIPatientSearchPage.class);
     }
+
+    public HomePage waitForCatchmentSync() {
+        waitForMillis(125000);
+        return initialize(webDriver, HomePage.class);
+    }
 }
