@@ -52,7 +52,7 @@ public class ClinicalDashboardPage extends Page {
     }
 
     public ClinicalDashboardPage verifyEncounterData(Diagnosis expectedDiagnosis) {
-        List<WebElement> diagnosisListElements = driver.findElements(By.xpath("//h4[@class='diagnosis-name ng-binding']"));
+        List<WebElement> diagnosisListElements = driver.findElements(By.xpath("//label[@class='diagnosis-name ng-binding']"));
         ArrayList<String> diagnosisList = new ArrayList<String>();
 
         for (WebElement diagnosis : diagnosisListElements)
@@ -67,12 +67,15 @@ public class ClinicalDashboardPage extends Page {
     public void verifyVitals(Vitals patientVitals) {
         waitForMillis(1000);
 
-        List<WebElement> vitalsList = driver.findElements(By.cssSelector(".form-field"));
+        List<WebElement> vitalsList = driver.findElements(By.xpath("//li[@class='ng-scope']"));
         HashMap<String, String> vitals = new HashMap();
         for (WebElement vital : vitalsList) {
-            String vitalName = vital.findElement(By.cssSelector(".field-attribute")).getText();
-            String vitalValue = vital.findElement(By.cssSelector(".value-text-only")).getText();
-            vitals.put(vitalName, vitalValue);
+            if (vital.findElements(By.cssSelector(".field-attribute")).size()>0)   {
+                String vitalName = vital.findElement(By.cssSelector(".field-attribute")).getText();
+            if (vital.findElements(By.cssSelector(".value-text-only")).size()>0){
+                String vitalValue = vital.findElement(By.cssSelector(".value-text-only")).getText();
+
+            vitals.put(vitalName, vitalValue);                                      }}
 
         }
         Assert.assertEquals("Vital Verification Temperature ", patientVitals.getTemperature(), vitals.get("Temperature"));

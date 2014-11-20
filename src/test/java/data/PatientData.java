@@ -43,7 +43,7 @@ public class PatientData {
             .address(addressForFacilityOne)
             .nid("9000000" + id1)
             .education("5th Pass and Below")
-            .occupation("Agriculture")
+            .occupation("Business")
             .primaryContact("Primary One").build();
     public  Patient defaultPatientWithEditedName = new Patient.PatientBuilder()
             .firstName("A" + id1+"Edit").lastName("ATESTEdit")
@@ -51,7 +51,7 @@ public class PatientData {
             .address(addressForFacilityOne)
             .nid("9000000" + id1)
             .education("5th Pass and Below")
-            .occupation("Agriculture")
+            .occupation("Business")
             .primaryContact("Primary One").build();
 
     public  Patient patientForFacilityTwoCatchment = new Patient.PatientBuilder()
@@ -60,7 +60,7 @@ public class PatientData {
             .address(addressForFacilityTwo)
             .nid("9000000" + id1)
             .education("5th Pass and Below")
-            .occupation("Agriculture")
+            .occupation("Business")
             .primaryContact("Primary One").build();
 
     public  Patient patientWithAllFieldDetails = new Patient.PatientBuilder()
@@ -68,7 +68,7 @@ public class PatientData {
             .gender("Male").dateOfBirth("01-03-2000")
             .address(defaultAddress)
             .education("5th Pass and Below")
-            .occupation("Agriculture")
+            .occupation("Business")
             .primaryContact("Primary One")
             .binBRN("90000000000" + id3).nid("9000000" + id3).uid("90000" + id3)
             .fatherBRN("91000000000" + id3).fatherNid("9100000" + id3).fatherUid("91000" + id3)

@@ -35,7 +35,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
         driver.get(facilityOneInternalURL);
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
-        page.login("demo").goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient)
+        page.login().goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .goToConsultationPage().goToDiagnosisPage().enterDiagnosisDetails(firstDiagnosis, secondDiagnosis);
 
@@ -44,7 +44,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
 
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
-        page.login("demo").goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
+        page.login().goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .verifyEncounterData(firstDiagnosis).verifyEncounterData(secondDiagnosis);
     }
@@ -60,7 +60,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
 
         driver.get(facilityOneInternalURL);
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login("demo")
+        page.login()
                 .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().enterChiefComplainDetails(firstChiefComplain, secondChiefComplain, thirdChiefComplain);
@@ -68,7 +68,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
         driver.get(facilityTwoInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
-        page.login("demo")
+        page.login()
                 .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).startConsultation().goToVisitPage()
                 .verifyCheifComplainData(firstChiefComplain)
@@ -84,21 +84,21 @@ public class BahmniEncounterSyncTests extends TestSetup {
 
         driver.get(facilityOneInternalURL);
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login("demo")
+        page.login()
                 .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().enterVitals(patientVitals);
 
         driver.get(facilityTwoInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login("demo")
+        page.login()
                 .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .verifyVitals(patientVitals);
     }
 
-    @Category(FunctionalTest.class)
-    @Test
+//    @Category(FunctionalTest.class)
+//    @Test
     public void verifyFamilyHistorySync() {
         PatientData dataStore = new PatientData();
         primaryPatient = dataStore.defaultPatient;
@@ -106,14 +106,14 @@ public class BahmniEncounterSyncTests extends TestSetup {
 
         driver.get(facilityOneInternalURL);
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login("demo")
+        page.login()
                 .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().enterFamilyHistory(patientFamilyHistory);
 
         driver.get(facilityTwoInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login("demo")
+        page.login()
                 .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().goToVisitPage()
@@ -131,7 +131,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
 
         driver.get(facilityOneInternalURL);
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login("demo")
+        page.login()
                 .goToRegistrationPage().goToCreatePatientPage().createPatient(primaryPatient).goToHomePage()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().enterChiefComplainDetails(firstChiefComplain, secondChiefComplain, thirdChiefComplain);
@@ -139,7 +139,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
         driver.get(facilityTwoInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
-        page.login("demo")
+        page.login()
                 .waitForCatchmentSync()
                 .goToClinicalPage().goToPatientDashboard(primaryPatient).startConsultation().goToVisitPage()
                 .verifyCheifComplainData(firstChiefComplain)

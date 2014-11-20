@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.Select;
 
 import static utils.PageFactoryWithWait.initialize;
 
@@ -14,6 +15,8 @@ public class LoginPage extends Page {
     private WebElement userName;
     @FindBy(id = "password")
     private WebElement password;
+    @FindBy(id = "location")
+    private WebElement location;
     @FindBy(className = "confirm")
     private WebElement loginButton;
 
@@ -45,6 +48,9 @@ public class LoginPage extends Page {
 
         userName.sendKeys("Demo");
         password.sendKeys("Demo1234");
+        Select loginLocation = new Select(location);
+        loginLocation.selectByVisibleText("OPD-1");
+
         loginButton.click();
         return initialize(webDriver, HomePage.class);
     }

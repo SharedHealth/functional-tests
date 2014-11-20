@@ -20,7 +20,7 @@ public class ClinicalObservationsPage extends Page {
 
     public WebDriver driver;
 
-    @FindBy(xpath = "//button[text()='Save']")
+    @FindBy(xpath = "//button[text()='ave']")
     private WebElement saveButton;
 
     @FindBy(xpath = "//strong[text()='Vitals']")
@@ -98,9 +98,9 @@ public class ClinicalObservationsPage extends Page {
 //        vitalsSection.click();
 //        waitForMillis(1000);
         List<WebElement> vitalsList = driver.findElements(By.cssSelector(".form-field-group"));
-        enterVitalObservation(vitalsList, "Systolic (mm Hg)", patientVitals.getSystolicBloodPressure());
-        enterVitalObservation(vitalsList, "Diastolic (mm Hg)", patientVitals.getDiastolicBloodPressure());
-        enterVitalObservation(vitalsList, "Pulse (/min)", patientVitals.getPulse());
+        enterVitalObservation(vitalsList, "Systolic", patientVitals.getSystolicBloodPressure());
+        enterVitalObservation(vitalsList, "Diastolic", patientVitals.getDiastolicBloodPressure());
+        enterVitalObservation(vitalsList, "Pulse", patientVitals.getPulse());
         enterVitalObservation(vitalsList, "Temperature", patientVitals.getTemperature());
         saveButton.click();
         System.out.println("Vitals Data Entered for Patient.");
@@ -145,10 +145,14 @@ public class ClinicalObservationsPage extends Page {
     }
 
     private void enterObservation(List<WebElement> observationList, String observationName, String observationValue) {
+        System.out.println("observationName :"+observationName );
         for (WebElement vital : observationList) {
+            System.out.println(vital.getText());
             if (vital.getText().equals(observationName)) {
-                WebElement vitalInput = vital.findElement(By.tagName("input"));
-                setText(vitalInput, observationValue);
+                if(vital.findElements(By.tagName("input")).size()>0) {
+                    WebElement vitalInput = vital.findElement(By.tagName("input"));
+                    setText(vitalInput, observationValue);
+                }
             }
         }
     }
