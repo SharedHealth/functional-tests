@@ -13,6 +13,7 @@ public class FamilyHistoryData {
             .onsetAge("13")
             .relationshipNotes("Relationship Notes")
             .relationshipDiagnosis("Fracture in upper arm")
+            .relationshipDiagnosisDisplayText("Arm Fracture")
             .build();
 
 

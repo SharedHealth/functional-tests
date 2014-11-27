@@ -113,14 +113,14 @@ public class ClinicalObservationsPage extends Page {
 
         List<WebElement> familyHistoryList = driver.findElements(By.cssSelector(".form-field-group"));
 
-        enterObservation(familyHistoryList, "Relationship", familyHistory.getRelationShipName());
+        enterObservation(familyHistoryList, "Relationship Desc\nRelationship", familyHistory.getRelationShipName());
         selectFromFamilyHistoryAutoComplete(familyHistory.getRelationShipName());
 
-        enterObservation(familyHistoryList, "Born On", familyHistory.getBornOnDate());
-        enterObservation(familyHistoryList, "Onset Age (years)", familyHistory.getOnsetAge());
-        enterObservationNotes(familyHistoryList, "Relationship Notes", familyHistory.getRelationshipNotes());
+        enterObservation(familyHistoryList, "Born On\nBorn On", familyHistory.getBornOnDate());
+        enterObservation(familyHistoryList, "Onset Age\nOnset Age (years)", familyHistory.getOnsetAge());
+        enterObservationNotes(familyHistoryList, "Relationship Notes\nRelationship Notes", familyHistory.getRelationshipNotes());
 
-        enterObservation(familyHistoryList, "Relationship Diagnosis", familyHistory.getRelationshipDiagnosis());
+        enterObservation(familyHistoryList, "Relationship Diagnosis\nRelationship Diagnosis", familyHistory.getRelationshipDiagnosis());
         selectFromFamilyHistoryAutoComplete(familyHistory.getRelationshipDiagnosis());
 
         saveButton.click();
@@ -145,9 +145,7 @@ public class ClinicalObservationsPage extends Page {
     }
 
     private void enterObservation(List<WebElement> observationList, String observationName, String observationValue) {
-        System.out.println("observationName :"+observationName );
         for (WebElement vital : observationList) {
-            System.out.println(vital.getText());
             if (vital.getText().equals(observationName)) {
                 if(vital.findElements(By.tagName("input")).size()>0) {
                     WebElement vitalInput = vital.findElement(By.tagName("input"));

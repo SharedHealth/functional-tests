@@ -9,6 +9,7 @@ public class FamilyHistory {
     private String onsetAge;
     private String relationshipNotes;
     private String relationshipDiagnosis;
+    private String relationshipDiagnosisDisplayText;
 
     public String getRelationShipName() {
         return relationShipName;
@@ -37,6 +38,9 @@ public class FamilyHistory {
     public String getRelationshipDiagnosis() {
         return relationshipDiagnosis;
     }
+    public String getRelationshipDiagnosisDisplayText() {
+        return relationshipDiagnosisDisplayText;
+    }
 
     private FamilyHistory(FamilyHistoryBuilder builder) {
         this.relationShipName = builder.relationShipName;
@@ -46,6 +50,7 @@ public class FamilyHistory {
         this.onsetAge = builder.onsetAge;
         this.relationshipNotes = builder.relationshipNotes;
         this.relationshipDiagnosis = builder.relationshipDiagnosis;
+        this.relationshipDiagnosisDisplayText = builder.relationshipDiagnosisDisplayText;
     }
 
 
@@ -58,6 +63,7 @@ public class FamilyHistory {
         private String onsetAge;
         private String relationshipNotes;
         private String relationshipDiagnosis;
+        public String relationshipDiagnosisDisplayText;
 
         public FamilyHistoryBuilder relationShipName(String relationShipName) {
             this.relationShipName = relationShipName;
@@ -95,6 +101,11 @@ public class FamilyHistory {
 
         public FamilyHistoryBuilder relationshipDiagnosis(String relationshipDiagnosis) {
             this.relationshipDiagnosis = relationshipDiagnosis;
+            return this;
+        }
+
+        public FamilyHistoryBuilder relationshipDiagnosisDisplayText(String relationshipDiagnosisDisplayText) {
+            this.relationshipDiagnosisDisplayText = relationshipDiagnosisDisplayText;
             return this;
         }
     }

@@ -97,8 +97,8 @@ public class BahmniEncounterSyncTests extends TestSetup {
                 .verifyVitals(patientVitals);
     }
 
-//    @Category(FunctionalTest.class)
-//    @Test
+    @Category(FunctionalTest.class)
+    @Test
     public void verifyFamilyHistorySync() {
         PatientData dataStore = new PatientData();
         primaryPatient = dataStore.defaultPatient;

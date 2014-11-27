@@ -88,7 +88,7 @@ public class ClinicalVisitPage extends Page {
         Assert.assertEquals("Born On", expectedFamilyHistory.getBornOnDateDisplayText(), familyHistory.get("Born On"));
         Assert.assertEquals("Onset Age", expectedFamilyHistory.getOnsetAge() + " years", familyHistory.get("Onset Age"));
         Assert.assertEquals("Relationship Notes", expectedFamilyHistory.getRelationshipNotes(), familyHistory.get("Relationship Notes"));
-        Assert.assertEquals("Relationship Diagnosis", expectedFamilyHistory.getRelationshipDiagnosis(), familyHistory.get("Relationship Diagnosis"));
+        Assert.assertEquals("Relationship Diagnosis", expectedFamilyHistory.getRelationshipDiagnosisDisplayText(), familyHistory.get("Relationship Diagnosis"));
 
         System.out.println("Family History data verified for Patient");
 
