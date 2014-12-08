@@ -34,7 +34,7 @@ public class PatientDetailsPage extends Page{
     @FindBy(id = "address1")
     private WebElement patientAddressLine1;
 
-    @FindBy(id = "cityVillage")
+    @FindBy(id = "address3")
     private WebElement patientAddressUnion;
 
     @FindBy(id = "address3")
