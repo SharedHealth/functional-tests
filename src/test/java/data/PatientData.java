@@ -26,9 +26,9 @@ public class PatientData {
 
     public static Address addressForFacilityTwo = new Address.AddressBuilder()
             .division("DHAKA")
-            .district("DHAKA")
+            .district("Dhaka")
             .upazilla("DOHAR")
-            .cityCorporation("BILASPUR")
+            .cityCorporation("Unions of DOHAR Upazila")
             .union("MUKSUDPUR")
             .addressLine1("Test")
             .build();
@@ -49,7 +49,7 @@ public class PatientData {
     public  Patient defaultPatientWithEditedName = new Patient.PatientBuilder()
             .firstName("A" + id1+"Edit").lastName("ATESTEdit")
             .gender("Male").dateOfBirth("01-03-2000")
-            .address(addressForFacilityOne)
+            .address(defaultAddress)
             .nid("9000000" + id1)
             .education("5th Pass and Below")
             .occupation("Business")
