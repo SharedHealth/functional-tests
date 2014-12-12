@@ -166,13 +166,14 @@ public class MCIBulkDataCreation {
         given().contentType("application/json")
                 .body(person.toString())
                 .when().post("/patients")
-                .then().assertThat().statusCode(201);
+               .then().log().status();
+//                .assertThat().statusCode(201);
 
 //        given().pathParam("nid", primaryPatient.getNid())
 //                .when().get("/patients?nid={nid}")
 //                .then()
 //                .body("results.hid[0]", Matchers.notNullValue());
-        System.out.println("Patient with NID " + primaryPatient.getNid() + " Created in MCI");
+        System.out.print("Patient with NID " + primaryPatient.getNid() + " Created in MCI ");
     }
 
     private JSONObject createPatientDataToPost(PatientData dataStore) {
