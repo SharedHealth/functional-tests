@@ -2,6 +2,8 @@ package data;
 
 import domain.Address;
 import domain.Patient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class PatientData {
 
@@ -34,9 +36,6 @@ public class PatientData {
             .build();
 
     private  String id1 = String.valueOf(System.currentTimeMillis()).substring(7);
-//    private  String id1 = "435316";
-    private  String id3 = String.valueOf(System.currentTimeMillis() + 1).substring(7);
-
 
     public  Patient defaultPatient = new Patient.PatientBuilder()
             .firstName("A" + id1).lastName("ATEST")
@@ -64,15 +63,127 @@ public class PatientData {
             .occupation("Business")
             .primaryContact("Primary One").build();
 
+    private  String id4 = String.valueOf(System.currentTimeMillis() + 1).substring(3);
     public  Patient patientWithAllFieldDetails = new Patient.PatientBuilder()
-            .firstName("A" + id3).lastName("ATEST")
+            .firstName("A" + id4).lastName("ATEST")
             .gender("Male").dateOfBirth("01-03-2000")
             .address(defaultAddress)
             .education("5th Pass and Below")
             .occupation("Business")
             .primaryContact("Primary One")
-            .binBRN("90000000000" + id3).nid("9000000" + id3).uid("90000" + id3)
-            .fatherBRN("91000000000" + id3).fatherNid("9100000" + id3).fatherUid("91000" + id3)
-            .motherBRN("92000000000" + id3).motherNid("9200000" + id3).motherUid("92000" + id3)
+            .binBRN("8000000" + id4).nid("800" + id4).uid("8" + id4)
+            .fatherBRN("8100000" + id4).fatherNid("810" + id4).fatherUid("8" + id4)
+            .motherBRN("8200000" + id4).motherNid("820" + id4).motherUid("8" + id4)
             .build();
+
+    public JSONObject getAddressJsonForBarisal() {
+        JSONObject present_address = new JSONObject();
+        try {
+            present_address.put("address_line", "Test");
+            present_address.put("division_id", "10");
+            present_address.put("district_id", "09");
+            present_address.put("upazilla_id", "18");
+            present_address.put("city_corporation_id", "16");
+            present_address.put("ward_id", "01");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return present_address;
+    }
+
+    public JSONObject getAddressJsonForDhaka() {
+        JSONObject present_address = new JSONObject();
+        try {
+            present_address.put("address_line", "Test");
+            present_address.put("division_id", "30");
+            present_address.put("district_id", "26");
+            present_address.put("upazilla_id", "18");
+            present_address.put("city_corporation_id", "99");
+            present_address.put("ward_id", "42");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return present_address;
+    }
+    public JSONObject getAddressJsonForKhulna() {
+        JSONObject present_address = new JSONObject();
+        try {
+            present_address.put("address_line", "Test");
+            present_address.put("division_id", "40");
+            present_address.put("district_id", "47");
+            present_address.put("upazilla_id", "53");
+            present_address.put("city_corporation_id", "99");
+            present_address.put("ward_id", "10");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return present_address;
+    }
+    public JSONObject getAddressJsonForChittagong() {
+        JSONObject present_address = new JSONObject();
+        try {
+            present_address.put("address_line", "Test");
+            present_address.put("division_id", "20");
+            present_address.put("district_id", "19");
+            present_address.put("upazilla_id", "81");
+            present_address.put("city_corporation_id", "99");
+            present_address.put("ward_id", "72");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return present_address;
+    }
+
+    public JSONObject getAddressJsonForRajshahi() {
+        JSONObject present_address = new JSONObject();
+        try {
+            present_address.put("address_line", "Test");
+            present_address.put("division_id", "50");
+            present_address.put("district_id", "70");
+            present_address.put("upazilla_id", "66");
+            present_address.put("city_corporation_id", "99");
+            present_address.put("ward_id", "89");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return present_address;
+    }
+
+    public JSONObject getAddressJsonForRangpur() {
+        JSONObject present_address = new JSONObject();
+        try {
+            present_address.put("address_line", "Test");
+            present_address.put("division_id", "55");
+            present_address.put("district_id", "32");
+            present_address.put("upazilla_id", "30");
+            present_address.put("city_corporation_id", "33");
+            present_address.put("ward_id", "01");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return present_address;
+    }
+
+    public JSONObject getAddressJsonForSylhet() {
+        JSONObject present_address = new JSONObject();
+        try {
+            present_address.put("address_line", "Test");
+            present_address.put("division_id", "55");
+            present_address.put("district_id", "32");
+            present_address.put("upazilla_id", "30");
+            present_address.put("city_corporation_id", "33");
+            present_address.put("ward_id", "01");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return present_address;
+    }
+
 }
