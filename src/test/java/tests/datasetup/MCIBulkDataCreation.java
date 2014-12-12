@@ -26,9 +26,9 @@ public class MCIBulkDataCreation {
     @Before
     public void setUp() {
 
-        RestAssured.baseURI = "http://172.18.46.56";
-        RestAssured.baseURI = WebDriverProperties.getProperty("mciURL");
-        RestAssured.port = 8081;
+        RestAssured.baseURI = "http://172.18.46.2";
+//        RestAssured.baseURI = WebDriverProperties.getProperty("mciURL");
+        RestAssured.port = 8080;
         RestAssured.basePath = "/api/v1";
         RestAssured.authentication = basic("mci", "password");
         RestAssured.rootPath = "";
@@ -41,7 +41,8 @@ public class MCIBulkDataCreation {
     public void createMultiplePatient() {
 
         long startTime = System.currentTimeMillis();
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 1000000; i++) {
+            long loopStartTime = System.currentTimeMillis();
             System.out.println(i + " ");
             verifyCreatePatientForBarisalDivision();
             verifyCreatePatientForDhakaDivision();
@@ -50,6 +51,8 @@ public class MCIBulkDataCreation {
             verifyCreatePatientForRajshahiDivision();
             verifyCreatePatientForRangpurDivision();
             verifyCreatePatientForSylhetDivision();
+            long loopEndTime = System.currentTimeMillis();
+            System.out.println("Time Taken: " + (loopEndTime - loopStartTime)  + " MilliSeconds");
         }
 
         long endTime = System.currentTimeMillis();

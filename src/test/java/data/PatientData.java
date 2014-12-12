@@ -82,9 +82,9 @@ public class PatientData {
             present_address.put("address_line", "Test");
             present_address.put("division_id", "10");
             present_address.put("district_id", "09");
-            present_address.put("upazilla_id", "18");
+            present_address.put("upazila_id", "18");
             present_address.put("city_corporation_id", "16");
-            present_address.put("ward_id", "01");
+            present_address.put("union_or_urban_ward_id", "01");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -98,9 +98,9 @@ public class PatientData {
             present_address.put("address_line", "Test");
             present_address.put("division_id", "30");
             present_address.put("district_id", "26");
-            present_address.put("upazilla_id", "18");
+            present_address.put("upazila_id", "18");
             present_address.put("city_corporation_id", "99");
-            present_address.put("ward_id", "42");
+            present_address.put("union_or_urban_ward_id", "42");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -113,9 +113,9 @@ public class PatientData {
             present_address.put("address_line", "Test");
             present_address.put("division_id", "40");
             present_address.put("district_id", "47");
-            present_address.put("upazilla_id", "53");
+            present_address.put("upazila_id", "53");
             present_address.put("city_corporation_id", "99");
-            present_address.put("ward_id", "10");
+            present_address.put("union_or_urban_ward_id", "10");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -128,9 +128,9 @@ public class PatientData {
             present_address.put("address_line", "Test");
             present_address.put("division_id", "20");
             present_address.put("district_id", "19");
-            present_address.put("upazilla_id", "81");
+            present_address.put("upazila_id", "81");
             present_address.put("city_corporation_id", "99");
-            present_address.put("ward_id", "72");
+            present_address.put("union_or_urban_ward_id", "72");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -144,9 +144,9 @@ public class PatientData {
             present_address.put("address_line", "Test");
             present_address.put("division_id", "50");
             present_address.put("district_id", "70");
-            present_address.put("upazilla_id", "66");
+            present_address.put("upazila_id", "66");
             present_address.put("city_corporation_id", "99");
-            present_address.put("ward_id", "89");
+            present_address.put("union_or_urban_ward_id", "89");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -160,9 +160,9 @@ public class PatientData {
             present_address.put("address_line", "Test");
             present_address.put("division_id", "55");
             present_address.put("district_id", "32");
-            present_address.put("upazilla_id", "30");
+            present_address.put("upazila_id", "30");
             present_address.put("city_corporation_id", "33");
-            present_address.put("ward_id", "01");
+            present_address.put("union_or_urban_ward_id", "01");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -176,9 +176,9 @@ public class PatientData {
             present_address.put("address_line", "Test");
             present_address.put("division_id", "55");
             present_address.put("district_id", "32");
-            present_address.put("upazilla_id", "30");
+            present_address.put("upazila_id", "30");
             present_address.put("city_corporation_id", "33");
-            present_address.put("ward_id", "01");
+            present_address.put("union_or_urban_ward_id", "01");
         } catch (JSONException e) {
             e.printStackTrace();
         }
