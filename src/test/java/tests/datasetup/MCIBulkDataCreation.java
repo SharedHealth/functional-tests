@@ -41,6 +41,7 @@ public class MCIBulkDataCreation {
     public void createMultiplePatient() {
 
         long startTime = System.currentTimeMillis();
+//        for (int i = 1; i <= 1; i++) {
         for (int i = 1; i <= 1000000; i++) {
             long loopStartTime = System.currentTimeMillis();
             System.out.println(i + " ");
@@ -194,7 +195,7 @@ public class MCIBulkDataCreation {
 
             phone_number.put("country_code", "88");
             phone_number.put("area_code", "");
-            phone_number.put("number", "01678904560");
+            phone_number.put("number", primaryPatient.getNid().substring(2));
             phone_number.put("extension", "");
             person.put("phone_number", phone_number);
 
