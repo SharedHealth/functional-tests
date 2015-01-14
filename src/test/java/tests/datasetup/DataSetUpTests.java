@@ -1,11 +1,13 @@
 package tests.datasetup;
 
+import categories.FunctionalTest;
 import data.ConceptData;
 import domain.Concept;
 import domain.ConceptReferenceTerm;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.TRLoginPage;
@@ -91,6 +93,25 @@ public class DataSetUpTests {
         TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
         page.login("admin", "Admin123").goToAdministrationPage().goToConceptDictionaryMaintenancePage()
                 .goToCreateNewConcept().createConceptWithOutReferenceTerm(concept);
+    }
+
+    @Test
+    @Ignore
+    public void createConceptForValueSet() {
+
+        driver.get(WebDriverProperties.getProperty("trInternalURL"));
+        ConceptData dataStore = new ConceptData();
+        conceptReferenceTerm = dataStore.conceptReferenceTermForValueSetData;
+        concept = dataStore.conceptForValueSetData;
+
+        TRLoginPage page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
+        page.login("admin", "Admin123").goToAdministrationPage().goToReferenceTermManagementPage().goToCreateReferenceTerm().createReferenceTerm(conceptReferenceTerm).goToTRAdministrationPage()
+                .goToConceptDictionaryMaintenancePage().goToCreateNewConcept().createConcept(concept);
+
+        driver.get(WebDriverProperties.getProperty("facilityOneOpenMRSInternalURL"));
+
+        page = PageFactoryWithWait.initialize(driver, TRLoginPage.class);
+        page.login("admin", "test").goToTRAdministrationPage().goToConceptDictionaryMaintenancePage().searchAndViewConceptWithWait(concept).readCurrentConcept(concept);
     }
 
     @After

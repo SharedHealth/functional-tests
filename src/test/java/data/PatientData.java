@@ -11,9 +11,9 @@ public class PatientData {
     public static Address defaultAddress = new Address.AddressBuilder()
             .division("Barisal")
             .district("Barguna")
-            .upazilla("AMTALI")
-            .cityCorporation("Unions of AMTALI Upazila")
-            .union("AMTALI")
+            .upazilla("Amtali")
+            .cityCorporation("Unions Of Amtali Upazila")
+            .union("Amtali")
             .addressLine1("Test")
             .build();
 
@@ -46,7 +46,7 @@ public class PatientData {
             .occupation("Business")
             .primaryContact("Primary One").build();
     public  Patient defaultPatientWithEditedName = new Patient.PatientBuilder()
-            .firstName("A" + id1+"Edit").lastName("ATESTEdit")
+            .firstName("A" + id1).lastName("ATESTEdit")
             .gender("Male").dateOfBirth("01-03-2000")
             .address(defaultAddress)
             .nid("9000000" + id1)

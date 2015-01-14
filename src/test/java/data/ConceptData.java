@@ -262,4 +262,31 @@ public class ConceptData {
             .version("1.0")
             .build();
 
+    private String id3 = "101";
+
+    public ConceptReferenceTerm conceptReferenceTermForValueSetData = new ConceptReferenceTerm.ConceptReferenceTermBuilder()
+            .code("VSCode" + id3)
+            .name("VSName " + id3)
+            .source(CONCEPT_SOURCE)
+            .description("Description" +id3)
+            .version("1.0")
+            .build();
+
+
+    public Concept conceptForValueSetData = new Concept.ConceptBuilder()
+            .name("VS Value" + id3)
+            .synonyms1("VS " + id3 + " Syn")
+            .synonyms2("VS " + id3 + " Syn2")
+            .shortName("VS" + id3)
+            .description("VS Desc "+ id3)
+            .conceptClass("Misc")
+            .dataType("N/A")
+            .version("1.0")
+            .conceptMappingRelationship("SAME-AS")
+            .conceptMappingSource("ICD10-BD")
+            .conceptMappingCode(conceptReferenceTermForValueSetData.getCode())
+            .conceptMappingName(conceptReferenceTermForValueSetData.getName())
+            .build();
+
+
 }
