@@ -29,9 +29,9 @@ public class PatientData {
     public static Address addressForFacilityTwo = new Address.AddressBuilder()
             .division("DHAKA")
             .district("Dhaka")
-            .upazilla("DOHAR")
-            .cityCorporation("Unions of DOHAR Upazila")
-            .union("MUKSUDPUR")
+            .upazilla("Dohar")
+            .cityCorporation("")
+            .union("")
             .addressLine1("Test")
             .build();
 
