@@ -35,3 +35,9 @@ task runApiTests(type: Test) {
         includeCategories 'categories.ApiTest'
     }
 }
+
+task runPerfTests(type: Test) {
+    useJUnit {
+        includeCategories 'categories.PerfTest'
+    }
+}
