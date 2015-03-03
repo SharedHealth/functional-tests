@@ -41,6 +41,7 @@ public class PatientDataSetUp {
             person.put("sur_name", primaryPatient.getSur_name());
             person.put("date_of_birth", primaryPatient.getDateOfBirth());
             person.put("gender", primaryPatient.getGender());
+            person.put("household_code", primaryPatient.getHouseholdCode());
             present_address.put("address_line", primaryPatient.getAddress().getAddressLine1());
             present_address.put("division_id", primaryPatient.getAddress().getDivision());
             present_address.put("district_id", primaryPatient.getAddress().getDistrict());
