@@ -21,6 +21,7 @@ public class Patient {
     private String motherBRN;
     private String binBRN;
     private String catchment;
+    private String household_code;
     private String nidF;
     private String binBRNF;
     private String given_nameF;
@@ -72,6 +73,12 @@ public class Patient {
     public Patient withCatchment(String catchment){
 
         this.catchment=catchment;
+        return this;
+    }
+
+    public Patient withHouseholdCode(String household_code){
+
+        this.household_code=household_code;
         return this;
     }
     public Patient withFieldNid(String nidF) {
@@ -156,6 +163,7 @@ public class Patient {
         return binBRN;
     }
     public String getCatchment() { return catchment ;}
+    public String getHouseholdCode(){ return household_code;}
 
     public String getFieldGiven_name() {
         return given_nameF;

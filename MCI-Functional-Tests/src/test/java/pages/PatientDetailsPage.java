@@ -25,8 +25,15 @@ public class PatientDetailsPage extends Page{
     @FindBy(css = ".alert.alert-warning>h4")
     private WebElement alertHeader;
 
+    @FindBy(css = ".page-header")
+    private WebElement nameHeader;
+
     @FindBy(css = ".alert.alert-warning>ul")
     private WebElement updatedFields;
+
+    @FindBy(css = ".col-lg-3")
+    private List<WebElement> fieldsName;
+
 
     @FindBy(linkText ="Patient approval list" )
     private WebElement patientApprovalLink;
@@ -87,5 +94,46 @@ public class PatientDetailsPage extends Page{
         patientApprovalLink.click();
 
         return  initialize(webDriver, PatientApprovalPage.class);
+    }
+
+    public void verifyApprovedPatientUpdatedDetails(Patient patient, Patient updatedPatient){
+
+        System.out.println(patient.getFieldGiven_name()+" "+ patient.getFieldSur_name()+" is "+nameHeader.getText());
+        assertEquals(nameHeader.getText(), updatedPatient.getGiven_name() + " " + updatedPatient.getSur_name());
+        System.out.println(patient.getFieldGiven_name()+ " and "+patient.getFieldSur_name()+" "+ " is updated from"
+                + patient.getGiven_name()+" "+patient.getSur_name()+" to "+updatedPatient.getGiven_name()+" "+updatedPatient.getSur_name());
+        assertTrue(patient.getFieldGender()+ " is not updated from " + patient.getGender()+ " to "+ updatedPatient.getGender()
+                , isvaluePresent(patient.getFieldGender(), updatedPatient.getGender()));
+        System.out.println(patient.getFieldGender()+ " is not updated from "+ patient.getGender()+" to "+updatedPatient.getGender());
+
+
+    }
+
+    public void verifyRejectPatientUpdatedDetails(Patient patient, Patient updatedPatient){
+
+        System.out.println(patient.getFieldGiven_name()+" and "+ patient.getFieldSur_name()+" is "+nameHeader.getText());
+        assertEquals(nameHeader.getText(), patient.getGiven_name() + " " + patient.getSur_name());
+        System.out.println(patient.getFieldGiven_name()+ " and "+patient.getFieldSur_name()+" "+ " is not updated from "
+                + patient.getGiven_name()+" "+patient.getSur_name()+" to "+updatedPatient.getGiven_name()+" "+updatedPatient.getSur_name());
+        assertTrue(patient.getFieldGender()+ " is got updated from " + patient.getGender()+ " to "+ updatedPatient.getGender()
+                , isvaluePresent(patient.getFieldGender(), "Male"));
+
+        System.out.println(patient.getFieldGender()+ " is not updated from "+ patient.getGender()+" to "+updatedPatient.getGender());
+
+
+    }
+
+    private boolean isvaluePresent(String fieldName, String value){
+
+        for(WebElement field: fieldsName){
+
+            if(field.getText().contains(fieldName)){
+                WebElement fieldValue=field.findElement(By.tagName("p"));
+                if(fieldValue.getText().contains(value));
+                return true;
+            }
+        }
+
+        return false;
     }
 }

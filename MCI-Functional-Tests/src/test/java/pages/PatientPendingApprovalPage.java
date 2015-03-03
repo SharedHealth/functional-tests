@@ -5,8 +5,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import static org.junit.Assert.*;
+import static utils.PageFactoryWithWait.initialize;
+
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * Created by ashutosh on 26/02/15.
@@ -19,6 +20,7 @@ public class PatientPendingApprovalPage extends Page {
     @FindBy(linkText = "Next")
     private WebElement nextButton;
 
+
     public PatientPendingApprovalPage(WebDriver driver) {
         super(driver);
     }
@@ -28,7 +30,7 @@ public class PatientPendingApprovalPage extends Page {
 
     }
 
-    public void verifyPatientNeedsApproval(String hid) {
+    public PatientPendingApprovalPage verifyPatientNeedsApproval(String hid) {
 
 
         boolean isFound = false;
@@ -39,7 +41,7 @@ public class PatientPendingApprovalPage extends Page {
 
             if (patient.getText().equals(hid)) {
 
-                System.out.println("Patient with" + hid + "needs approval found");
+                System.out.println("Patient with " + hid + " needs approval found on approval page");
                 isFound = true;
                 break;
             }
@@ -51,7 +53,7 @@ public class PatientPendingApprovalPage extends Page {
 
                 if (patient.getText().equals(hid)) {
 
-                    System.out.println("Patient with" + hid + "needs approval found");
+                    System.out.println("Patient with " + hid + " needs approval found on approval page");
                     isFound = true;
                     break outer;
                 }
@@ -60,7 +62,19 @@ public class PatientPendingApprovalPage extends Page {
         }
 
         assertTrue(hid + " is not found", isFound);
+        return initialize(webDriver, PatientPendingApprovalPage.class);
 
+    }
+
+    public PatientApprovalDetailPage goToPatientApprovalDetailPage(String hid){
+
+     WebElement viewButton= webDriver.findElement(By.xpath("//a[contains(@href, '"+hid+"')]"));
+
+        viewButton.click();
+
+
+
+        return initialize(webDriver, PatientApprovalDetailPage.class);
     }
 
     private boolean isButtonEnabled() {

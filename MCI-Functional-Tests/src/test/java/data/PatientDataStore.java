@@ -18,11 +18,12 @@ public class PatientDataStore {
             .withDateOfBirth("2000-03-01")
             .withGender("M")
             .address(address.defaultAddress)
+            .withHouseholdCode("4")
             .withCatchment("Sylhet -Habiganj -Ajmiriganj")
             .withFieldNid("National Identity Card No(NID)")
             .withFieldBinBRN("Birth Registration No(BRN)")
             .withFieldGiven_name("Given Name")
-            .withFieldSur_name("Sur Name")
+            .withFieldSur_name("Surname")
             .withFieldDateOfBirth("Date of Birth")
             .withFieldGender("Gender")
             .build();

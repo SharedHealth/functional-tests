@@ -27,7 +27,8 @@ public class UpdatePatientTest extends TestSetup{
 
     @Category(FunctionalTest.class)
     @Test
-    public void verifyPatientUpdatedInfo() throws InterruptedException, JSONException {
+    public void verifyPatientUpdatedPersonalInfoApproved() throws InterruptedException, JSONException {
+
 
         updatedPatientPersonalinfo= updatedData.updatedPatientPerfonalInfo;
         primaryPatient= dataStore.defaultPatient;
@@ -40,9 +41,33 @@ public class UpdatePatientTest extends TestSetup{
         page.login().goPatientDetailsPage(hid).EditPatientDetails().goToPatientPersonalInfo()
             .updatePatientPersonalInfo(primaryPatient,updatedPatientPersonalinfo).goPatientDetailsPage(hid)
             .verifyUpdateHeaderInfo(primaryPatient).goToPatientApprovalPage().selectCatchment(primaryPatient)
-            .verifyPatientNeedsApproval(hid);
+            .verifyPatientNeedsApproval(hid).goToPatientApprovalDetailPage(hid)
+            .verifyPendingApprovalFields(primaryPatient,hid).verifyPendingApprovalOldValues(primaryPatient)
+            .verifyPendingApprovalNewValues(updatedPatientPersonalinfo).approveRequest(primaryPatient,hid)
+            .searchByHID(hid).verifyApprovedPatientUpdatedDetails(primaryPatient, updatedPatientPersonalinfo);
+
+    }
+
+    @Category(FunctionalTest.class)
+    @Test
+    public void verifyPatientUpdatedPersonalInfoReject() throws InterruptedException, JSONException {
 
 
+        updatedPatientPersonalinfo= updatedData.updatedPatientPerfonalInfo;
+        primaryPatient= dataStore.defaultPatient;
+        person = createPatientDataJsonToPost(primaryPatient);
+        String hid=createPatient(person);
+        System.out.println(hid);
+
+        driver.get(WebDriverProperties.getProperty("MCI_URL"));
+        LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login().goPatientDetailsPage(hid).EditPatientDetails().goToPatientPersonalInfo()
+                .updatePatientPersonalInfo(primaryPatient,updatedPatientPersonalinfo).goPatientDetailsPage(hid)
+                .verifyUpdateHeaderInfo(primaryPatient).goToPatientApprovalPage().selectCatchment(primaryPatient)
+                .verifyPatientNeedsApproval(hid).goToPatientApprovalDetailPage(hid)
+                .verifyPendingApprovalFields(primaryPatient,hid).verifyPendingApprovalOldValues(primaryPatient)
+                .verifyPendingApprovalNewValues(updatedPatientPersonalinfo).rejectRequest(primaryPatient, hid)
+                .searchByHID(hid).verifyRejectPatientUpdatedDetails(primaryPatient, updatedPatientPersonalinfo);
 
     }
 
