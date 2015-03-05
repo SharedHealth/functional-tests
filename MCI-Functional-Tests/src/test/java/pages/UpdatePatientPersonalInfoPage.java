@@ -6,9 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.Select;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static utils.PageFactoryWithWait.initialize;
@@ -60,19 +58,19 @@ public class UpdatePatientPersonalInfoPage extends Page{
     }
 
 
-    public UpdatePatientPersentAddressPage goToPatientPersentAddressPage() {
+    public UpdatePatientPresentAddressPage goToPatientPersentAddressPage() {
 
         presentAddress.click();
 
-        return  initialize(webDriver, UpdatePatientPersentAddressPage.class);
+        return  initialize(webDriver, UpdatePatientPresentAddressPage.class);
 
     }
 
-    public UpdatePatientPermanentAddressPage goToPatientPermanentAddressPage() {
+    public UpdatePatientPremanentAddressPage goToPatientPermanentAddressPage() {
 
         permanentAddress.click();
 
-        return  initialize(webDriver, UpdatePatientPermanentAddressPage.class);
+        return  initialize(webDriver, UpdatePatientPremanentAddressPage.class);
 
     }
 

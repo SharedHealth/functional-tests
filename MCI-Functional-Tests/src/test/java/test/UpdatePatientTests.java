@@ -71,27 +71,5 @@ public class UpdatePatientTests extends TestSetup{
 
     }
 
-    @Category(FunctionalTest.class)
-    @Test
-    public void verifyPatientUpdatedPersentAddressApproved() throws InterruptedException, JSONException {
-
-
-        updatedPatient = updatedData.updatedPatientInfo;
-        primaryPatient= dataStore.defaultPatient;
-        person = createPatientDataJsonToPost(primaryPatient);
-        String hid=createPatient(person);
-        System.out.println(hid);
-
-        driver.get(WebDriverProperties.getProperty("MCI_URL"));
-        LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login().goPatientDetailsPage(hid).EditPatientDetails().goToPatientPersentAddressPage()
-                .updatePatientPersentAddress(primaryPatient, updatedPatient).goPatientDetailsPage(hid)
-                .verifyUpdateHeaderInfo(primaryPatient).goToPatientApprovalPage().selectCatchment(primaryPatient)
-                .verifyPatientNeedsApproval(hid).goToPatientApprovalDetailPage(hid)
-                .verifyPendingApprovalFields(primaryPatient,hid).verifyPendingApprovalOldValues(primaryPatient)
-                .verifyPendingApprovalNewValues(updatedPatient).rejectRequest(primaryPatient, hid)
-                .searchByHID(hid).verifyRejectPatientUpdatedDetails(primaryPatient, updatedPatient);
-
-    }
 
 }

@@ -69,19 +69,19 @@ public class UpdatePatientPage extends Page{
 
     }
 
-    public UpdatePatientPersentAddressPage goToPatientPersentAddressPage() {
+    public UpdatePatientPresentAddressPage goToPatientPersentAddressPage() {
 
         presentAddress.click();
 
-        return  initialize(webDriver, UpdatePatientPersentAddressPage.class);
+        return  initialize(webDriver, UpdatePatientPresentAddressPage.class);
 
     }
 
-    public UpdatePatientPermanentAddressPage goToPatientPermanentAddressPage() {
+    public UpdatePatientPremanentAddressPage goToPatientPermanentAddressPage() {
 
         permanentAddress.click();
 
-        return  initialize(webDriver, UpdatePatientPermanentAddressPage.class);
+        return  initialize(webDriver, UpdatePatientPremanentAddressPage.class);
 
     }
 

@@ -1,26 +1,23 @@
 package pages;
 
-import domain.Patient;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import java.util.List;
-
 import static utils.PageFactoryWithWait.initialize;
 
 /**
  * Created by ashutosh on 20/02/15.
  */
-public class UpdatePatientPersentAddressPage extends Page{
+public class UpdatePatientPremanentAddressPage extends Page{
 
     @FindBy(linkText = "Personal Information")
     private WebElement personalInformation;
 
-    @FindBy(linkText = "Permanent Address")
-    private WebElement permanentAddress;
+    @FindBy(linkText = "Present Address")
+    private WebElement presentAddress;
 
     @FindBy(linkText = "Phone Number")
     private WebElement phoneNumber;
@@ -37,10 +34,11 @@ public class UpdatePatientPersentAddressPage extends Page{
     @FindBy(linkText= "Cancel")
     private WebElement cancel;
 
-
-    public UpdatePatientPersentAddressPage(WebDriver driver) {
+    public UpdatePatientPremanentAddressPage(WebDriver driver) {
         super(driver);
     }
+
+
 
     @Override
     public void waitForPageToLoad() {
@@ -48,7 +46,7 @@ public class UpdatePatientPersentAddressPage extends Page{
         wait.until(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
-                return null != webDriver.findElement(By.xpath("//label[text()='Upazila']"));
+                return null != webDriver.findElement(By.xpath("//label[text()='District']"));
             }
         });
 
@@ -62,13 +60,14 @@ public class UpdatePatientPersentAddressPage extends Page{
 
     }
 
-    public UpdatePatientPermanentAddressPage goToPatientPermanentAddressPage() {
+    public UpdatePatientPresentAddressPage goToPatientPersentAddressPage() {
 
-        permanentAddress.click();
+        presentAddress.click();
 
-        return  initialize(webDriver, UpdatePatientPermanentAddressPage.class);
+        return  initialize(webDriver, UpdatePatientPresentAddressPage.class);
 
     }
+
 
     public UpdatePatientPhoneNumberPage goToPatientPhoneNumberPage() {
 
@@ -94,19 +93,6 @@ public class UpdatePatientPersentAddressPage extends Page{
 
     }
 
-    public UpdatePatientPage updatePatientPersentAddress(Patient currentPatientInfo, Patient updatedPatientInfo) throws InterruptedException {
-
-        List<WebElement> personalInfo= webDriver.findElements(By.cssSelector(".form-group"));
-        enterUpdatedPatientData(personalInfo, currentPatientInfo.getAddress().getAddressLine1F(), updatedPatientInfo.getAddress().getAddressLine1());
-        enterUpdatedPatientData(personalInfo, currentPatientInfo.getFieldSur_name(), updatedPatientInfo.getSur_name());
-        selectUpdatedPatientData(personalInfo, currentPatientInfo.getFieldGender(), updatedPatientInfo.getGender());
-        clickSave();
-        Thread.sleep(2000);
-
-
-        return initialize(webDriver, UpdatePatientPage.class);
-    }
-
     public void clickSave(){
 
         save.click();
@@ -116,6 +102,7 @@ public class UpdatePatientPersentAddressPage extends Page{
 
         cancel.click();
     }
+
 
 
 }
