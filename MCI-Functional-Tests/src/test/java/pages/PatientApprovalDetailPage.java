@@ -50,7 +50,7 @@ public class PatientApprovalDetailPage extends Page{
         System.out.println(patient.getFieldGender()+ " field is mark for approval");
         assertTrue(patient.getFieldGiven_name()+ " field is mark for approval", isValuePresent(allFields, patient.getFieldGiven_name()));
         System.out.println(patient.getFieldGiven_name()+ " field is mark for approval");
-        assertTrue(patient.getFieldSur_name()+ " field is mark for approval", isValuePresent(allFields,"Sur Name"));
+        assertTrue(patient.getFieldSur_name()+ " field is mark for approval", isValuePresent(allFields,patient.getSur_name()));
         System.out.println(patient.getFieldSur_name()+ " field is mark for approval");
 
         return initialize(webDriver, PatientApprovalDetailPage.class);

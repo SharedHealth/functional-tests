@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -81,6 +82,38 @@ public abstract class Page {
         if (w.isEmpty()) throw new NoSuchElementException("Element " + by.toString() + " not found!");
 
         return w.get(0);
+    }
+
+    protected void enterUpdatedPatientData(List<WebElement> updatedPatientInfo, String patientInfo, String patientValue){
+
+
+        for(WebElement personalInfo: updatedPatientInfo) {
+            if (personalInfo.getText().contains(patientInfo)){
+                if (personalInfo.findElements(By.tagName("input")).size() > 0) {
+                    WebElement patientInput = personalInfo.findElement(By.tagName("input"));
+                    setText(patientInput, patientValue);
+                }
+
+            }
+
+        }
+
+    }
+
+    protected  void selectUpdatedPatientData(List<WebElement> updatedPatientInfo, String patientInfo, String patientValue){
+
+        for(WebElement personalInfo: updatedPatientInfo) {
+            if (personalInfo.getText().startsWith(patientInfo)){
+                if (personalInfo.findElements(By.tagName("select")).size() > 0) {
+                    WebElement patientInput = personalInfo.findElement(By.tagName("select"));
+                    Select selectValue= new Select(patientInput);
+                    selectValue.selectByVisibleText(patientValue);
+
+                }
+
+            }
+
+        }
     }
 
 

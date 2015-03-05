@@ -113,37 +113,7 @@ public class UpdatePatientPersonalInfoPage extends Page{
         return initialize(webDriver, UpdatePatientPage.class);
     }
 
-    private void enterUpdatedPatientData(List<WebElement> updatedPatientInfo, String patientInfo, String patientValue){
 
-
-        for(WebElement personalInfo: updatedPatientInfo) {
-            if (personalInfo.getText().contains(patientInfo)){
-                if (personalInfo.findElements(By.tagName("input")).size() > 0) {
-                    WebElement patientInput = personalInfo.findElement(By.tagName("input"));
-                    setText(patientInput, patientValue);
-                }
-
-                }
-
-        }
-
-    }
-
-    private  void selectUpdatedPatientData(List<WebElement> updatedPatientInfo, String patientInfo, String patientValue){
-
-        for(WebElement personalInfo: updatedPatientInfo) {
-            if (personalInfo.getText().startsWith(patientInfo)){
-                if (personalInfo.findElements(By.tagName("select")).size() > 0) {
-                    WebElement patientInput = personalInfo.findElement(By.tagName("select"));
-                    Select selectValue= new Select(patientInput);
-                    selectValue.selectByVisibleText(patientValue);
-
-                }
-
-            }
-
-        }
-    }
 
     public void clickSave(){
 

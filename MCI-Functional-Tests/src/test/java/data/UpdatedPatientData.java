@@ -7,10 +7,12 @@ import domain.Patient;
  */
 public class UpdatedPatientData {
 
+    protected AddressDataStore address = new AddressDataStore();
 
-    public Patient updatedPatientPerfonalInfo= new Patient()
+    public Patient updatedPatientInfo = new Patient()
             .withGiven_name("UpdatedName")
             .withSur_name("UpdatedSurName")
             .withGender("Female")
+            .address(address.updateAddressForAmtali)
             .build();
 }

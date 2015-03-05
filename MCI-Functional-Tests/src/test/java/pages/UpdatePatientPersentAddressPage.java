@@ -1,10 +1,13 @@
 package pages;
 
+import domain.Patient;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+
+import java.util.List;
 
 import static utils.PageFactoryWithWait.initialize;
 
@@ -89,6 +92,19 @@ public class UpdatePatientPersentAddressPage extends Page{
 
         return  initialize(webDriver, UpdatePatientRelationsPage.class);
 
+    }
+
+    public UpdatePatientPage updatePatientPersentAddress(Patient currentPatientInfo, Patient updatedPatientInfo) throws InterruptedException {
+
+        List<WebElement> personalInfo= webDriver.findElements(By.cssSelector(".form-group"));
+        enterUpdatedPatientData(personalInfo, currentPatientInfo.getAddress().getAddressLine1F(), updatedPatientInfo.getAddress().getAddressLine1());
+        enterUpdatedPatientData(personalInfo, currentPatientInfo.getFieldSur_name(), updatedPatientInfo.getSur_name());
+        selectUpdatedPatientData(personalInfo, currentPatientInfo.getFieldGender(), updatedPatientInfo.getGender());
+        clickSave();
+        Thread.sleep(2000);
+
+
+        return initialize(webDriver, UpdatePatientPage.class);
     }
 
     public void clickSave(){

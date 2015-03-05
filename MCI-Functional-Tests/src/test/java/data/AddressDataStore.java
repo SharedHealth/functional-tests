@@ -19,11 +19,11 @@ public class AddressDataStore {
 
     public Address getAddressForBarisal=new Address.AddressBuilder()
 
-            .addressLine1("Barisal")
+            .addressLine1("Amtali")
             .division("10")
             .district("04")
-            .upazilla("18")
-            .cityCorporation("16")
+            .upazilla("09")
+            .cityCorporation("13")
             .union_or_urban_ward("01")
             .build();
 
@@ -35,6 +35,22 @@ public class AddressDataStore {
             .upazilla("18")
             .cityCorporation("99")
             .union_or_urban_ward("42")
+            .addressLine1F("Address Line")
+            .divisionF("Division")
+            .districtF("District")
+            .upazillaF("Upazilla")
+            .union_or_urban_wardF("Union/Urban Ward")
+            .cityCorporationF("City Corporation")
+            .build();
+
+    public Address updateAddressForAmtali=new Address.AddressBuilder()
+
+            .addressLine1("Amtali")
+            .division("Barisal")
+            .district("Barguna")
+            .upazilla("Amtali")
+            .cityCorporation("Unions Of Amtali Upazila")
+            .union_or_urban_ward("Amtali")
             .build();
 
     public JSONObject getAddressJsonForBarisal() {

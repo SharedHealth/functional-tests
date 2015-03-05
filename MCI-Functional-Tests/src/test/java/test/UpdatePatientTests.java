@@ -17,12 +17,12 @@ import static utils.PageFactoryWithWait.initialize;
 /**
  * Created by ashutosh on 20/02/15.
  */
-public class UpdatePatientTest extends TestSetup{
+public class UpdatePatientTests extends TestSetup{
 
     PatientDataStore dataStore = new PatientDataStore();
     UpdatedPatientData updatedData= new UpdatedPatientData();
     protected Patient primaryPatient;
-    protected Patient updatedPatientPersonalinfo;
+    protected Patient updatedPatient;
     JSONObject person;
 
     @Category(FunctionalTest.class)
@@ -30,7 +30,7 @@ public class UpdatePatientTest extends TestSetup{
     public void verifyPatientUpdatedPersonalInfoApproved() throws InterruptedException, JSONException {
 
 
-        updatedPatientPersonalinfo= updatedData.updatedPatientPerfonalInfo;
+        updatedPatient = updatedData.updatedPatientInfo;
         primaryPatient= dataStore.defaultPatient;
         person = createPatientDataJsonToPost(primaryPatient);
         String hid=createPatient(person);
@@ -39,12 +39,12 @@ public class UpdatePatientTest extends TestSetup{
         driver.get(WebDriverProperties.getProperty("MCI_URL"));
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login().goPatientDetailsPage(hid).EditPatientDetails().goToPatientPersonalInfo()
-            .updatePatientPersonalInfo(primaryPatient,updatedPatientPersonalinfo).goPatientDetailsPage(hid)
+            .updatePatientPersonalInfo(primaryPatient, updatedPatient).goPatientDetailsPage(hid)
             .verifyUpdateHeaderInfo(primaryPatient).goToPatientApprovalPage().selectCatchment(primaryPatient)
             .verifyPatientNeedsApproval(hid).goToPatientApprovalDetailPage(hid)
             .verifyPendingApprovalFields(primaryPatient,hid).verifyPendingApprovalOldValues(primaryPatient)
-            .verifyPendingApprovalNewValues(updatedPatientPersonalinfo).approveRequest(primaryPatient,hid)
-            .searchByHID(hid).verifyApprovedPatientUpdatedDetails(primaryPatient, updatedPatientPersonalinfo);
+            .verifyPendingApprovalNewValues(updatedPatient).approveRequest(primaryPatient,hid)
+            .searchByHID(hid).verifyApprovedPatientUpdatedDetails(primaryPatient, updatedPatient);
 
     }
 
@@ -53,7 +53,7 @@ public class UpdatePatientTest extends TestSetup{
     public void verifyPatientUpdatedPersonalInfoReject() throws InterruptedException, JSONException {
 
 
-        updatedPatientPersonalinfo= updatedData.updatedPatientPerfonalInfo;
+        updatedPatient = updatedData.updatedPatientInfo;
         primaryPatient= dataStore.defaultPatient;
         person = createPatientDataJsonToPost(primaryPatient);
         String hid=createPatient(person);
@@ -62,12 +62,35 @@ public class UpdatePatientTest extends TestSetup{
         driver.get(WebDriverProperties.getProperty("MCI_URL"));
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login().goPatientDetailsPage(hid).EditPatientDetails().goToPatientPersonalInfo()
-                .updatePatientPersonalInfo(primaryPatient,updatedPatientPersonalinfo).goPatientDetailsPage(hid)
+                .updatePatientPersonalInfo(primaryPatient, updatedPatient).goPatientDetailsPage(hid)
                 .verifyUpdateHeaderInfo(primaryPatient).goToPatientApprovalPage().selectCatchment(primaryPatient)
                 .verifyPatientNeedsApproval(hid).goToPatientApprovalDetailPage(hid)
                 .verifyPendingApprovalFields(primaryPatient,hid).verifyPendingApprovalOldValues(primaryPatient)
-                .verifyPendingApprovalNewValues(updatedPatientPersonalinfo).rejectRequest(primaryPatient, hid)
-                .searchByHID(hid).verifyRejectPatientUpdatedDetails(primaryPatient, updatedPatientPersonalinfo);
+                .verifyPendingApprovalNewValues(updatedPatient).rejectRequest(primaryPatient, hid)
+                .searchByHID(hid).verifyRejectPatientUpdatedDetails(primaryPatient, updatedPatient);
+
+    }
+
+    @Category(FunctionalTest.class)
+    @Test
+    public void verifyPatientUpdatedPersentAddressApproved() throws InterruptedException, JSONException {
+
+
+        updatedPatient = updatedData.updatedPatientInfo;
+        primaryPatient= dataStore.defaultPatient;
+        person = createPatientDataJsonToPost(primaryPatient);
+        String hid=createPatient(person);
+        System.out.println(hid);
+
+        driver.get(WebDriverProperties.getProperty("MCI_URL"));
+        LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
+        page.login().goPatientDetailsPage(hid).EditPatientDetails().goToPatientPersentAddressPage()
+                .updatePatientPersentAddress(primaryPatient, updatedPatient).goPatientDetailsPage(hid)
+                .verifyUpdateHeaderInfo(primaryPatient).goToPatientApprovalPage().selectCatchment(primaryPatient)
+                .verifyPatientNeedsApproval(hid).goToPatientApprovalDetailPage(hid)
+                .verifyPendingApprovalFields(primaryPatient,hid).verifyPendingApprovalOldValues(primaryPatient)
+                .verifyPendingApprovalNewValues(updatedPatient).rejectRequest(primaryPatient, hid)
+                .searchByHID(hid).verifyRejectPatientUpdatedDetails(primaryPatient, updatedPatient);
 
     }
 
