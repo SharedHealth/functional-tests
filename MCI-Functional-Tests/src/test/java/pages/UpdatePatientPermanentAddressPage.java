@@ -11,7 +11,7 @@ import static utils.PageFactoryWithWait.initialize;
 /**
  * Created by ashutosh on 20/02/15.
  */
-public class UpdatePatientPremanentAddressPage extends Page{
+public class UpdatePatientPermanentAddressPage extends Page{
 
     @FindBy(linkText = "Personal Information")
     private WebElement personalInformation;
@@ -34,7 +34,7 @@ public class UpdatePatientPremanentAddressPage extends Page{
     @FindBy(linkText= "Cancel")
     private WebElement cancel;
 
-    public UpdatePatientPremanentAddressPage(WebDriver driver) {
+    public UpdatePatientPermanentAddressPage(WebDriver driver) {
         super(driver);
     }
 

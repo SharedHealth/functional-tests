@@ -77,11 +77,11 @@ public class UpdatePatientPage extends Page{
 
     }
 
-    public UpdatePatientPremanentAddressPage goToPatientPermanentAddressPage() {
+    public UpdatePatientPermanentAddressPage goToPatientPermanentAddressPage() {
 
         permanentAddress.click();
 
-        return  initialize(webDriver, UpdatePatientPremanentAddressPage.class);
+        return  initialize(webDriver, UpdatePatientPermanentAddressPage.class);
 
     }
 
