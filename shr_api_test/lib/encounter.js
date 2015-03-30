@@ -1,5 +1,5 @@
 module.exports = function(hid, confidentiality) {
-var pretty_data = require('/usr/local/lib/node_modules/pretty-data').pd;
+var pretty_data = require('pretty-data').pd;
 		var encounter_payload = "";
 		var confidentiality = confidentiality || 'No';
 
