@@ -238,6 +238,7 @@ describe("Patient User", function() {
 			var catchment_request = new CatchmentRequest(user, catchment);
 			request.get(catchment_request.getUrl(), catchment_request.getHeaders(), function(err, httpResponse, body) {
 				expect(httpResponse.statusCode).to.equal(403);
+				expect(JSON.parse(body).message).to.equal("Access is denied");
 				done();
 			});
 		});
