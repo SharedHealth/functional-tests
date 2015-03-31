@@ -71,7 +71,7 @@ describe("Patient User", function() {
 			request.get(encounter_request.getUrl(), encounter_request.getHeaders(), function(get_err, get_res, res_body) {
 				expect(get_res.statusCode).to.equal(403);
 				expect(Number(JSON.parse(res_body).httpStatus)).to.equal(403);
-				expect(JSON.parse(res_body).message).to.equal("Access for patient " + hid + " is denied for user " + user.client_id);
+				expect(JSON.parse(res_body).message).to.equal("Access is denied to user " + user.client_id + " for patient " + hid );
 				done();
 
 			});
@@ -84,7 +84,7 @@ describe("Patient User", function() {
 				request.get(encounter_request.getUrl(), encounter_request.getHeaders(), function(get_err, get_res, res_body) {
 					expect(get_res.statusCode).to.equal(403);
 					expect(Number(JSON.parse(res_body).httpStatus)).to.equal(403);
-					expect(JSON.parse(res_body).message).to.equal("Access for patient " + hid + " is denied for user " + user.client_id);
+					expect(JSON.parse(res_body).message).to.equal("Access is denied to user "+ user.client_id + " for patient " + hid);
 					done();
 				});
 			});
@@ -125,7 +125,7 @@ describe("Patient User", function() {
 
 				expect(get_res.statusCode).to.equal(403);
 				expect(Number(JSON.parse(get_body).httpStatus)).to.equal(403);
-				expect(JSON.parse(get_body).message).to.equal("Access for patient " + confidential_patient_hid + " is denied for user " + user.client_id);
+				expect(JSON.parse(get_body).message).to.equal("Access is denied to user "+ user.client_id + " for patient " + confidential_patient_hid);
 				done();
 			});
 		});

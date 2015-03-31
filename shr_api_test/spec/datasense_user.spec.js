@@ -143,7 +143,7 @@ describe("Datasense User", function() {
 			var catchment_request = new CatchmentRequest(user, catchment);
 			request.get(catchment_request.getUrl(), catchment_request.getHeaders(), function(err, httpResponse, body) {
 				expect(httpResponse.statusCode).to.equal(403);
-				expect(body).to.equal('{"httpStatus":"403","message":"Access to catchment [' + catchment + '] is denied for user [' + user.client_id + ']"}');
+				expect(body).to.equal('{"httpStatus":"403","message":"Access is denied to user '+ user.client_id +' for catchment ' + catchment + '"}');
 				done();
 			});
 
