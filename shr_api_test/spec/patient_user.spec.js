@@ -19,8 +19,6 @@ describe("Patient User", function() {
 	before(function(done) {
 		request.post(new SSORequest(user).postBy(facility_user), function(err, httpResponse, body) {
 			user.access_token = JSON.parse(httpResponse.body).access_token;
-			
-			
 			request.post(new SSORequest(confidential_user).postBy(facility_user), function(err, httpResponse, body) {
 				confidential_user.access_token = JSON.parse(httpResponse.body).access_token;
 				request.post(new SSORequest(facility_user).post(), function(err, httpResponse, body) {
@@ -59,7 +57,7 @@ describe("Patient User", function() {
 
 		beforeEach(function(done) {
 			confidential_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid, "Yes"));
-			non_confidentail_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid));			
+			non_confidentail_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid));
 			encounter_request = new EncounterRequest(hid, user);
 			request.post(non_confidentail_encounter_request.post(), function(post_err, post_res, post_body) {
 				expect(post_res.statusCode).to.equal(200);
@@ -124,7 +122,7 @@ describe("Patient User", function() {
 
 		it("Should not receive encounters for confidential patient", function(done) {
 			request.get(encounter_request.getUrl(), encounter_request.getHeaders(), function(get_err, get_res, get_body) {
-				
+
 				expect(get_res.statusCode).to.equal(403);
 				expect(Number(JSON.parse(get_body).httpStatus)).to.equal(403);
 				expect(JSON.parse(get_body).message).to.equal("Access for patient " + confidential_patient_hid + " is denied for user " + user.client_id);
@@ -144,7 +142,7 @@ describe("Patient User", function() {
 		beforeEach(function(done) {
 			confidential_encounter_request_get = new EncounterRequest(confidential_user.hid, datasense_user);
 			non_confidential_encounter_request_get = new EncounterRequest(user.hid, datasense_user);
-			
+
 			request.get(non_confidential_encounter_request_get.getUrl(), non_confidential_encounter_request_get.getHeaders(), function(get_err, get_res, get_body) {
 				user_encounter_count = JSON.parse(get_body).entries.length;
 				request.get(confidential_encounter_request_get.getUrl(), confidential_encounter_request_get.getHeaders(), function(get_err, get_res, get_body) {
@@ -158,7 +156,7 @@ describe("Patient User", function() {
 
 		it("Should not accept post request from confidential patient", function(done) {
 			var confidential_user_encounter_request = new EncounterRequest(confidential_user.hid, confidential_user, new Encounter(confidential_user.hid, "Yes"));
-			
+
 			request.post(confidential_user_encounter_request.post(), function(post_err, post_res, post_body) {
 				expect(post_res.statusCode).to.equal(403);
 				request.get(confidential_user_encounter_request.getUrl(), confidential_user_encounter_request.getHeaders(), function(get_err, get_res, get_body) {
@@ -171,9 +169,9 @@ describe("Patient User", function() {
 		it("Should not accept post request from non confidential patient", function(done) {
 
 			var non_confidential_user_encounter_request = new EncounterRequest(user.hid, user, new Encounter(user.hid, "No"));
-			
+
 			request.post(non_confidential_user_encounter_request.post(), function(post_err, post_res, post_body) {
-				
+
 				expect(post_res.statusCode).to.equal(403);
 				request.get(non_confidential_user_encounter_request.getUrl(), non_confidential_user_encounter_request.getHeaders(), function(get_err, get_res, get_body) {
 					expect(JSON.parse(get_body).entries.length).to.equal(user_encounter_count);
@@ -242,7 +240,6 @@ describe("Patient User", function() {
 				done();
 			});
 		});
-
 
 	});
 });

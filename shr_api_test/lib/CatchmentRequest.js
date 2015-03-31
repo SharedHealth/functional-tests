@@ -1,8 +1,11 @@
 module.exports = function(user_detail, catchment_area_code) {
+	
+
 
 	function CatchmentRequest(user_detail, catchment_area_code) {
-		this.ip = "172.18.46.57";
-		this.port = "8081";
+		var config = require('./Config').config;
+		this.ip = config.shr_server_ip;
+		this.port = config.shr_server_port;
 		this.user_detail = user_detail;
 		this.catchment_area_code = catchment_area_code;
 		this.pad =  function (n) { return n < 10 ? '0'+n : n; };

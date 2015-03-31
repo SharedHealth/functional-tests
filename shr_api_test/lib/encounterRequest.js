@@ -1,14 +1,16 @@
 module.exports = function ( hid, user_detail, payload)
 {
 
+
+
 function EncounterRequest(hid,user_detail,  payload)
 {
-	
+	var config = require('./Config').config;	
 	this.user_detail = user_detail;
 	this.hid = hid;
 	this.encounter = payload || "";
-	this.ip =  "172.18.46.57";
-	this.port = "8081";
+	this.ip =  config.shr_server_ip;
+	this.port = config.shr_server_port;
 
 	this.headers = function(content_type) {
 
@@ -20,11 +22,7 @@ function EncounterRequest(hid,user_detail,  payload)
 		};
 
 	};
-	
-	
-	
 
-	
 	this.getHeaders = function()
 	{
 		return {headers : this.headers("application/json") };

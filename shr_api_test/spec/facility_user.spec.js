@@ -33,7 +33,7 @@ describe("facility user", function() {
 	afterEach(function() {
 		hid = "";
 		confidential_patient_hid = "";
-		
+
 	});
 
 	describe("Encounter Post and Request for non confidential patient", function() {
@@ -95,7 +95,7 @@ describe("facility user", function() {
 			request.get(confidential_encounter_request.getUrl(), confidential_encounter_request.getHeaders(), function(get_err, get_res, res_body) {
 				expect(get_res.statusCode).to.equal(403);
 				expect(Number(JSON.parse(res_body).httpStatus)).to.equal(403);
-// 				Access for patient 11302488966 data for user 18549 is denied
+				// 				Access for patient 11302488966 data for user 18549 is denied
 				expect(JSON.parse(res_body).message).to.equal("Access for patient " + confidential_patient_hid + " data for user " + user.client_id + " is denied");
 				done();
 			});

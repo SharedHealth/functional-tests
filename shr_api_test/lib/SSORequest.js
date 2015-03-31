@@ -1,8 +1,9 @@
 module.exports = function(user_detail) {
+	
 	function SSORequest(user_detail) {
-
-		this.sso_server_ip = "172.18.46.56";
-		this.port = 8080;
+		var config = require('./Config').config;
+		this.ip = config.sso_server_ip;
+		this.port = config.sso_server_port;
 		this.user_detail = user_detail;
 		
 		this.headers = function() {
@@ -23,7 +24,7 @@ module.exports = function(user_detail) {
 		this.post = function() {
 
 			return {
-				url : "http://" + this.sso_server_ip + ":" + this.port + "/signin",
+				url : "http://" + this.ip + ":" + this.port + "/signin",
 				headers : this.headers(),
 				formData : this.sso_form_data()
 			};
@@ -33,7 +34,7 @@ module.exports = function(user_detail) {
 		this.postBy = function(poster)
 		{
 			return {
-				url : "http://" + this.sso_server_ip + ":" + this.port + "/signin",
+				url : "http://" + this.ip + ":" + this.port + "/signin",
 				headers :  {
 								'X-Auth-Token' : poster.api_token,
 								'client_id' :    poster.client_id

@@ -1,5 +1,7 @@
 // var User = require('../lib/user.js');
-var Patient = require('../lib/patient');
+// var CatchmentRequest = require('../lib/CatchmentRequest.js');
+// 
+// var Patient = require('../lib/patient');
 // var Encounter = require('../lib/encounter');
 // var datasense = new User("datasense");
 // console.log(datasense);
@@ -25,3 +27,15 @@ var Patient = require('../lib/patient');
 // 		
 	// });
 // });
+
+
+// describe.only("Configuration Tests", function(){
+// 	// var user = new User('facility');
+// 	var config = require('../lib/Config').config;
+// 	// var catchment_request = new CatchmentRequest(user, user.catchment);
+// 	// it("Should show catchment request", function(){
+// 		// console.log(catchment_request.getUrl());
+// 		// console.log(catchment_request.getHeaders());
+// 	// })	;
+// });
+
