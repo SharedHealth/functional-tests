@@ -97,7 +97,7 @@ describe("Provider User", function() {
 				expect(get_res.statusCode).to.equal(403);
 				expect(Number(JSON.parse(res_body).httpStatus)).to.equal(403);
 				// Access for patient 11302580553 data for user 18556 is denied
-				expect(JSON.parse(res_body).message).to.equal("Access for patient " + confidential_patient_hid + " data for user " + user.client_id +  " is denied");
+				expect(JSON.parse(res_body).message).to.equal("Access is denied to user " + user.client_id + " for patient " + confidential_patient_hid);
 				done();
 			});
 		});
