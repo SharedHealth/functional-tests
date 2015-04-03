@@ -11,7 +11,7 @@ public class ClinicalDiagnosisPage extends Page {
 
     public WebDriver driver;
 
-    @FindBy(xpath = "//button[text()='ave']")
+    @FindBy(className = "save-consultation")
     private WebElement saveButton;
 
 

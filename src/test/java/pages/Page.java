@@ -90,7 +90,7 @@ public abstract class Page {
     }
 
     public HomePage goToHomePage() {
-        WebElement homeLogo = webDriver.findElement(By.className("header-logo"));
+        WebElement homeLogo = webDriver.findElement(By.className("icon-home"));
         homeLogo.click();
         return initialize(webDriver, HomePage.class);
 

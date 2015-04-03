@@ -30,7 +30,7 @@ public class ClinicalPage extends Page {
         wait.until(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
-                return null != webDriver.findElement(By.id("patientIdentifierInList"));
+                return null != webDriver.findElement(By.id("patientIdentifier"));
             }
         });
     }

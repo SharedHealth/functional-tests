@@ -37,7 +37,7 @@ public class ClinicalVisitPage extends Page {
         wait.until(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
-                return null != (webDriver.findElement(By.linkText("Visit")));
+                return null != (webDriver.findElement(By.className("concept-set-title")));
             }
         });
 
