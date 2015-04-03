@@ -6,7 +6,7 @@ module.exports = function(user_type){
 			client_id : 18552,
 			api_token : 'b7aa1f4001ac4b922dabd6a02a0dabc44cf5af74a0d1b68003ce7ccdb897a1d2',
 			access_token : "",
-			catchment : "30"
+			catchment : "3026"
 		};
 
 		user["facility"] = {
@@ -18,13 +18,22 @@ module.exports = function(user_type){
 			catchment : ["302607"]
 		};
 
-		user["mci"] = {
+		user["mciAdmin"] = {
 			email : "ashutoks@thoughtworks.com",
 			password : "thoughtworks",
 			client_id : 18557,
-			api_token : '',
+			api_token : null,
 			access_token : ""
 		};
+		user["mci_approver"] = {
+    			email : "ranjan@thoughtworks.com",
+    			password : "thoughtworks",
+    			client_id : 18559,
+    			api_token : null,
+    			access_token : "",
+    			catchment : ["3026"]
+    		};
+
 
 		user["provider"] = {
 			email : "monikar@thoughtworks.com",
@@ -54,6 +63,16 @@ module.exports = function(user_type){
 			hid : '11246363561'
 
 		};
+	user["shr"] = {
+    			email : "mritunjd@thoughtworks.com",
+    			password : "thoughtworks",
+    			client_id : 18550,
+    			api_token : 'c6e6fd3a26313eb250e1019519af33e743808f5bb50428ae5423b8ee278e6fa5',
+    			access_token : "",
+    			catchment : ["302607"]
+
+
+    		};
 
 
 
