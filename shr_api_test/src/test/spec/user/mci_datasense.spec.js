@@ -16,11 +16,11 @@ describe("MCI Datasense User", function () {
     var mci_datasense_user = it;
 
     before(function (done) {
-        request.post(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
+        request(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
             facility_user.access_token = JSON.parse(httpResponse.body).access_token;
-            request.post(new SSORequest(user).postBy(facility_user), function (err, httpResponse, body) {
+            request(new SSORequest(user).postBy(facility_user), function (err, httpResponse, body) {
                 user.access_token = JSON.parse(httpResponse.body).access_token;
-                request.post(new PatientRequest(facility_user, new Patient()).post(), function (err, res, body) {
+                request(new PatientRequest(facility_user, new Patient()).post(), function (err, res, body) {
                     hid = body.id;
                     done();
                 });
@@ -43,7 +43,7 @@ describe("MCI Datasense User", function () {
         patientRequest = new PatientRequest(user);
 
         mci_datasense_user("Should not be able to create patient", function (done) {
-            request.post(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
+            request(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 expect(body.message).to.equal("Access is denied");
                 done();

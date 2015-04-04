@@ -4,7 +4,8 @@ module.exports = function(user_detail, confidential) {
    		var config = require('./../Config').config;
 		this.user_detail = user_detail;
 		this.confidential = confidential || 'No';
-		this.server = config.mci_dns_name;		
+		this.server = config.mci_dns_name;
+        this.patient_detail = patient_detail;
 		this.headers = function() {
 
 			return {
@@ -19,10 +20,11 @@ module.exports = function(user_detail, confidential) {
 
 		this.post = function() {
 			return {
+                method : 'POST',
 				url : "https://" + this.server +  "/api/v1/patients",
 				headers : this.headers(),
 				json : true,
-				body : patient_detail
+				body : this.patient_detail
 			};
 
 		};

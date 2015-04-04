@@ -14,9 +14,9 @@ describe("MCI Provider User", function () {
     var mci_provider_user = it;
 
     before(function (done) {
-        request.post(new SSORequest(user).post(), function (err, httpResponse, body) {
+        request(new SSORequest(user).post(), function (err, httpResponse, body) {
             user.access_token = JSON.parse(httpResponse.body).access_token;
-            request.post(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
+            request(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
                 hid = body.id;
                 done();
             });

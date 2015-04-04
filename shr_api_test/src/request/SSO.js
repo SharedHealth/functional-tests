@@ -24,6 +24,7 @@ module.exports = function(user_detail) {
 		this.post = function() {
 
 			return {
+                method : 'POST',
 				url : "http://" + this.ip + ":" + this.port + "/signin",
 				headers : this.headers(),
 				formData : this.sso_form_data()
@@ -34,6 +35,7 @@ module.exports = function(user_detail) {
 		this.postBy = function(poster)
 		{
 			return {
+                method : 'POST',
 				url : "http://" + this.ip + ":" + this.port + "/signin",
 				headers :  {
 								'X-Auth-Token' : poster.api_token,

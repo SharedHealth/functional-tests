@@ -16,16 +16,16 @@ var confidential_patient_hid = "";
 var provider_user = it;
 
 before(function (done) {
-    request.post(new SSORequest(user).post(), function (err, httpResponse, body) {
+    request(new SSORequest(user).post(), function (err, httpResponse, body) {
         user.access_token = JSON.parse(httpResponse.body).access_token;
         done();
     });
 });
 
 beforeEach(function (done) {
-    request.post(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
+    request(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
         hid = body.id;
-        request.post(new PatientRequest(user, new Patient("Yes")).post(), function (err, res, body) {
+        request(new PatientRequest(user, new Patient("Yes")).post(), function (err, res, body) {
             confidential_patient_hid = body.id;
             done();
         });
@@ -46,23 +46,23 @@ describe("Encounter Post and Request for non confidential patient", function () 
     beforeEach(function (done) {
         confidential_encounter_request = new EncounterRequest(hid, user, new Encounter(hid, "Yes"));
         non_confidential_encounter_request = new EncounterRequest(hid, user, new Encounter(hid));
-        request.post(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
+        request(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
             expect(post_res.statusCode).to.equal(200);
             done();
         });
     });
 
     provider_user("Should receive non confidential encounter", function (done) {
-        request.get(non_confidential_encounter_request.getUrl(), non_confidential_encounter_request.getHeaders(), function (get_err, get_res, get_body) {
+        request(non_confidential_encounter_request.get(), function (get_err, get_res, get_body) {
             expect(get_res.statusCode).to.equal(200);
             expect(JSON.parse(get_body).entries.length).to.equal(1);
             done();
         });
     });
         provider_user("Should create and not receive confidential encounter", function (done) {
-            request.post(confidential_encounter_request.post(), function (post_err, post_res, post_body) {
+            request(confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(post_res.statusCode).to.equal(200);
-                request.get(confidential_encounter_request.getUrl(), confidential_encounter_request.getHeaders(), function (get_err, get_res, get_body) {
+                request(confidential_encounter_request.get(), function (get_err, get_res, get_body) {
                     expect(get_res.statusCode).to.equal(200);
                     expect(JSON.parse(get_body).entries.length).to.equal(1);
                     done();
@@ -78,9 +78,9 @@ describe("Encounter Post and Request for non confidential patient", function () 
         beforeEach(function (done) {
             confidential_encounter_request = new EncounterRequest(confidential_patient_hid, user, new Encounter(confidential_patient_hid, "Yes"));
             non_confidential_encounter_request = new EncounterRequest(confidential_patient_hid, user, new Encounter(confidential_patient_hid));
-            request.post(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
+            request(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(post_res.statusCode).to.equal(200);
-                request.post(confidential_encounter_request.post(), function (post_err, post_res, post_body) {
+                request(confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                     expect(post_res.statusCode).to.equal(200);
                     done();
                 });
@@ -89,7 +89,7 @@ describe("Encounter Post and Request for non confidential patient", function () 
         });
 
         provider_user("Should not receive any encounter for confidential patient", function (done) {
-            request.get(confidential_encounter_request.getUrl(), confidential_encounter_request.getHeaders(), function (get_err, get_res, res_body) {
+            request(confidential_encounter_request.get(), function (get_err, get_res, res_body) {
                 expect(get_res.statusCode).to.equal(403);
                 expect(Number(JSON.parse(res_body).httpStatus)).to.equal(403);
                 // Access for patient 11302580553 data for user 18556 is denied
@@ -105,7 +105,7 @@ describe("Encounter Post and Request for non confidential patient", function () 
 
             var catchment = user.catchment[0];
             var catchment_request = new CatchmentRequest(user, catchment);
-            request.get(catchment_request.getUrl(), catchment_request.getHeaders(), function (err, httpResponse, body) {
+            request(catchment_request.get(), function (err, httpResponse, body) {
                 expect(httpResponse.statusCode).to.equal(200);
                 done();
             });
@@ -116,7 +116,7 @@ describe("Encounter Post and Request for non confidential patient", function () 
             var catchment = user.catchment[0];
             var district_catchment = catchment.substring(0, catchment.length - 2);
             var catchment_request = new CatchmentRequest(user, district_catchment);
-            request.get(catchment_request.getUrl(), catchment_request.getHeaders(), function (err, httpResponse, body) {
+            request(catchment_request.get(), function (err, httpResponse, body) {
                 expect(httpResponse.statusCode).to.equal(403);
                 expect(body).to.equal('{"httpStatus":"403","message":"Access is denied to user ' + user.client_id + ' for catchment ' + district_catchment + '"}');
                 done();
@@ -127,7 +127,7 @@ describe("Encounter Post and Request for non confidential patient", function () 
         provider_user("should  return catchment details for city in case of city belongs to upazilla of facility", function (done) {
             var catchment = user.catchment[0] + "01";
             var catchment_request = new CatchmentRequest(user, catchment);
-            request.get(catchment_request.getUrl(), catchment_request.getHeaders(), function (err, httpResponse, body) {
+            request(catchment_request.get(), function (err, httpResponse, body) {
                 expect(httpResponse.statusCode).to.equal(200);
                 done();
             });

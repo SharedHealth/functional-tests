@@ -6,7 +6,7 @@ var Patient = require('../../../../src/entity/patient');
 var PatientRequest = require('../../../request/patient');
 var CatchmentRequest = require('../../../request/catchment');
 
-describe("MCI Patient User", function () {
+describe('MCI Patient User', function () {
     var facility_user = new User('facility');
     var mciPatient_user = new User('patient')
     var hid = "";
@@ -16,9 +16,9 @@ describe("MCI Patient User", function () {
     var mci_patient_user = it;
 
     before(function (done) {
-        request.post(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
+        request(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
             facility_user.access_token = JSON.parse(httpResponse.body).access_token;
-            request.post(new PatientRequest(facility_user, new Patient()).post(), function (err, res, body) {
+            request(new PatientRequest(facility_user, new Patient()).post(), function (err, res, body) {
                 hid = body.id;
                 done();
             });
@@ -35,14 +35,14 @@ describe("MCI Patient User", function () {
 
     describe("Execute all MCI APIs for mci patient user", function () {
 
-        request.post(new SSORequest(mciPatient_user).postBy(facility_user), function (err, httpResponse, body) {
+        request(new SSORequest(mciPatient_user).postBy(facility_user), function (err, httpResponse, body) {
             mciPatient_user.access_token = JSON.parse(httpResponse.body).access_token;
         });
 
         var patientRequest;
         patientRequest = new PatientRequest(mciPatient_user);
         mci_patient_user("Should not be able to create patient", function (done) {
-            request.post(new PatientRequest(mciPatient_user, new Patient()).post(), function (err, res, body) {
+            request(new PatientRequest(mciPatient_user, new Patient()).post(), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 expect(body.message).to.equal("Access is denied");
                 done();

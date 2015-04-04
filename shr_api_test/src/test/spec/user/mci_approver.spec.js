@@ -16,9 +16,9 @@ describe("MCI Approver User", function () {
     var mci_approver = it;
 
     before(function (done) {
-        request.post(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
+        request(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
             facility_user.access_token = JSON.parse(httpResponse.body).access_token;
-            request.post(new PatientRequest(facility_user, new Patient()).post(), function (err, res, body) {
+            request(new PatientRequest(facility_user, new Patient()).post(), function (err, res, body) {
                 hid = body.id;
                 done();
             });
@@ -35,7 +35,7 @@ describe("MCI Approver User", function () {
 
     describe("Execute all MCI APIs for mci approver user", function () {
 
-        request.post(new SSORequest(mciApprover_user).postBy(facility_user), function (err, httpResponse, body) {
+        request(new SSORequest(mciApprover_user).postBy(facility_user), function (err, httpResponse, body) {
             mciApprover_user.access_token = JSON.parse(httpResponse.body).access_token;
 
 
@@ -46,7 +46,7 @@ describe("MCI Approver User", function () {
 
 
         mci_approver("Should not be able to create patient", function (done) {
-            request.post(new PatientRequest(mciApprover_user, new Patient()).post(), function (err, res, body) {
+            request(new PatientRequest(mciApprover_user, new Patient()).post(), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 expect(body.message).to.equal("Access is denied");
                 done();
