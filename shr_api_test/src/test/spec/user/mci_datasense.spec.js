@@ -51,7 +51,7 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should be able to view patient By Hid", function (done) {
-            request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(200);
                 expect(JSON.parse(body).hid).to.equal(hid);
                 done();
@@ -61,9 +61,9 @@ describe("MCI Datasense User", function () {
 
 
         mci_datasense_user("Should not be able to view patient By Nid", function (done) {
-            request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
                 nid = JSON.parse(body).nid
-                request.get(patientRequest.getPatientDetailsByNid(nid), patientRequest.getHeaders(), function (err, res, body) {
+                request(patientRequest.getPatientDetailsByNid(nid), function (err, res, body) {
                     expect(res.statusCode).to.equal(403);
                     expect(JSON.parse(body).message).to.equal("Access is denied");
                     done();
@@ -73,9 +73,9 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should not be able to view patient By BinBrn", function (done) {
-            request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
                 var binBrn = JSON.parse(body).bin_brn
-                request.get(patientRequest.getPatientDetailsByBinBrn(binBrn), patientRequest.getHeaders(), function (err, res, body) {
+                request(patientRequest.getPatientDetailsByBinBrn(binBrn), function (err, res, body) {
                     expect(res.statusCode).to.equal(403);
                     expect(JSON.parse(body).message).to.equal("Access is denied");
                     done();
@@ -84,7 +84,7 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should be able to download all patient by catchment", function (done) {
-            request.get(patientRequest.getAllPatientsByCatchment(user.catchment), patientRequest.getHeaders(), function (err, res, body) {
+            request.get(patientRequest.getAllPatientsByCatchment(user.catchment), function (err, res, body) {
                 expect(res.statusCode).to.equal(200);
                 done();
             });
@@ -98,7 +98,7 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should not be able to view pending approval patient by catchment", function (done) {
-            request.get(patientRequest.getAllPendingApprovalPatientsByCatchment(user.catchment), patientRequest.getHeaders(), function (err, res, body) {
+            request.get(patientRequest.getAllPendingApprovalPatientsByCatchment(user.catchment), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 done();
             });

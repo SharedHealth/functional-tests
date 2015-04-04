@@ -39,36 +39,43 @@ module.exports = function(user_detail, confidential) {
 
         		};
 
+
+        this.get = function (uri) {
+            return {
+                method : 'GET',
+                headers : this.headers(),
+                'uri' : uri || this.uri
+            }
+
+        }
+
+
 		this.getPatientDetailsByHid = function(hid)
 		{
-		    return "https://" + this.server + "/api/v1/patients/" + hid;
+		    return this.get("https://" + this.server + "/api/v1/patients/" + hid);
 		}
 
 
 		this.getPatientDetailsByNid = function(nid)
         {
-        		    return "https://" + this.server + "/api/v1/patients/?nid=" + nid;
+        		    return this.get("https://" + this.server + "/api/v1/patients/?nid=" + nid);
   		}
 
         this.getPatientDetailsByBinBrn = function(binBrn)
         {
-            		    return "https://" + this.server + "/api/v1/patients/?bin_brn=" + binBrn;
+            return this.get("https://" + this.server + "/api/v1/patients/?bin_brn=" + binBrn);
         }
         this.getAllPatientsByCatchment = function(catchment)
         {
-                		    return "https://" + this.server + "/api/v1/catchments/"+catchment+"/patients";
+                		    return this.get("https://" + this.server + "/api/v1/catchments/"+catchment+"/patients");
         }
 
         this.getAllPendingApprovalPatientsByCatchment = function(catchment)
         {
-                		    return "https://" + this.server + "/api/v1/catchments/"+catchment+"/approvals";
+                		    return this.get("https://" + this.server + "/api/v1/catchments/"+catchment+"/approvals");
         }
 
 
-		this.getHeaders = function()
-		{
-		    return {headers : this.headers() };
-		}
 	}
 
 	return new PatientRequest(user_detail, confidential);

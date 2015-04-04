@@ -51,7 +51,7 @@ describe('MCI Patient User', function () {
         });
 
         mci_patient_user("Should not be able to view other patient By Hid", function (done) {
-            request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 expect(JSON.parse(body).message).to.equal("Access is denied to user " + mciPatient_user.client_id + " for patient with healthId : " + hid);
                 done();
@@ -60,7 +60,7 @@ describe('MCI Patient User', function () {
 
         mci_patient_user("Should be able to view patient By Hid", function (done) {
             var patientHid = mciPatient_user.hid;
-            request.get(patientRequest.getPatientDetailsByHid(patientHid), patientRequest.getHeaders(), function (err, res, body) {
+            request.get(patientRequest.getPatientDetailsByHid(patientHid), function (err, res, body) {
                 expect(res.statusCode).to.equal(200);
                 expect(JSON.parse(body).hid).to.equal(patientHid);
                 done();
@@ -69,9 +69,9 @@ describe('MCI Patient User', function () {
 
         mci_patient_user("Should not be able to view patient By Nid", function (done) {
             var patientHid = mciPatient_user.hid;
-            request.get(patientRequest.getPatientDetailsByHid(patientHid), patientRequest.getHeaders(), function (err, res, body) {
+            request.get(patientRequest.getPatientDetailsByHid(patientHid), function (err, res, body) {
                 nid = JSON.parse(body).nid
-                request.get(patientRequest.getPatientDetailsByNid(nid), patientRequest.getHeaders(), function (err, res, body) {
+                request(patientRequest.getPatientDetailsByNid(nid), function (err, res, body) {
                     expect(res.statusCode).to.equal(403);
                     expect(JSON.parse(body).message).to.equal("Access is denied");
                     done();
@@ -80,9 +80,9 @@ describe('MCI Patient User', function () {
         });
         mci_patient_user("Should not be able to view patient By BinBrn", function (done) {
             var patientHid = mciPatient_user.hid;
-            request.get(patientRequest.getPatientDetailsByHid(patientHid), patientRequest.getHeaders(), function (err, res, body) {
+            request.get(patientRequest.getPatientDetailsByHid(patientHid), function (err, res, body) {
                 binBrn = JSON.parse(body).bin_brn
-                request.get(patientRequest.getPatientDetailsByBinBrn(binBrn), patientRequest.getHeaders(), function (err, res, body) {
+                request(patientRequest.getPatientDetailsByBinBrn(binBrn), function (err, res, body) {
                     expect(res.statusCode).to.equal(403);
                     expect(JSON.parse(body).message).to.equal("Access is denied");
                     done();
@@ -91,7 +91,7 @@ describe('MCI Patient User', function () {
         });
 
         mci_patient_user("Should not be able to download patient by Catchment", function (done) {
-            request.get(patientRequest.getAllPatientsByCatchment("302607"), patientRequest.getHeaders(), function (err, res, body) {
+           request(patientRequest.getAllPatientsByCatchment("302607"), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 done();
             });
