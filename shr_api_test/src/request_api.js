@@ -1,7 +1,9 @@
+var Patient = require('./type/patient.js');
+var Encounter = require('./type/encounter.js');
+
 module.exports = function(user_detail) {
-	var Patient = require('./patient.js);
-	var Encounter = require('./encounter.js');
-	var this.user_detail = user_detail;
+
+	this.user_detail = user_detail;
 	
 	var sso_server_ip = "172.18.46.56";
 	var shr_server_ip = "172.18.46.57";

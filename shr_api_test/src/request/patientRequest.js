@@ -1,7 +1,7 @@
 module.exports = function(user_detail, confidential) {
 
 	function PatientRequest(user_detail, patient_detail) {
-   		var config = require('./Config').config;
+   		var config = require('./../Config').config;
 		this.user_detail = user_detail;
 		this.confidential = confidential || 'No';
 		this.server = config.mci_dns_name;		

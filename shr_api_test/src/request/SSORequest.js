@@ -1,7 +1,7 @@
 module.exports = function(user_detail) {
 	
 	function SSORequest(user_detail) {
-		var config = require('./Config').config;
+		var config = require('./../Config').config;
 		this.ip = config.sso_server_ip;
 		this.port = config.sso_server_port;
 		this.user_detail = user_detail;

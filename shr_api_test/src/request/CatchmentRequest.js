@@ -3,7 +3,7 @@ module.exports = function(user_detail, catchment_area_code) {
 
 
 	function CatchmentRequest(user_detail, catchment_area_code) {
-		var config = require('./Config').config;
+		var config = require('./../Config').config;
 		this.ip = config.shr_server_ip;
 		this.port = config.shr_server_port;
 		this.user_detail = user_detail;

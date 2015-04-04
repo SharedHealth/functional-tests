@@ -5,7 +5,7 @@ module.exports = function ( hid, user_detail, payload)
 
 function EncounterRequest(hid,user_detail,  payload)
 {
-	var config = require('./Config').config;	
+	var config = require('./../Config').config;
 	this.user_detail = user_detail;
 	this.hid = hid;
 	this.encounter = payload || "";
