@@ -98,7 +98,6 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should not be able to view pending approval patient by catchment", function (done) {
-
             request.get(patientRequest.getAllPendingApprovalPatientsByCatchment(user.catchment), patientRequest.getHeaders(), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 done();
