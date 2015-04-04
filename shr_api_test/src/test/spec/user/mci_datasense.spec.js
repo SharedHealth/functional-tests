@@ -1,19 +1,19 @@
 var request = require('request');
-var User = require('../../../src/user');
+var User = require('../../../../src/data/user' );
 
-var SSORequest = require('../../../src/request/SSORequest');
-var Patient = require('../../../src/type/patient');
-var PatientRequest = require('../../../src/request/patientRequest');
-var CatchmentRequest = require('../../../src/request/CatchmentRequest');
+var SSORequest = require('../../../../src/request/SSORequest');
+var Patient = require('../../../../src/entity/patient');
+var PatientRequest = require('../../../../src/request/patientRequest');
+var CatchmentRequest = require('../../../../src/request/CatchmentRequest');
 
-describe("MCI Admin User", function () {
+describe("MCI Datasense User", function () {
     var facility_user = new User('facility');
-    var user = new User('mciAdmin')
+    var user = new User('datasense')
     var hid = "";
     var nid = ""
     var binBrn = "";
     var confidential_patient_hid = "";
-    var mci_admin_user = it;
+    var mci_datasense_user = it;
 
     before(function (done) {
         request.post(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
@@ -24,7 +24,9 @@ describe("MCI Admin User", function () {
                     hid = body.id;
                     done();
                 });
+
             });
+
         });
     });
 
@@ -36,65 +38,70 @@ describe("MCI Admin User", function () {
         done();
     });
 
-    describe("Execute all MCI APIs for mci admin user", function () {
+    describe("Execute all MCI APIs for mci datasense user", function () {
         var patientRequest;
         patientRequest = new PatientRequest(user);
 
-        mci_admin_user("Should not be able to create patient", function (done) {
+        mci_datasense_user("Should not be able to create patient", function (done) {
             request.post(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 expect(body.message).to.equal("Access is denied");
                 done();
-
             });
         });
 
-        mci_admin_user("Should be able to view patient By Hid", function (done) {
+        mci_datasense_user("Should be able to view patient By Hid", function (done) {
             request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
                 expect(res.statusCode).to.equal(200);
                 expect(JSON.parse(body).hid).to.equal(hid);
                 done();
+
             });
         });
 
-        mci_admin_user("Should be able to view patient By Nid", function (done) {
+
+        mci_datasense_user("Should not be able to view patient By Nid", function (done) {
             request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
                 nid = JSON.parse(body).nid
                 request.get(patientRequest.getPatientDetailsByNid(nid), patientRequest.getHeaders(), function (err, res, body) {
-                    expect(res.statusCode).to.equal(200);
-                    expect(JSON.parse(body).results[0].nid).to.equal(nid);
+                    expect(res.statusCode).to.equal(403);
+                    expect(JSON.parse(body).message).to.equal("Access is denied");
                     done();
+
                 });
             });
         });
 
-        mci_admin_user("Should be able to view patient By BinBrn", function (done) {
+        mci_datasense_user("Should not be able to view patient By BinBrn", function (done) {
             request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
-                binBrn = JSON.parse(body).bin_brn
+                var binBrn = JSON.parse(body).bin_brn
                 request.get(patientRequest.getPatientDetailsByBinBrn(binBrn), patientRequest.getHeaders(), function (err, res, body) {
-                    expect(res.statusCode).to.equal(200);
-                    expect(JSON.parse(body).results[0].bin_brn).to.equal(binBrn);
+                    expect(res.statusCode).to.equal(403);
+                    expect(JSON.parse(body).message).to.equal("Access is denied");
                     done();
-
                 });
             });
         });
 
-        mci_admin_user("Should not be able to download patients by catchment", function (done) {
-            request.get(patientRequest.getAllPatientsByCatchment("302607"), patientRequest.getHeaders(), function (err, res, body) {
-                expect(res.statusCode).to.equal(403)
+        mci_datasense_user("Should be able to download all patient by catchment", function (done) {
+            request.get(patientRequest.getAllPatientsByCatchment(user.catchment), patientRequest.getHeaders(), function (err, res, body) {
+                expect(res.statusCode).to.equal(200);
                 done();
             });
         });
 
-        mci_admin_user("Should be able to update the patient", function (done) {
+        mci_datasense_user("Should not be able to update the patient", function (done) {
             request.put(patientRequest.updatePost(hid), function (err, res, body) {
-                expect(res.statusCode).to.equal(202);
+                expect(res.statusCode).to.equal(403);
                 done();
             });
         });
 
+        mci_datasense_user("Should not be able to view pending approval patient by catchment", function (done) {
+            request.get(patientRequest.getAllPendingApprovalPatientsByCatchment(user.catchment), patientRequest.getHeaders(), function (err, res, body) {
+                expect(res.statusCode).to.equal(403);
+                done();
+            });
+        });
     });
-
-
 });

@@ -1,3 +1,0 @@
---require test/chai.js
---no-timeouts
---recursive

@@ -1,23 +1,26 @@
 var request = require('request');
-var User = require('../../../src/user');
-var Encounter = require('../../../src/type/encounter');
-var EncounterRequest = require('../../../src/request/encounterRequest');
-var CatchmentRequest = require('../../../src/request/CatchmentRequest');
-var SSORequest = require('../../../src/request/SSORequest');
-var Patient = require('../../../src/type/patient');
-var PatientRequest = require('../../../src/request/patientRequest');
+var User = require('../../../../src/data/user' );
+var Encounter = require('../../../../src/entity/encounter');
+var EncounterRequest = require('../../../../src/request/encounterRequest');
 
-describe("Provider User", function () {
-    var user = new User('provider');
+var SSORequest = require('../../../../src/request/SSORequest');
+var Patient = require('../../../../src/entity/patient');
+var PatientRequest = require('../../../../src/request/patientRequest');
+var CatchmentRequest = require('../../../../src/request/CatchmentRequest');
+
+
+describe("Facility User", function () {
+    var user = new User('facility');
     var hid = "";
     var confidential_patient_hid = "";
-    var provider_user = it;
-
+    var facility_user = it;
+    
     before(function (done) {
         request.post(new SSORequest(user).post(), function (err, httpResponse, body) {
             user.access_token = JSON.parse(httpResponse.body).access_token;
             done();
         });
+
     });
 
     beforeEach(function (done) {
@@ -28,16 +31,16 @@ describe("Provider User", function () {
                 done();
             });
         });
-
     });
 
-    afterEach(function (done) {
+    afterEach(function () {
         hid = "";
         confidential_patient_hid = "";
-        done();
+
     });
 
     describe("Encounter Post and Request for non confidential patient", function () {
+
         var confidential_encounter_request;
         var non_confidential_encounter_request;
 
@@ -48,17 +51,19 @@ describe("Provider User", function () {
                 expect(post_res.statusCode).to.equal(200);
                 done();
             });
+
         });
 
-        provider_user("Should receive non confidential encounter", function (done) {
+        facility_user("Should receive non confidential encounter", function (done) {
             request.get(non_confidential_encounter_request.getUrl(), non_confidential_encounter_request.getHeaders(), function (get_err, get_res, get_body) {
                 expect(get_res.statusCode).to.equal(200);
                 expect(JSON.parse(get_body).entries.length).to.equal(1);
                 done();
+
             });
         });
 
-        provider_user("Should create and not receive confidential encounter", function (done) {
+        facility_user("Should create and not receive confidential encounter", function (done) {
             request.post(confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(post_res.statusCode).to.equal(200);
                 request.get(confidential_encounter_request.getUrl(), confidential_encounter_request.getHeaders(), function (get_err, get_res, get_body) {
@@ -67,6 +72,7 @@ describe("Provider User", function () {
                     done();
                 });
             });
+
         });
     });
 
@@ -87,11 +93,11 @@ describe("Provider User", function () {
 
         });
 
-        provider_user("Should not receive any encounter for confidential patient", function (done) {
+        facility_user("Should not receive any encounter for confidential patient", function (done) {
             request.get(confidential_encounter_request.getUrl(), confidential_encounter_request.getHeaders(), function (get_err, get_res, res_body) {
                 expect(get_res.statusCode).to.equal(403);
                 expect(Number(JSON.parse(res_body).httpStatus)).to.equal(403);
-                // Access for patient 11302580553 data for user 18556 is denied
+                // 				Access for patient 11302488966 data for user 18549 is denied
                 expect(JSON.parse(res_body).message).to.equal("Access is denied to user " + user.client_id + " for patient " + confidential_patient_hid);
                 done();
             });
@@ -100,8 +106,7 @@ describe("Provider User", function () {
     });
 
     describe("Catchment Feed", function () {
-        provider_user("Should receive for his catchment area code", function (done) {
-
+        facility_user("Should receive for his catchment area code", function (done) {
             var catchment = user.catchment[0];
             var catchment_request = new CatchmentRequest(user, catchment);
             request.get(catchment_request.getUrl(), catchment_request.getHeaders(), function (err, httpResponse, body) {
@@ -110,8 +115,7 @@ describe("Provider User", function () {
             });
         });
 
-        provider_user("should not return catchment details for district in case catchment_code correspondes to upazilla belongs to upazilla", function (done) {
-
+        facility_user("should not return catchment details for district in case catchment_code correspondes to upazilla belongs to upazilla", function (done) {
             var catchment = user.catchment[0];
             var district_catchment = catchment.substring(0, catchment.length - 2);
             var catchment_request = new CatchmentRequest(user, district_catchment);
@@ -123,7 +127,7 @@ describe("Provider User", function () {
 
         });
 
-        provider_user("should  return catchment details for city in case of city belongs to upazilla of facility", function (done) {
+        facility_user("should  return catchment details for city in case of city belongs to upazilla of facility", function (done) {
             var catchment = user.catchment[0] + "01";
             var catchment_request = new CatchmentRequest(user, catchment);
             request.get(catchment_request.getUrl(), catchment_request.getHeaders(), function (err, httpResponse, body) {
@@ -135,4 +139,3 @@ describe("Provider User", function () {
 
     });
 });
-

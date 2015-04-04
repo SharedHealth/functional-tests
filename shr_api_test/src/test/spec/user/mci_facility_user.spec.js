@@ -1,27 +1,25 @@
 var request = require('request');
-var User = require('../../../src/user');
+var User = require('../../../../src/data/user' );
 
-var SSORequest = require('../../../src/request/SSORequest');
-var Patient = require('../../../src/type/patient');
-var PatientRequest = require('../../../src/request/patientRequest');
-var CatchmentRequest = require('../../../src/request/CatchmentRequest');
+var SSORequest = require('../../../../src/request/SSORequest');
+var Patient = require('../../../../src/entity/patient');
+var PatientRequest = require('../../../../src/request/patientRequest');
+var CatchmentRequest = require('../../../../src/request/CatchmentRequest');
 
-describe("MCI Provider User", function () {
-    var provider_user = new User('provider');
+describe("MCI Facility User", function () {
+    var user = new User('facility');
     var hid = "";
-    var nid = ""
+    var nid = "";
     var binBrn = "";
     var confidential_patient_hid = "";
-    var mci_provider_user = it;
-
+    var mci_facility_user = it;
     before(function (done) {
-        request.post(new SSORequest(provider_user).post(), function (err, httpResponse, body) {
-            provider_user.access_token = JSON.parse(httpResponse.body).access_token;
-            request.post(new PatientRequest(provider_user, new Patient()).post(), function (err, res, body) {
+        request.post(new SSORequest(user).post(), function (err, httpResponse, body) {
+            user.access_token = JSON.parse(httpResponse.body).access_token;
+            request.post(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
                 hid = body.id;
                 done();
             });
-
         });
     });
 
@@ -33,53 +31,57 @@ describe("MCI Provider User", function () {
         done();
     });
 
-    describe("Execute all MCI APIs for provider user", function () {
+    describe("MCI APIs for Facility User", function () {
 
         var patientRequest;
-        patientRequest = new PatientRequest(provider_user);
-        mci_provider_user("Should be able to view patient By Hid", function (done) {
+        patientRequest = new PatientRequest(user);
+
+
+        mci_facility_user("Should be able to view patient By Hid", function (done) {
             request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
                 expect(res.statusCode).to.equal(200);
                 expect(JSON.parse(body).hid).to.equal(hid);
                 done();
+
             });
         });
 
-
-        mci_provider_user("Should be able to view patient By Nid", function (done) {
+        mci_facility_user("Should be able to view patient By nid", function (done) {
             request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
                 nid = JSON.parse(body).nid
                 request.get(patientRequest.getPatientDetailsByNid(nid), patientRequest.getHeaders(), function (err, res, body) {
                     expect(res.statusCode).to.equal(200);
                     expect(JSON.parse(body).results[0].nid).to.equal(nid);
                     done();
-                });
-            });
-        });
-        mci_provider_user("Should be able to view patient By BinBrn", function (done) {
-            request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
-                binBrn = JSON.parse(body).bin_brn;
-                request.get(patientRequest.getPatientDetailsByBinBrn(binBrn), patientRequest.getHeaders(), function (err, res, body) {
-                    expect(res.statusCode).to.equal(200);
-                    expect(JSON.parse(body).results[0].bin_brn).to.equal(binBrn);
-                    done();
+
                 });
             });
         });
 
-        mci_provider_user("Should be able to download all patient by catchment", function (done) {
-            request.get(patientRequest.getAllPatientsByCatchment(provider_user.catchment), patientRequest.getHeaders(), function (err, res, body) {
+        mci_facility_user("Should be able to view patient By BinBrn", function (done) {
+            request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
+                binBrn = JSON.parse(body).bin_brn
+                request.get(patientRequest.getPatientDetailsByBinBrn(binBrn), patientRequest.getHeaders(), function (err, res, body) {
+                    expect(res.statusCode).to.equal(200);
+                    expect(JSON.parse(body).results[0].bin_brn).to.equal(binBrn);
+                    done();
+
+                });
+            });
+        });
+
+        mci_facility_user("Should be able to download all patient by catchment", function (done) {
+            request.get(patientRequest.getAllPatientsByCatchment(user.catchment), patientRequest.getHeaders(), function (err, res, body) {
                 expect(res.statusCode).to.equal(200);
                 done();
             });
         });
 
-        mci_provider_user("Should be able to update the patient", function (done) {
+        mci_facility_user("Should be able to update the patient", function (done) {
             request.put(patientRequest.updatePost(hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(202);
                 done();
             });
         });
-
     });
 });

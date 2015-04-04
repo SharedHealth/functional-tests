@@ -11,7 +11,6 @@ module.exports = function(user_detail, catchment_area_code) {
 		this.pad =  function (n) { return n < 10 ? '0'+n : n; };
 		this.ISODateString = function() {
 			var d = new Date();
-			// return d.getFullYear() + '-' + this.pad(d.getMonth() + 1) + '-' + this.pad(d.getDate()) + 'T' + this.pad(d.getHours()) + ':' + this.pad(d.getMinutes()) + ':' + this.pad(d.getSeconds());
 			return d.getFullYear() + '-' + this.pad(d.getMonth() + 1) + '-' + this.pad(d.getDate()) + 'T' + this.pad(d.getHours()) + '%3A' + this.pad(d.getMinutes()) + '%3A' + this.pad(d.getSeconds()) + "%2B0530";
 			
 		};
