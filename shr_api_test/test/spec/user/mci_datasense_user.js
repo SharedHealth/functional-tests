@@ -13,6 +13,7 @@ describe("MCI Datasense User", function () {
     var nid = ""
     var binBrn = "";
     var confidential_patient_hid = "";
+    var mci_datasense_user = it;
 
     before(function (done) {
         request.post(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
@@ -41,7 +42,7 @@ describe("MCI Datasense User", function () {
         var patientRequest;
         patientRequest = new PatientRequest(user);
 
-        it("Should not be able to create patient", function (done) {
+        mci_datasense_user("Should not be able to create patient", function (done) {
             request.post(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 expect(body.message).to.equal("Access is denied");
@@ -49,7 +50,7 @@ describe("MCI Datasense User", function () {
             });
         });
 
-        it("Should be able to view patient By Hid", function (done) {
+        mci_datasense_user("Should be able to view patient By Hid", function (done) {
             request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
                 expect(res.statusCode).to.equal(200);
                 expect(JSON.parse(body).hid).to.equal(hid);
@@ -59,7 +60,7 @@ describe("MCI Datasense User", function () {
         });
 
 
-        it("Should not be able to view patient By Nid", function (done) {
+        mci_datasense_user("Should not be able to view patient By Nid", function (done) {
             request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
                 nid = JSON.parse(body).nid
                 request.get(patientRequest.getPatientDetailsByNid(nid), patientRequest.getHeaders(), function (err, res, body) {
@@ -71,7 +72,7 @@ describe("MCI Datasense User", function () {
             });
         });
 
-        it("Should not be able to view patient By BinBrn", function (done) {
+        mci_datasense_user("Should not be able to view patient By BinBrn", function (done) {
             request.get(patientRequest.getPatientDetailsByHid(hid), patientRequest.getHeaders(), function (err, res, body) {
                 var binBrn = JSON.parse(body).bin_brn
                 request.get(patientRequest.getPatientDetailsByBinBrn(binBrn), patientRequest.getHeaders(), function (err, res, body) {
@@ -82,30 +83,26 @@ describe("MCI Datasense User", function () {
             });
         });
 
-        it("Should be able to download all patient by catchment", function (done) {
+        mci_datasense_user("Should be able to download all patient by catchment", function (done) {
             request.get(patientRequest.getAllPatientsByCatchment(user.catchment), patientRequest.getHeaders(), function (err, res, body) {
                 expect(res.statusCode).to.equal(200);
                 done();
             });
         });
 
-        it("Should not be able to update the patient", function (done) {
+        mci_datasense_user("Should not be able to update the patient", function (done) {
             request.put(patientRequest.updatePost(hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 done();
             });
         });
 
-        it("Should not be able to view pending approval patient by catchment", function (done) {
+        mci_datasense_user("Should not be able to view pending approval patient by catchment", function (done) {
 
             request.get(patientRequest.getAllPendingApprovalPatientsByCatchment(user.catchment), patientRequest.getHeaders(), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 done();
             });
         });
-
-
     });
-
-
 });

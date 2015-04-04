@@ -15,6 +15,7 @@ describe("Patient User", function () {
     var datasense_user = new User('datasense');
     var hid = "";
     var confidential_patient_hid = "";
+    var patient_user = it;
 
     before(function (done) {
         request.post(new SSORequest(user).postBy(facility_user), function (err, httpResponse, body) {
@@ -66,7 +67,7 @@ describe("Patient User", function () {
 
         });
 
-        it("Should not receive non confidential encounter", function (done) {
+        patient_user("Should not receive non confidential encounter", function (done) {
 
             request.get(encounter_request.getUrl(), encounter_request.getHeaders(), function (get_err, get_res, res_body) {
                 expect(get_res.statusCode).to.equal(403);
@@ -77,7 +78,7 @@ describe("Patient User", function () {
             });
         });
 
-        it("Should not receive confidential encounters", function (done) {
+        patient_user("Should not receive confidential encounters", function (done) {
 
             request.post(confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(post_res.statusCode).to.equal(200);
@@ -90,7 +91,7 @@ describe("Patient User", function () {
             });
         });
 
-        it("Should not create encounter", function (done) {
+        patient_user("Should not create encounter", function (done) {
 
             request.post(encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(Number(JSON.parse(post_body).httpStatus)).to.equal(403);
@@ -120,7 +121,7 @@ describe("Patient User", function () {
 
         });
 
-        it("Should not receive encounters for confidential patient", function (done) {
+        patient_user("Should not receive encounters for confidential patient", function (done) {
             request.get(encounter_request.getUrl(), encounter_request.getHeaders(), function (get_err, get_res, get_body) {
 
                 expect(get_res.statusCode).to.equal(403);
@@ -154,7 +155,7 @@ describe("Patient User", function () {
             });
         });
 
-        it("Should not accept post request from confidential patient", function (done) {
+        patient_user("Should not accept post request from confidential patient", function (done) {
             var confidential_user_encounter_request = new EncounterRequest(confidential_user.hid, confidential_user, new Encounter(confidential_user.hid, "Yes"));
 
             request.post(confidential_user_encounter_request.post(), function (post_err, post_res, post_body) {
@@ -166,7 +167,7 @@ describe("Patient User", function () {
             });
         });
 
-        it("Should not accept post request from non confidential patient", function (done) {
+        patient_user("Should not accept post request from non confidential patient", function (done) {
 
             var non_confidential_user_encounter_request = new EncounterRequest(user.hid, user, new Encounter(user.hid, "No"));
 
@@ -203,7 +204,7 @@ describe("Patient User", function () {
             });
         });
 
-        it("should be able to see his own confidential encounters", function (done) {
+        patient_user("should be able to see his own confidential encounters", function (done) {
             var confidential_encounter_post = new EncounterRequest(confidential_user.hid, facility_user, new Encounter(confidential_user.hid, "Yes"));
             var encounter_request = new EncounterRequest(confidential_user.hid, confidential_user);
             request.post(confidential_encounter_post.post(), function (post_err, post_res, post_body) {
@@ -215,7 +216,7 @@ describe("Patient User", function () {
             });
         });
 
-        it("should be able to see his own non confidential encounters", function (done) {
+        patient_user("should be able to see his own non confidential encounters", function (done) {
             var encounter_post = new EncounterRequest(user.hid, facility_user, new Encounter(user.hid, "Yes"));
             var encounter_request = new EncounterRequest(user.hid, user);
             request.post(encounter_post.post(), function (post_err, post_res, post_body) {
@@ -230,7 +231,7 @@ describe("Patient User", function () {
     });
 
     describe("Catchment Feed", function () {
-        it("Should not receive for his catchment area code", function (done) {
+        patient_user("Should not receive encounters for his catchment area code", function (done) {
 
             var catchment = "302607";
             var catchment_request = new CatchmentRequest(user, catchment);

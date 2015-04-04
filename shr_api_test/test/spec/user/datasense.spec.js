@@ -8,13 +8,14 @@ var Patient = require('../../../src/type/patient');
 var PatientRequest = require('../../../src/request/patientRequest');
 var CatchmentRequest = require('../../../src/request/CatchmentRequest');
 
-
 describe("Datasense User", function () {
     var user = new User('datasense');
     var facility_user = new User('facility');
 
     var hid = "";
     var confidential_patient_hid = "";
+    var datasense_user = it;
+    
 
     before(function (done) {
         request.post(new SSORequest(user).post(), function (err, httpResponse, body) {
@@ -60,7 +61,7 @@ describe("Datasense User", function () {
 
         });
 
-        it("Should receive non confidential encounter", function (done) {
+        datasense_user("Should receive non confidential encounter", function (done) {
 
             request.get(encounter_request.getUrl(), encounter_request.getHeaders(), function (get_err, get_res, get_body) {
                 expect(get_res.statusCode).to.equal(200);
@@ -70,7 +71,7 @@ describe("Datasense User", function () {
             });
         });
 
-        it("Should receive confidential encounter", function (done) {
+        datasense_user("Should receive confidential encounter", function (done) {
 
             request.post(confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(post_res.statusCode).to.equal(200);
@@ -81,7 +82,7 @@ describe("Datasense User", function () {
             });
         });
 
-        it("Should not create encounter", function (done) {
+        datasense_user("Should not create encounter", function (done) {
 
             request.post(encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(Number(JSON.parse(post_body).httpStatus)).to.equal(403);
@@ -116,7 +117,7 @@ describe("Datasense User", function () {
 
         });
 
-        it("Should receive encounters for confidential patient", function (done) {
+        datasense_user("Should receive encounters for confidential patient", function (done) {
             request.get(encounter_request.getUrl(), encounter_request.getHeaders(), function (get_err, get_res, get_body) {
                 expect(get_res.statusCode).to.equal(200);
                 expect(JSON.parse(get_body).entries.length).to.equal(2);
@@ -127,7 +128,7 @@ describe("Datasense User", function () {
     });
 
     describe("Catchment Feed", function () {
-        it("Should receive for his catchment area code", function (done) {
+        datasense_user("Should receive for his catchment area code", function (done) {
 
             var catchment = user.catchment + "26";
             var catchment_request = new CatchmentRequest(user, catchment);
@@ -137,7 +138,7 @@ describe("Datasense User", function () {
             });
         });
 
-        it("should not return catchment details for unauthorized catchments", function (done) {
+        datasense_user("should not return catchment details for unauthorized catchments", function (done) {
 
             var catchment = "31" + "26";
             var catchment_request = new CatchmentRequest(user, catchment);
@@ -149,7 +150,7 @@ describe("Datasense User", function () {
 
         });
 
-        it("should  return catchment details for city in case of city belongs to upazilla of facility", function (done) {
+        datasense_user("should  return catchment details for city in case of city belongs to upazilla of facility", function (done) {
             var catchment = user.catchment + "2701";
             var catchment_request = new CatchmentRequest(user, catchment);
             request.get(catchment_request.getUrl(), catchment_request.getHeaders(), function (err, httpResponse, body) {
