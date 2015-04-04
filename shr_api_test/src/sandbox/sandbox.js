@@ -1,5 +1,5 @@
 // var User = require('../lib/user.js');
-// var CatchmentRequest = require('../lib/CatchmentRequest.js');
+// var CatchmentRequest = require('../lib/catchment.js');
 // 
 // var Patient = require('../lib/patient');
 // var Encounter = require('../lib/encounter');

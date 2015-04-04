@@ -1,12 +1,12 @@
 var request = require('request');
 var User = require('../../../../src/data/user' );
 var Encounter = require('../../../../src/entity/encounter');
-var EncounterRequest = require('../../../../src/request/encounterRequest');
-var CatchmentRequest = require('../../../../src/request/CatchmentRequest');
+var EncounterRequest = require('../../../request/encounter');
+var CatchmentRequest = require('../../../request/catchment');
 
-var SSORequest = require('../../../../src/request/SSORequest');
+var SSORequest = require('../../../request/SSO');
 var Patient = require('../../../../src/entity/patient');
-var PatientRequest = require('../../../../src/request/patientRequest');
+var PatientRequest = require('../../../request/patient');
 
 describe("Patient User", function () {
     var user = new User('patient');

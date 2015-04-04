@@ -1,10 +1,10 @@
 var request = require('request');
 var User = require('../../../../src/data/user' );
 
-var SSORequest = require('../../../../src/request/SSORequest');
+var SSORequest = require('../../../request/SSO');
 var Patient = require('../../../../src/entity/patient');
-var PatientRequest = require('../../../../src/request/patientRequest');
-var CatchmentRequest = require('../../../../src/request/CatchmentRequest');
+var PatientRequest = require('../../../request/patient');
+var CatchmentRequest = require('../../../request/catchment');
 
 describe("MCI Approver User", function () {
     var facility_user = new User('facility');
