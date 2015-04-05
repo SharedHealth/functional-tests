@@ -1,195 +1,166 @@
-exports.PatientRequest =     function (user_detail, patient_detail) {
-        var config = require('./../Config').config;
-        this.user_detail = user_detail;
-        this.server = config.mci_dns_name;
-        this.patient_detail = patient_detail;
-        this.headers = function() {
-            return {
-                "Content-Type" : "application/json",
-                "X-Auth-Token" : this.user_detail.access_token,
-                "From" : this.user_detail.email,
-                "client_id" : this.user_detail.client_id
-            };
-        };
+var config = require('./../Config').config;
+var EntityRequest = function() {};
+EntityRequest.prototype.headers = function (content_type) {
+    return {
+        "Content-Type": content_type || "application/json",
+        "X-Auth-Token": this.user_detail.access_token,
+        "From": this.user_detail.email,
+        "client_id": this.user_detail.client_id
+    }
+};
 
-        this.post = function() {
-            return {
-                method : 'POST',
-                url : "https://" + this.server +  "/api/v1/patients",
-                headers : this.headers(),
-                json : true,
-                body : this.patient_detail
-            };
-        };
+ EntityRequest.prototype.get = function (uri) {
+     return {
+         method: 'GET',
+         headers: this.headers(),
+         'uri': uri || this.uri()
+     }
+ };
 
-        this.updatePost = function(hid) {
-            return {
-                url : "https://" + this.server + "/api/v1/patients/" + hid,
-                headers : this.headers(),
-                json : true,
-                body : {"gender" : "F"}
-            };
-        };
-
-        this.get = function (uri) {
-            return {
-                method : 'GET',
-                headers : this.headers(),
-                'uri' : uri || this.uri
-            }
-        };
-
-        this.getPatientDetailsByHid = function(hid)
-        {
-            return this.get("https://" + this.server + "/api/v1/patients/" + hid);
-        };
-        this.getPatientDetailsByNid = function(nid)
-        {
-            return this.get("https://" + this.server + "/api/v1/patients/?nid=" + nid);
-        };
-
-        this.getPatientDetailsByBinBrn = function(binBrn)
-        {
-            return this.get("https://" + this.server + "/api/v1/patients/?bin_brn=" + binBrn);
-        };
-        this.getAllPatientsByCatchment = function(catchment)
-        {
-            return this.get("https://" + this.server + "/api/v1/catchments/"+catchment+"/patients");
-        };
-
-        this.getAllPendingApprovalPatientsByCatchment = function(catchment)
-        {
-            return this.get("https://" + this.server + "/api/v1/catchments/"+catchment+"/approvals");
-        }
-
+EntityRequest.prototype._post = function (body, url) {
+    return {
+        method: 'POST',
+        'url': url || this.uri(),
+        'headers': this.headers(),
+        'json': true,
+        'body': body
 
     };
+};
 
-exports.EncounterRequest =  function (hid,user_detail,  payload)
+var PatientRequest = function(user_detail, patient_detail)
 {
+    this.user_detail = user_detail;
+    this.server = config.mci_dns_name;
+    this.patient_detail = patient_detail;
+};
+
+
+PatientRequest.prototype = new EntityRequest();
+PatientRequest.prototype.uri = function() {
+    return "https://" + this.server + "/api/v1/patients";
+};
+
+PatientRequest.prototype.post = function() {
+    return this._post(this.patient_detail);
+};
+
+PatientRequest.prototype.updatePost = function (hid) {
+    return this._post({'gender': 'F'}, this.uri() + "/" + hid)
+};
+
+PatientRequest.prototype.getPatientDetailsByHid = function (hid) {
+    return this.get("https://" + this.server + "/api/v1/patients/" + hid);
+};
+
+PatientRequest.prototype.getPatientDetailsByNid = function (nid) {
+    return this.get("https://" + this.server + "/api/v1/patients/?nid=" + nid);
+};
+
+PatientRequest.prototype.getPatientDetailsByBinBrn = function (binBrn) {
+    return this.get("https://" + this.server + "/api/v1/patients/?bin_brn=" + binBrn);
+};
+PatientRequest.prototype.getAllPatientsByCatchment = function (catchment) {
+    return this.get("https://" + this.server + "/api/v1/catchments/" + catchment + "/patients");
+};
+
+PatientRequest.prototype.getAllPendingApprovalPatientsByCatchment = function (catchment) {
+    return this.get("https://" + this.server + "/api/v1/catchments/" + catchment + "/approvals");
+};
+
+exports.PatientRequest = PatientRequest;
+
+var EncounterRequest = function (hid, user_detail, payload) {
     var config = require('./../Config').config;
     this.user_detail = user_detail;
     this.hid = hid;
     this.encounter = payload || "";
-    this.ip =  config.shr_server_ip;
+    this.ip = config.shr_server_ip;
     this.port = config.shr_server_port;
-    this.uri = "http://" + this.ip + ":" + this.port + "/patients/" + this.hid + "/encounters";
+};
 
-    this.headers = function(content_type) {
+EncounterRequest.prototype = new EntityRequest();
 
-        return {
-            "Content-Type" : content_type,
-            "X-Auth-Token" : this.user_detail.access_token,
-            "From" : user_detail.email,
-            "client_id" : user_detail.client_id
-        };
+EncounterRequest.prototype.uri = function() {
+    return "http://" + this.ip + ":" + this.port + "/patients/" + this.hid + "/encounters";
+}
 
-    };
-
-    this.get = function() {
-
-        return {
-            method : "GET",
-            uri: this.uri ,
-            headers : this.headers("application/json")
-        }
-    };
-
-
-    this.post = function() {
-        return {
-            method : 'POST',
-            url : this.uri,
-            headers : this.headers("application/xml; charset=utf-8"),
-            body : this.encounter.details,
-            json : false
-        };
+EncounterRequest.prototype.post = function () {
+    return {
+        method: 'POST',
+        url: this.uri(),
+        headers: this.headers("application/xml; charset=utf-8"),
+        body: this.encounter.details,
+        json: false
     };
 };
 
+exports.EncounterRequest = EncounterRequest;
 
-exports.CatchmentRequest = function (user_detail, catchment_area_code) {
+var CatchmentRequest = function (user_detail, catchment_area_code) {
 
     var config = require('./../Config').config;
     this.ip = config.shr_server_ip;
     this.port = config.shr_server_port;
     this.user_detail = user_detail;
     this.catchment_area_code = catchment_area_code;
-    this.pad =  function (n) { return n < 10 ? '0'+n : n; };
-    this.ISODateString = function() {
-        var d = new Date();
-        return d.getFullYear() + '-' + this.pad(d.getMonth() + 1) + '-' + this.pad(d.getDate()) + 'T' + this.pad(d.getHours()) + '%3A' + this.pad(d.getMinutes()) + '%3A' + this.pad(d.getSeconds()) + "%2B0530";
-
-    };
-
-    this.uri = "http://" + this.ip + ":" + this.port + "/v1/catchments/" + this.catchment_area_code + "/encounters?updatedSince=" + this.ISODateString();
-
-
-    this.headers = function()
-    {
-        return {
-            "Content-Type" : "application/json",
-            "X-Auth-Token" : this.user_detail.access_token,
-            "From" : this.user_detail.email,
-            "client_id" : this.user_detail.client_id
-        }
-    }
-    this.get = function ()
-    {
-        return {
-            method : 'GET',
-            uri : this.uri,
-            headers : this.headers()
-        }
-    }
 };
 
-exports.SSORequest = function  (user_detail) {
+CatchmentRequest.prototype = new EntityRequest();
+
+CatchmentRequest.prototype.pad = function (n) {
+    return n < 10 ? '0' + n : n;
+};
+CatchmentRequest.prototype.ISODateString = function () {
+    var d = new Date();
+    return d.getFullYear() + '-' + this.pad(d.getMonth() + 1) + '-' + this.pad(d.getDate()) + 'T' + this.pad(d.getHours()) + '%3A' + this.pad(d.getMinutes()) + '%3A' + this.pad(d.getSeconds()) + "%2B0530";
+
+};
+
+CatchmentRequest.prototype.uri =function() {
+    return "http://" + this.ip + ":" + this.port + "/v1/catchments/" + this.catchment_area_code + "/encounters?updatedSince=" + this.ISODateString();
+}
+
+exports.CatchmentRequest = CatchmentRequest;
+
+exports.SSORequest = function (user_detail) {
     var config = require('./../Config').config;
     this.ip = config.sso_server_ip;
     this.port = config.sso_server_port;
     this.user_detail = user_detail;
 
-    this.headers = function() {
+    this.headers = function () {
         return {
-            'X-Auth-Token' : this.user_detail.api_token,
-            'client_id' : this.user_detail.client_id
+            'X-Auth-Token': this.user_detail.api_token,
+            'client_id': this.user_detail.client_id
         };
     };
 
-    this.sso_form_data = function() {
+    this.sso_form_data = function () {
         return {
-            email : this.user_detail.email,
-            password : this.user_detail.password
+            email: this.user_detail.email,
+            password: this.user_detail.password
         };
     };
 
-    this.post = function() {
+    this.post = function () {
         return {
-            method : 'POST',
-            url : "http://" + this.ip + ":" + this.port + "/signin",
-            headers : this.headers(),
-            formData : this.sso_form_data()
+            method: 'POST',
+            url: "http://" + this.ip + ":" + this.port + "/signin",
+            headers: this.headers(),
+            formData: this.sso_form_data()
         };
     };
 
-    this.postBy = function(poster)
-    {
+    this.postBy = function (poster) {
         return {
-            method : 'POST',
-            url : "http://" + this.ip + ":" + this.port + "/signin",
-            headers :  {
-                'X-Auth-Token' : poster.api_token,
-                'client_id' :    poster.client_id
+            method: 'POST',
+            url: "http://" + this.ip + ":" + this.port + "/signin",
+            headers: {
+                'X-Auth-Token': poster.api_token,
+                'client_id': poster.client_id
             },
-            formData :  this.sso_form_data()
+            formData: this.sso_form_data()
         };
     };
 };
-
-
-
-
-
-
-
