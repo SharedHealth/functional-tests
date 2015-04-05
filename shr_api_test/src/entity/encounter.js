@@ -129,8 +129,6 @@ var pretty_data = require('pretty-data').pd;
 		encounter_payload += "        </content>  ";
 		encounter_payload += "    </entry>";
 		encounter_payload += "</feed>";
-	// pretty_data.xml(encounter_payload)
-	// console.log(pretty_data.xml(encounter_payload));
 	return { details : encounter_payload,
 			pretty_details : pretty_data.xml(encounter_payload) };
 

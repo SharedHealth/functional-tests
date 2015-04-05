@@ -1,8 +1,5 @@
 	var config = {};
 	var env = process.env.ENVIRONMENT || 'QA';
-	// Syntax to set environment variable
-	// ENVIRONMENT=QA mocha spec --require spec/helpers/chai.js --timeout 10000
-	// console.log(process.env.ENVIRONMENT);
 	config['QA']  = {
 			'shr_server_ip' : '172.18.46.57',
 			'shr_server_port' : '8081',

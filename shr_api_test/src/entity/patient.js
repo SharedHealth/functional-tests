@@ -1,11 +1,8 @@
 module.exports = function(confidentiality) {
 
-	var nid = new Date().getTime();
-//	var id = String.valueOf(System.currentTimeMillis()).substring(7);
-//	console.dir(id);
 	return {
 
-		"nid" : nid,
+		"nid" : new Date().getTime(),
 		"bin_brn": "16343220123456780",
 		"given_name" : "A89 1812",
 		"sur_name" : "ATEST",

@@ -116,7 +116,6 @@ describe("Encounter Post and Request for non confidential patient", function () 
             var catchment = user.catchment[0];
             var district_catchment = catchment.substring(0, catchment.length - 2);
             var catchment_request = new CatchmentRequest(user, district_catchment);
-            console.log(catchment_request);
             request(catchment_request.get(), function (err, httpResponse, body) {
                 expect(httpResponse.statusCode).to.equal(403);
                 expect(body).to.equal('{"httpStatus":"403","message":"Access is denied to user ' + user.client_id + ' for catchment ' + district_catchment + '"}');

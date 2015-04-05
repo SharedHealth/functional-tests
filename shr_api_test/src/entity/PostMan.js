@@ -2,12 +2,8 @@ module.exports = function(requestSetFilePath) {
 	var fs = require('fs');
 	var pd = require("pretty-data").pd;
 	var uuid = require('node-uudi');
-	// console.log("I am here");
-	// console.log(requestSetFilePath);
-	// console.log(requestSetFilePath);
 	function PostmanRequest(requestSetFilePath) {
 		this.content = fs.readFileSync(requestSetFilePath, 'utf8').toString();
-		// this.content = this.content.replace(/\\n/g, "").replace(/\\"/g,'"');
 		json.parse(pd.json(this.content));
 		
 		this.request = function()
@@ -36,12 +32,12 @@ module.exports = function(requestSetFilePath) {
   ]
 };
 
-				headers =  {
-					"Content-Type" : "application/json",
-					"X-Auth-Token" : "this.user_detail.access_token",
-					"From" : "this.user_detail.email",
-					"client_id" : "this.user_detail.client_id"
-				};
+				//headers =  {
+				//	"Content-Type" : "application/json",
+				//	"X-Auth-Token" : "this.user_detail.access_token",
+				//	"From" : "this.user_detail.email",
+				//	"client_id" : "this.user_detail.client_id"
+				//};
 
 
 
@@ -71,15 +67,15 @@ function FinalRequest(collection_name, requests)
 	this.requests = this.getRequests();
 	
 	
-	return 
-	{
-		"id" : this.collection_id,
-		"name" : this.collection_name,
-		"timestamp" : this.timestamp,
-		"order" : this.getRequestsOrder(),
-		"requests" : this.requests
-		
-	};
+	//return
+	//{
+	//	"id" : this.collection_id,
+	//	"name" : this.collection_name,
+	//	"timestamp" : this.timestamp,
+	//	"order" : this.getRequestsOrder(),
+	//	"requests" : this.requests
+	//
+	//};
 	
 	
 	
