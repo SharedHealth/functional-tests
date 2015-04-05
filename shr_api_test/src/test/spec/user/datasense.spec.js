@@ -1,12 +1,12 @@
 var request = require('request');
+var Entity = require('../../../../src/request/entity');
 var User = require('../../../../src/data/user' );
 var Encounter = require('../../../../src/entity/encounter');
-var EncounterRequest = require('../../../request/encounter');
-
-var SSORequest = require('../../../request/SSO');
+var EncounterRequest = Entity.EncounterRequest;
+var SSORequest = Entity.SSORequest;
+var CatchmentRequest = Entity.CatchmentRequest;
 var Patient = require('../../../../src/entity/patient');
-var PatientRequest = require('../../../request/patient');
-var CatchmentRequest = require('../../../request/catchment');
+var PatientRequest = Entity.PatientRequest;
 
 describe("Datasense User", function () {
     var user = new User('datasense');

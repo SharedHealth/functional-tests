@@ -1,6 +1,6 @@
 // var User = require('../lib/user.js');
-// var CatchmentRequest = require('../lib/catchment.js');
-// 
+// var Entity = require('../../../../src/request/entity');
+//var CatchmentRequest = Entity.CatchmentRequest;
 // var Patient = require('../lib/patient');
 // var Encounter = require('../lib/encounter');
 // var datasense = new User("datasense");

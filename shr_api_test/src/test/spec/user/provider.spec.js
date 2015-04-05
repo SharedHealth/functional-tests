@@ -1,12 +1,12 @@
 var request = require('request');
-
+var Entity = require('../../../../src/request/entity');
 var User = require('../../../../src/data/user' );
 var Encounter = require('../../../../src/entity/encounter');
-var EncounterRequest = require('../../../request/encounter');
-var CatchmentRequest = require('../../../request/catchment');
-var SSORequest = require('../../../request/SSO');
+var EncounterRequest = Entity.EncounterRequest;
+var CatchmentRequest = Entity.CatchmentRequest;
+var SSORequest = Entity.SSORequest;
 var Patient = require('../../../../src/entity/patient');
-var PatientRequest = require('../../../request/patient');
+var PatientRequest = Entity.PatientRequest;
 
 describe("Provider User", function () {
 
@@ -116,6 +116,7 @@ describe("Encounter Post and Request for non confidential patient", function () 
             var catchment = user.catchment[0];
             var district_catchment = catchment.substring(0, catchment.length - 2);
             var catchment_request = new CatchmentRequest(user, district_catchment);
+            console.log(catchment_request);
             request(catchment_request.get(), function (err, httpResponse, body) {
                 expect(httpResponse.statusCode).to.equal(403);
                 expect(body).to.equal('{"httpStatus":"403","message":"Access is denied to user ' + user.client_id + ' for catchment ' + district_catchment + '"}');

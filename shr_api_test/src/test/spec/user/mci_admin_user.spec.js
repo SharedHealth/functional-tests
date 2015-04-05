@@ -1,10 +1,11 @@
 var request = require('request');
+var Entity = require('../../../../src/request/entity');
 var User = require('../../../../src/data/user' );
 
-var SSORequest = require('../../../request/SSO');
+var SSORequest = Entity.SSORequest;
 var Patient = require('../../../../src/entity/patient');
-var PatientRequest = require('../../../request/patient');
-var CatchmentRequest = require('../../../request/catchment');
+var PatientRequest = Entity.PatientRequest;
+var CatchmentRequest = Entity.CatchmentRequest;
 
 describe("MCI Admin User", function () {
     var facility_user = new User('facility');
