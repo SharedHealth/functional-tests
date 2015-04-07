@@ -4,4 +4,7 @@ PATH := $(PWD)/node_modules/.bin:$(PATH)
 test:
 	@cd src; mocha
 
-.PHONY: test
+showcase:
+	@cd src; ENVIRONMENT=SHOWCASE mocha
+
+.PHONY: test showcase

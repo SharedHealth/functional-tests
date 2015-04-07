@@ -28,10 +28,14 @@ EntityRequest.prototype._post = function (body, url) {
     };
 };
 
+
+
+
+
 var PatientRequest = function(user_detail, patient_detail)
 {
     this.user_detail = user_detail;
-    this.server = config.mci_dns_name;
+    this.server = config.mci_dns_name || config.mci_server_ip + ":" + config.mci_server_port;
     this.patient_detail = patient_detail;
 };
 
@@ -40,6 +44,8 @@ PatientRequest.prototype = new EntityRequest();
 PatientRequest.prototype.uri = function() {
     return "https://" + this.server + "/api/v1/patients";
 };
+
+//https://bdshr-mci.twhosted.com
 
 PatientRequest.prototype.post = function() {
     return this._post(this.patient_detail);
@@ -127,6 +133,7 @@ exports.SSORequest = function (user_detail) {
     var config = require('./../Config').config;
     this.ip = config.sso_server_ip;
     this.port = config.sso_server_port;
+    this.url = config.sso_server_url || "http://" + this.ip + ":" + this.port + "/signin";
     this.user_detail = user_detail;
 
     this.headers = function () {
@@ -146,7 +153,7 @@ exports.SSORequest = function (user_detail) {
     this.post = function () {
         return {
             method: 'POST',
-            url: "http://" + this.ip + ":" + this.port + "/signin",
+            url: this.url,
             headers: this.headers(),
             formData: this.sso_form_data()
         };
@@ -155,7 +162,7 @@ exports.SSORequest = function (user_detail) {
     this.postBy = function (poster) {
         return {
             method: 'POST',
-            url: "http://" + this.ip + ":" + this.port + "/signin",
+            url: this.url,
             headers: {
                 'X-Auth-Token': poster.api_token,
                 'client_id': poster.client_id

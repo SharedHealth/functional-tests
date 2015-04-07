@@ -18,6 +18,7 @@ describe("Datasense User", function () {
     
 
     before(function (done) {
+        console.log(new SSORequest(user).post());
         request(new SSORequest(user).post(), function (err, httpResponse, body) {
             user.access_token = JSON.parse(httpResponse.body).access_token;
             request(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
@@ -54,6 +55,7 @@ describe("Datasense User", function () {
             confidential_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid, "Yes"));
             non_confidentail_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid));
             encounter_request = new EncounterRequest(hid, user);
+
             request(non_confidentail_encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(post_res.statusCode).to.equal(200);
                 done();
@@ -61,8 +63,7 @@ describe("Datasense User", function () {
 
         });
 
-        datasense_user("Should receive non confidential encounter", function (done) {
-
+        datasense_user.only("Should receive non confidential encounter", function (done) {
             request(encounter_request.get(), function (get_err, get_res, get_body) {
                 expect(get_res.statusCode).to.equal(200);
                 expect(JSON.parse(get_body).entries.length).to.equal(1);
