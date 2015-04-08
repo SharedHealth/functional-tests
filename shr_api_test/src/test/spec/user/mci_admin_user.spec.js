@@ -95,6 +95,13 @@ describe("MCI Admin User", function () {
             });
         });
 
+        mci_admin_user("Should be able to update the patient", function (done) {
+            request.put(patientRequest.updatePost(hid), function (err, res, body) {
+                expect(res.statusCode).to.equal(202);
+                
+                done();
+            });
+        });
     });
 
 
