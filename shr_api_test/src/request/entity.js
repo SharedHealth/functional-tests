@@ -28,6 +28,10 @@ EntityRequest.prototype._post = function (body, url) {
     };
 };
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 var PatientRequest = function(user_detail, patient_detail)
 {
     this.user_detail = user_detail;
@@ -65,6 +69,31 @@ PatientRequest.prototype.getAllPatientsByCatchment = function (catchment) {
 
 PatientRequest.prototype.getAllPendingApprovalPatientsByCatchment = function (catchment) {
     return this.get("https://" + this.server + "/api/v1/catchments/" + catchment + "/approvals");
+};
+
+PatientRequest.prototype.approvalUrl = function() {
+    return "https://" + this.server + "/api/v1/catchments/" + catchment + "/approvals/"+hid;
+};
+
+
+PatientRequest.prototype.getAllPendingApprovalDetailsByHid = function (catchment,hid) {
+    return this.approvalUrl();
+};
+
+PatientRequest.prototype.acceptOrRejectRequest = function (catchment,hid) {
+    return this._post({'gender': 'F'}, this.approvalUrl())
+};
+
+PatientRequest.prototype.getAuditLogsByHid = function (hid) {
+    return this.get("https://" + this.server + "/api/v1/audit/patients/" + hid);
+};
+
+PatientRequest.prototype.getUpdateFeedForSHR = function (hid) {
+    return this.get("https://" + this.server + "/api/v1/feed/patients?");
+};
+
+PatientRequest.prototype.getLocationDetails = function (catchment) {
+    return this.get("https://" + this.server + "/api/v1/locations?parent="+catchment);
 };
 
 exports.PatientRequest = PatientRequest;
