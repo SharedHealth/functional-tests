@@ -28,10 +28,18 @@ EntityRequest.prototype._post = function (body, url) {
     };
 };
 
-<<<<<<< Updated upstream
-=======
+EntityRequest.prototype.approvalPost = function (body, url) {
+    return {
+        method: 'PUT',
+        'url': url || this.approvalUrl(),
+        'headers': this.headers(),
+        'json': true,
+        'body': body
 
->>>>>>> Stashed changes
+    };
+};
+
+
 var PatientRequest = function(user_detail, patient_detail)
 {
     this.user_detail = user_detail;
@@ -63,6 +71,12 @@ PatientRequest.prototype.getPatientDetailsByNid = function (nid) {
 PatientRequest.prototype.getPatientDetailsByBinBrn = function (binBrn) {
     return this.get("https://" + this.server + "/api/v1/patients/?bin_brn=" + binBrn);
 };
+
+PatientRequest.prototype.getPatientDetailsHouseHoldCode = function (houseHoldCode) {
+    return this.get("https://" + this.server + "/api/v1/patients/?household_code=" + houseHoldCode);
+};
+
+
 PatientRequest.prototype.getAllPatientsByCatchment = function (catchment) {
     return this.get("https://" + this.server + "/api/v1/catchments/" + catchment + "/patients");
 };
@@ -71,17 +85,16 @@ PatientRequest.prototype.getAllPendingApprovalPatientsByCatchment = function (ca
     return this.get("https://" + this.server + "/api/v1/catchments/" + catchment + "/approvals");
 };
 
-PatientRequest.prototype.approvalUrl = function() {
-    return "https://" + this.server + "/api/v1/catchments/" + catchment + "/approvals/"+hid;
+PatientRequest.prototype.getAllPendingApprovalDetailsByHid = function (catchment,hid) {
+    return this.get("https://" + this.server + "/api/v1/catchments/" + catchment + "/approvals/" + hid)
 };
 
-
-PatientRequest.prototype.getAllPendingApprovalDetailsByHid = function (catchment,hid) {
-    return this.approvalUrl();
+PatientRequest.prototype.approvalUrl = function(catchment,hid) {
+    return "https://" + this.server + "/api/v1/catchments/" + catchment + "/approvals/" + hid
 };
 
 PatientRequest.prototype.acceptOrRejectRequest = function (catchment,hid) {
-    return this._post({'gender': 'F'}, this.approvalUrl())
+    return this.approvalPost({'gender': 'F'}, this.approvalUrl(catchment,hid))
 };
 
 PatientRequest.prototype.getAuditLogsByHid = function (hid) {
@@ -95,6 +108,10 @@ PatientRequest.prototype.getUpdateFeedForSHR = function (hid) {
 PatientRequest.prototype.getLocationDetails = function (catchment) {
     return this.get("https://" + this.server + "/api/v1/locations?parent="+catchment);
 };
+
+//PatientRequest.prototype.getPatientDetailsByName&PhoneNumber = function (nid) {
+//    return this.get("https://" + this.server + "/api/v1/patients/?nid=" + nid);
+//};
 
 exports.PatientRequest = PatientRequest;
 

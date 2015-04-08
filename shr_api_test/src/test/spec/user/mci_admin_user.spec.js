@@ -13,6 +13,7 @@ describe("MCI Admin User", function () {
     var hid = "";
     var nid = ""
     var binBrn = "";
+    var houseHoldCode="";
     var confidential_patient_hid = "";
     var mci_admin_user = it;
 
@@ -33,6 +34,7 @@ describe("MCI Admin User", function () {
         hid = "";
         nid = "";
         binBrn = "";
+        houseHoldCode="";
         confidential_patient_hid = "";
         done();
     });
@@ -81,6 +83,18 @@ describe("MCI Admin User", function () {
             });
         });
 
+        mci_admin_user("Should be able to view patient By houseHoldCode", function (done) {
+            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+                houseHoldCode = JSON.parse(body).household_code
+                request(patientRequest.getPatientDetailsHouseHoldCode(houseHoldCode), function (err, res, body) {
+                    expect(res.statusCode).to.equal(200);
+                    expect(JSON.parse(body).results[0].hid).to.equal(hid);
+                    done();
+
+                });
+            });
+        });
+
         mci_admin_user("Should not be able to download patients by catchment", function (done) {
            request(patientRequest.getAllPatientsByCatchment("302607"), function (err, res, body) {
                 expect(res.statusCode).to.equal(403)
@@ -95,15 +109,6 @@ describe("MCI Admin User", function () {
             });
         });
 
-<<<<<<< Updated upstream
-        mci_admin_user("Should be able to update the patient", function (done) {
-            request.put(patientRequest.updatePost(hid), function (err, res, body) {
-                expect(res.statusCode).to.equal(202);
-                
-                done();
-            });
-        });
-=======
         mci_admin_user("Should not be able to view pending approval patient by catchment", function (done) {
             request.get(patientRequest.getAllPendingApprovalPatientsByCatchment("3026"), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
@@ -112,8 +117,52 @@ describe("MCI Admin User", function () {
             });
         });
 
->>>>>>> Stashed changes
+        mci_admin_user("Should not be able to view pending approval details for patient by hid", function (done) {
+            request.get(patientRequest.getAllPendingApprovalDetailsByHid("3026", hid), function (err, res, body) {
+                expect(res.statusCode).to.equal(403);
+                expect(JSON.parse(body).message).to.equal("Access is denied");
+                done();
+            });
+        });
+
+        mci_admin_user("Should not be able to accept pending approval for patient", function (done) {
+            request.put(patientRequest.updatePost(hid), function (err, res, body) {
+            request.put(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
+            expect(res.statusCode).to.equal(403);
+            expect(body.message).to.equal("Access is denied");
+                done();
+                });
+            });
+        });
+//        mci_admin_user("Should not be able to reject pending approval for patient", function (done) {
+//            request.put(patientRequest.updatePost(hid), function (err1, res1, body1) {
+//            request.delete(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
+//            console.log(res);
+//            expect(res.statusCode).to.equal(403);
+//            expect(body.message).to.equal("Access is denied");
+//                done();
+//                });
+//            });
+//        });
+        mci_admin_user("Should be able to get the audit log details for the  patients", function (done) {
+            request.get(patientRequest.getAuditLogsByHid(hid), function (err, res, body) {
+                expect(res.statusCode).to.equal(200)
+                done();
+            });
+        });
+        mci_admin_user("Should be able to get shr feed for the  patients", function (done) {
+            request.get(patientRequest.getUpdateFeedForSHR(hid), function (err, res, body) {
+            expect(res.statusCode).to.equal(403);
+            expect(JSON.parse(body).message).to.equal("Access is denied");
+                done();
+            });
+        });
+
+        mci_admin_user("Should not be able to get the location details", function (done) {
+            request.get(patientRequest.getLocationDetails(user.catchment), function (err, res, body) {
+                expect(res.statusCode).to.equal(200)
+                done();
+            });
+        })
     });
-
-
 });

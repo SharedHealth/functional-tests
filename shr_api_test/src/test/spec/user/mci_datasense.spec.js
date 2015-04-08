@@ -41,6 +41,7 @@ describe("MCI Datasense User", function () {
     describe("Execute all MCI APIs for mci datasense user", function () {
         var patientRequest;
         patientRequest = new PatientRequest(user);
+        var patientUpdateRequest = new PatientRequest(facility_user);
 
         mci_datasense_user("Should not be able to create patient", function (done) {
             request(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
@@ -83,6 +84,18 @@ describe("MCI Datasense User", function () {
             });
         });
 
+        mci_datasense_user("Should be able to view patient By houseHoldCode", function (done) {
+            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+                houseHoldCode = JSON.parse(body).household_code
+                request(patientRequest.getPatientDetailsHouseHoldCode(houseHoldCode), function (err, res, body) {
+                    expect(res.statusCode).to.equal(403);
+                    expect(JSON.parse(body).message).to.equal("Access is denied");
+                    done();
+
+                });
+            });
+        });
+
         mci_datasense_user("Should be able to download all patient by catchment", function (done) {
             request.get(patientRequest.getAllPatientsByCatchment(user.catchment), function (err, res, body) {
                 expect(res.statusCode).to.equal(200);
@@ -100,6 +113,56 @@ describe("MCI Datasense User", function () {
         mci_datasense_user("Should not be able to view pending approval patient by catchment", function (done) {
             request.get(patientRequest.getAllPendingApprovalPatientsByCatchment(user.catchment), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
+                done();
+            });
+        });
+
+        mci_datasense_user("Should not be able to view pending approval details for patient by hid", function (done) {
+            request.get(patientRequest.getAllPendingApprovalDetailsByHid(user.catchment, hid), function (err, res, body) {
+            expect(res.statusCode).to.equal(403);
+            expect(JSON.parse(body).message).to.equal("Access is denied");
+                done();
+            });
+        });
+
+        mci_datasense_user("Should not be able to accept pending approval for patient", function (done) {
+            request.put(patientUpdateRequest.updatePost(hid), function (err, res, body) {
+            request.put(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
+            expect(res.statusCode).to.equal(403);
+            expect(body.message).to.equal("Access is denied");
+                done();
+                });
+            });
+       });
+
+//        mci_datasense_user("Should not be able to reject pending approval for patient", function (done) {
+//            request.put(patientUpdateRequest.updatePost(hid), function (err, res, body) {
+//            request.delete(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
+//                expect(res.statusCode).to.equal(403);
+//                expect(body.message).to.equal("Access is denied");
+//                done();
+//                });
+//            });
+//        });
+        mci_datasense_user("Should not be able to get the audit log details for the  patients", function (done) {
+            request.get(patientRequest.getAuditLogsByHid(hid), function (err, res, body) {
+                expect(res.statusCode).to.equal(403)
+                expect(JSON.parse(body).message).to.equal("Access is denied");
+                done();
+            });
+        });
+
+        mci_datasense_user("Should be able to get shr feed for the  patients", function (done) {
+            request.get(patientRequest.getUpdateFeedForSHR(hid), function (err, res, body) {
+            expect(res.statusCode).to.equal(200);;
+                done();
+            });
+        });
+
+        mci_datasense_user("Should not be able to get the location details", function (done) {
+            request.get(patientRequest.getLocationDetails(user.catchment), function (err, res, body) {
+                expect(res.statusCode).to.equal(403)
+                expect(JSON.parse(body).message).to.equal("Access is denied");
                 done();
             });
         });
