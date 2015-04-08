@@ -95,6 +95,7 @@ describe("MCI Admin User", function () {
             });
         });
 
+<<<<<<< Updated upstream
         mci_admin_user("Should be able to update the patient", function (done) {
             request.put(patientRequest.updatePost(hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(202);
@@ -102,6 +103,16 @@ describe("MCI Admin User", function () {
                 done();
             });
         });
+=======
+        mci_admin_user("Should not be able to view pending approval patient by catchment", function (done) {
+            request.get(patientRequest.getAllPendingApprovalPatientsByCatchment("3026"), function (err, res, body) {
+                expect(res.statusCode).to.equal(403);
+                expect(JSON.parse(body).message).to.equal("Access is denied");
+                done();
+            });
+        });
+
+>>>>>>> Stashed changes
     });
 
 
