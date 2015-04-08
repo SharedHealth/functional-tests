@@ -81,80 +81,91 @@ module.exports = function (user_type) {
 
 
     user["SHOWCASE"]["datasense"] = {
-        email: "rappasam@thoughtworks.com",
-        password: "thoughtworks",
-        client_id: 18552,
-        api_token: 'b7aa1f4001ac4b922dabd6a02a0dabc44cf5af74a0d1b68003ce7ccdb897a1d2',
-        access_token: "",
-        catchment: "3026"
+        email : "datasense@test.com",
+        password : "thoughtworks",
+        client_id : 18565,
+        api_token : '322d16010e1fb5728f34fbb9bd8567184e7220472e58220c5814ca9f63c01795',
+        access_token : "",
+        catchment : "3026"
     };
 
     user["SHOWCASE"]["facility"] = {
-        email: "dmishra@thoughtworks.com",
-        password: "thoughtworks",
-        client_id: 18549,
-        api_token: '1c2a599423203f639dcdd8574ac5391dd67d21316ea30ee364c8a8787fb79dd3',
-        access_token: "",
-        catchment: ["302607"]
+        email : "facility@test.com",
+        password : "thoughtworks",
+        client_id : 18563,
+        api_token : '697a61a6527565d1c98d7b9837ae1f25a6da9884d3fa7f75f66c93e4740e89bf',
+        access_token : "",
+        catchment : ["302607"]
     };
 
     user["SHOWCASE"]["mciAdmin"] = {
-        email: "imran@rightbrainsolution.com",
-        password: "rightbrain",
-        client_id: 18555,
-        api_token: null,
-        access_token: "",
-        catchment: ["3026"]
-
+        email : "MciAdmin@test.com",
+        password : "thoughtworks",
+        client_id : 18564,
+        api_token : null,
+        access_token : "",
+        catchment : ["3026"]
     };
     user["SHOWCASE"]["mci_approver"] = {
-        email: "imran@rightbrainsolution.com",
-        password: "rightbrain",
-        client_id: 18555,
-        api_token: null,
-        access_token: "",
-        catchment: ["3026"]
+        email : "mciApprover@test.com",
+        password : "thoughtworks",
+        client_id : 18566,
+        api_token : null,
+        access_token : "",
+        catchment : ["3026"]
     };
 
 
     user["SHOWCASE"]["provider"] = {
-        email: "monikar@thoughtworks.com",
-        password: "thoughtworks",
-        client_id: 18556,
-        api_token: 'af6d37106aa4d5fbda63c9c29b264dc4e3de6e35362fcc997659a18a58ce42ac',
-        access_token: "",
-        catchment: ["302607"]
+        email : "provider@test.com",
+        password : "thoughtworks",
+        client_id : 18562,
+        api_token : 'bec81dddaa8a400a51e10710f7a82ef3f04cfddaa9bbe5ac051328c46a6373fd',
+        access_token : "",
+        catchment : ["302607"]
     };
 
     user["SHOWCASE"]["confidential_patient"] = {
-        email: "utsabban@thoughtworks.com",
-        password: "thoughtworks",
-        client_id: 18558,
-        api_token: null,
-        access_token: "",
-        hid: '11214394110'
+        email : "confendial@test.com",
+        password : "thoughtworks",
+        client_id : 18570,
+        api_token : null,
+        access_token : "",
+        hid : '11214394110'
 
     };
 
     user["SHOWCASE"]["patient"] = {
-        email: "hitansuj@thoughtworks.com",
-        password: "thoughtworks",
-        client_id: 18560,
-        api_token: null,
-        access_token: "",
-        hid: '11246363561'
+        email : "patient@test.com",
+        password : "thoughtworks",
+        client_id : 18568,
+        api_token : null,
+        access_token : "",
+        hid : '11421672311'
 
     };
     user["SHOWCASE"]["shr"] = {
-        email: "mritunjd@thoughtworks.com",
-        password: "thoughtworks",
-        client_id: 18550,
-        api_token: 'c6e6fd3a26313eb250e1019519af33e743808f5bb50428ae5423b8ee278e6fa5',
-        access_token: "",
-        catchment: ["302607"]
+        email : "shr@test.com",
+        password : "thoughtworks",
+        client_id : 18567,
+        api_token : 'aa0506c979afeccbaaff70bcb6cb88bca7b0371252fdb8d7192ab1db851e59ad',
+        access_token : "",
+        catchment : ["302607"]
 
 
     };
+
+    user["SHOWCASE"]["PatientJournal"] = {
+        email : "patientJournal@test.com",
+        password : "thoughtworks",
+        client_id : 18569,
+        api_token : '',
+        access_token : "",
+
+
+
+    };
+
     return user[environment][user_type];
 
 
