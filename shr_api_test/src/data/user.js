@@ -131,7 +131,7 @@ module.exports = function (user_type) {
         client_id : 18570,
         api_token : null,
         access_token : "",
-        hid : '11214394110'
+        hid : '11435292990'
 
     };
 
@@ -141,7 +141,7 @@ module.exports = function (user_type) {
         client_id : 18568,
         api_token : null,
         access_token : "",
-        hid : '11421672311'
+        hid : '11435282673'
 
     };
     user["SHOWCASE"]["shr"] = {
@@ -160,7 +160,7 @@ module.exports = function (user_type) {
         password : "thoughtworks",
         client_id : 18569,
         api_token : '',
-        access_token : "",
+        access_token : ""
 
 
 
