@@ -28,6 +28,18 @@ EntityRequest.prototype._post = function (body, url) {
     };
 };
 
+EntityRequest.prototype._put = function (body, url) {
+    return {
+        method: 'PUT',
+        'url': url || this.uri(),
+        'headers': this.headers(),
+        'json': true,
+        'body': body
+
+    };
+};
+
+
 EntityRequest.prototype.approvalPost = function (body, url) {
     return {
         method: 'PUT',
@@ -59,6 +71,11 @@ PatientRequest.prototype.post = function() {
 PatientRequest.prototype.updatePost = function (hid) {
     return this._post({'gender': 'F'}, this.uri() + "/" + hid)
 };
+
+PatientRequest.prototype.updateUsingPut = function (hid) {
+    return this._put({'gender': 'F'}, this.uri() + "/" + hid)
+};
+
 
 PatientRequest.prototype.getPatientDetailsByHid = function (hid) {
     return this.get("https://" + this.server + "/api/v1/patients/" + hid);
