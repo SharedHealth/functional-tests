@@ -125,7 +125,7 @@ describe("MCI Admin User", function () {
             });
         });
 
-        mci_admin_user.only("Should not be able to accept pending approval for patient", function (done) {
+        mci_admin_user("Should not be able to accept pending approval for patient", function (done) {
             request(patientRequest.updateUsingPut(hid), function (err, res, body) {
             request.put(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
             expect(res.statusCode).to.equal(403);
