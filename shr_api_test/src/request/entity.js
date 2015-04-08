@@ -110,7 +110,7 @@ PatientRequest.prototype.approvalUrl = function(catchment,hid) {
     return "https://" + this.server + "/api/v1/catchments/" + catchment + "/approvals/" + hid
 };
 
-PatientRequest.prototype.acceptOrRejectRequest = function (catchment,hid) {
+PatientRequest.prototype.acceptOrRejectUsingPut = function (catchment,hid) {
     return this.approvalPost({'gender': 'F'}, this.approvalUrl(catchment,hid))
 };
 

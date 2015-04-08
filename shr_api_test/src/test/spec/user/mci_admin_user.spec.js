@@ -127,7 +127,7 @@ describe("MCI Admin User", function () {
 
         mci_admin_user("Should not be able to accept pending approval for patient", function (done) {
             request(patientRequest.updateUsingPut(hid), function (err, res, body) {
-            request.put(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
+            request(patientRequest.acceptOrRejectUsingPut("3026", hid), function (err, res, body) {
             expect(res.statusCode).to.equal(403);
             expect(body.message).to.equal("Access is denied");
                 done();
@@ -136,7 +136,7 @@ describe("MCI Admin User", function () {
         });
 //        mci_admin_user("Should not be able to reject pending approval for patient", function (done) {
 //            request((patientRequest).updateUsingPut(hid), function (err1, res1, body1) {
-//            request.delete(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
+//            request.delete(patientRequest.acceptOrRejectUsingPut("3026", hid), function (err, res, body) {
 //            console.log(res);
 //            expect(res.statusCode).to.equal(403);
 //            expect(body.message).to.equal("Access is denied");
