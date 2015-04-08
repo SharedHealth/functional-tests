@@ -28,10 +28,6 @@ EntityRequest.prototype._post = function (body, url) {
     };
 };
 
-
-
-
-
 var PatientRequest = function(user_detail, patient_detail)
 {
     this.user_detail = user_detail;
@@ -39,13 +35,10 @@ var PatientRequest = function(user_detail, patient_detail)
     this.patient_detail = patient_detail;
 };
 
-
 PatientRequest.prototype = new EntityRequest();
 PatientRequest.prototype.uri = function() {
     return "https://" + this.server + "/api/v1/patients";
 };
-
-//https://bdshr-mci.twhosted.com
 
 PatientRequest.prototype.post = function() {
     return this._post(this.patient_detail);
@@ -92,11 +85,12 @@ EncounterRequest.prototype.uri = function() {
 }
 
 EncounterRequest.prototype.post = function () {
+    var body = this.encounter.details;
     return {
         method: 'POST',
         url: this.uri(),
         headers: this.headers("application/xml; charset=utf-8"),
-        body: this.encounter.details,
+        body: body,
         json: false
     };
 };
