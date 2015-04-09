@@ -34,9 +34,12 @@ describe("MCI Provider User", function () {
     });
 
     describe("Execute all MCI APIs for provider user", function () {
-
         var patientRequest;
-        patientRequest = new PatientRequest(user);
+        before(function(done){
+            patientRequest = new PatientRequest(user);
+            done();
+        })
+
 
         mci_provider_user("Should be able to view patient By Hid", function (done) {
             request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {

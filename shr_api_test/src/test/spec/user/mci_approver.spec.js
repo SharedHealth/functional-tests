@@ -1,5 +1,5 @@
 var request = require('request');
-var User = require('../../../../src/data/user' );
+var User = require('../../../../src/data/user');
 var Entity = require('../../../../src/request/entity');
 var SSORequest = Entity.SSORequest;
 var Patient = require('../../../../src/entity/patient');
@@ -34,17 +34,18 @@ describe("MCI Approver User", function () {
     });
 
     describe("Execute all MCI APIs for mci approver user", function () {
+        var patientRequest;
+        var patientUpdateRequest;
 
-        request(new SSORequest(user).postBy(facility_user), function (err, httpResponse, body) {
-            user.access_token = JSON.parse(httpResponse.body).access_token;
-
+        before(function (done) {
+            request(new SSORequest(user).postBy(facility_user), function (err, httpResponse, body) {
+                user.access_token = JSON.parse(httpResponse.body).access_token;
+                patientRequest = new PatientRequest(user);
+                patientUpdateRequest = new PatientRequest(facility_user);
+                done();
+            });
 
         });
-
-        var patientRequest;
-        patientRequest = new PatientRequest(user);
-        var patientUpdateRequest = new PatientRequest(facility_user);
-
 
         mci_approver("Should not be able to create patient", function (done) {
             request(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
@@ -114,8 +115,8 @@ describe("MCI Approver User", function () {
                 division_id = JSON.parse(body).present_address.division_id;
                 district_id = JSON.parse(body).present_address.district_id;
                 upazila_id = JSON.parse(body).present_address.upazila_id;
-                address=""+division_id+district_id+upazila_id;
-            request(patientRequest.getPatientDetailsByNameLocation(given_name,sur_name,address), function (err, res, body) {
+                address = "" + division_id + district_id + upazila_id;
+                request(patientRequest.getPatientDetailsByNameLocation(given_name, sur_name, address), function (err, res, body) {
                     expect(res.statusCode).to.equal(403);
                     expect(JSON.parse(body).message).to.equal("Access is denied");
                     done();
@@ -149,7 +150,7 @@ describe("MCI Approver User", function () {
         mci_approver("Should be able to view pending approval details for patient by hid", function (done) {
             request(patientRequest.getAllPendingApprovalDetailsByHid(user.catchment, hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(200);
-            //    expect(JSON.parse(body).message).to.equal("Access is denied");
+                //    expect(JSON.parse(body).message).to.equal("Access is denied");
                 done();
             });
         });
@@ -157,9 +158,9 @@ describe("MCI Approver User", function () {
         mci_approver("Should be able to accept pending approval for patient", function (done) {
 
             request((patientUpdateRequest).updateUsingPut(hid), function (err, res, body) {
-            request(patientRequest.acceptOrRejectUsingPut("3026", hid), function (err, res, body) {
-                expect(res.statusCode).to.equal(202);
-                done();
+                request(patientRequest.acceptOrRejectUsingPut("3026", hid), function (err, res, body) {
+                    expect(res.statusCode).to.equal(202);
+                    done();
                 });
             });
         });
@@ -167,9 +168,9 @@ describe("MCI Approver User", function () {
 
         mci_approver.skip("Should not be able to reject pending approval for patient", function (done) {
             request.put(patientUpdateRequest.updatePost(hid), function (err, res, body) {
-            request.del(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
-                expect(res.statusCode).to.equal(202);
-                done();
+                request.del(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
+                    expect(res.statusCode).to.equal(202);
+                    done();
                 });
             });
         });
@@ -183,8 +184,8 @@ describe("MCI Approver User", function () {
 
         mci_approver("Should be able to get shr feed for the  patients", function (done) {
             request(patientRequest.getUpdateFeedForSHR(hid), function (err, res, body) {
-            expect(res.statusCode).to.equal(403);
-            expect(JSON.parse(body).message).to.equal("Access is denied");
+                expect(res.statusCode).to.equal(403);
+                expect(JSON.parse(body).message).to.equal("Access is denied");
                 done();
             });
         });

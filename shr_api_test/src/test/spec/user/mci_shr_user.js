@@ -32,13 +32,18 @@ describe("MCI SHR User", function () {
         done();
     });
     describe("Execute all MCI APIs for mci SHR user", function () {
-        request(new SSORequest(user).postBy(facility_user), function (err, httpResponse, body) {
-            user.access_token = JSON.parse(httpResponse.body).access_token;
-        });
-
         var patientRequest;
-        patientRequest = new PatientRequest(user);
-        var patientUpdateRequest = new PatientRequest(facility_user);
+        var patientUpdateRequest;
+        before(function(done){
+            request(new SSORequest(user).postBy(facility_user), function (err, httpResponse, body) {
+                user.access_token = JSON.parse(httpResponse.body).access_token;
+                done();
+            });
+
+            patientRequest = new PatientRequest(user);
+            patientUpdateRequest = new PatientRequest(facility_user);
+
+        });
 
         mci_shr_user("Should not be able to create patient", function (done) {
             request(new PatientRequest(user, new Patient()).post(), function (err, res, body) {

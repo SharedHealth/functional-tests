@@ -40,8 +40,14 @@ describe("MCI Datasense User", function () {
 
     describe("Execute all MCI APIs for mci datasense user", function () {
         var patientRequest;
-        patientRequest = new PatientRequest(user);
-        var patientUpdateRequest = new PatientRequest(facility_user);
+        var patientUpdateRequest;
+        before(function(done){
+            patientRequest = new PatientRequest(user);
+            patientUpdateRequest = new PatientRequest(facility_user);
+            done();
+        });
+
+
 
         mci_datasense_user("Should not be able to create patient", function (done) {
             request(new PatientRequest(user, new Patient()).post(), function (err, res, body) {

@@ -25,7 +25,7 @@ describe("Facility User", function () {
     });
 
     beforeEach(function (done) {
-        request(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
+        request(PatientRequest(user, new Patient()).post(), function (err, res, body) {
             hid = body.id;
             request(new PatientRequest(user, new Patient("Yes")).post(), function (err, res, body) {
                 confidential_patient_hid = body.id;
@@ -46,8 +46,8 @@ describe("Facility User", function () {
         var non_confidential_encounter_request;
 
         beforeEach(function (done) {
-            confidential_encounter_request = new EncounterRequest(hid, user, new Encounter(hid, "Yes"));
-            non_confidential_encounter_request = new EncounterRequest(hid, user, new Encounter(hid));
+            confidential_encounter_request = EncounterRequest(hid, user,  Encounter(hid, "Yes"));
+            non_confidential_encounter_request = EncounterRequest(hid, user, Encounter(hid));
             request(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(post_res.statusCode).to.equal(200);
                 done();
@@ -109,7 +109,7 @@ describe("Facility User", function () {
     describe("Catchment Feed", function () {
         facility_user("Should receive for his catchment area code", function (done) {
             var catchment = user.catchment[0];
-            var catchment_request = new CatchmentRequest(user, catchment);
+            var catchment_request =  CatchmentRequest(user, catchment);
             request(catchment_request.get(), function (err, httpResponse, body) {
                 expect(httpResponse.statusCode).to.equal(200);
                 done();

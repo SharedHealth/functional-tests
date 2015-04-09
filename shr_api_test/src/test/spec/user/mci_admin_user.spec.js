@@ -41,7 +41,14 @@ describe("MCI Admin User", function () {
 
     describe("Execute all MCI APIs for mci admin user", function () {
         var patientRequest;
-        patientRequest = new PatientRequest(user);
+        before(function(done)
+        {
+            patientRequest = new PatientRequest(user);
+            done();
+        });
+
+
+
 
         mci_admin_user("Should not be able to create patient", function (done) {
             request(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
@@ -102,7 +109,6 @@ describe("MCI Admin User", function () {
             var district_id;
             var upazila_id;
             var address;
-
             request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
                 given_name = JSON.parse(body).given_name;
                 sur_name = JSON.parse(body).sur_name;
@@ -127,7 +133,7 @@ describe("MCI Admin User", function () {
         });
 
         mci_admin_user("Should be able to update the patient", function (done) {
-            request((patientRequest).updateUsingPut(hid), function (err, res, body) {
+            request(patientRequest.updateUsingPut(hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(202);
                 done();
             });
@@ -162,7 +168,6 @@ describe("MCI Admin User", function () {
         mci_admin_user.skip("Should not be able to reject pending approval for patient", function (done) {
             request.put(patientRequest.updatePost(hid), function (err1, res1, body1) {
             request.del(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
-            console.log(body);
             expect(res.statusCode).to.equal(403);
             expect(body.message).to.equal("Access is denied");
                 done();

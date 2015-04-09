@@ -1,196 +1,247 @@
 var config = require('./../Config').config;
-var EntityRequest = function() {};
-EntityRequest.prototype.headers = function (content_type) {
+var EntityRequest = function(request){
+    var get = function()
+    {
+        return {
+            method :'GET',
+            headers : request.headers,
+            uri : request.uri
+
+        };
+
+    };
+
+    var post = function()
+    {
+        return {
+            method: 'POST',
+            'url': request.uri,
+            'headers': request.headers,
+            'body': request.body,
+            'json': request.isJSON
+
+        };
+
+    };
+
+    var put = function()
+    {
+        return {
+            method: 'PUT',
+            'url': request.uri,
+            'headers': request.headers,
+            'json': true,
+            'body': request.body
+        };
+    };
+
     return {
-        "Content-Type": content_type || "application/json",
-        "X-Auth-Token": this.user_detail.access_token,
-        "From": this.user_detail.email,
-        "client_id": this.user_detail.client_id
+        get : get,
+        post : post,
+        put : put
+    }
+
+};
+
+var PatientRequest = function(user_detail, patient_detail){
+
+    var headers = function()
+    {
+        return {
+            "Content-Type": "application/json",
+            "X-Auth-Token": user_detail.access_token,
+            "From": user_detail.email,
+            "client_id": user_detail.client_id
+        }
+    }
+
+    var uri = config.mci_protocol + "://" +  (config.mci_dns_name || (config.mci_server_ip + ":" + config.mci_server_port)) + "/api/v1"
+
+    var post = function(){
+        return EntityRequest({uri : uri + "/patients", body : patient_detail, headers : headers(), isJSON:true}).post()
+    };
+
+    var updatePost = function(hid){
+        return EntityRequest({'uri' : uri + "/patients", body : {'gender': 'F'}, headers : headers(), isJSON:true}).post()
+    };
+
+    var updateUsingPut = function (hid) {
+        return EntityRequest({uri : uri + "/patients/" + hid, body : {'gender': 'F'}, headers : headers(), isJSON:true}).put()
+    };
+
+    var getPatientDetailsByHid = function (hid) {
+        return EntityRequest({uri : uri + "/patients/" + hid, headers : headers()}).get();
+    };
+
+    var getPatientDetailsByNid = function (nid) {
+        return EntityRequest({uri : uri + "/patients/?nid=" + nid, headers : headers()}).get();
+    };
+
+
+    var getPatientDetailsByBinBrn = function (binBrn) {
+        return EntityRequest({uri : uri + "/patients/?bin_brn=" + binBrn, headers : headers()}).get();
+    };
+
+    var getPatientDetailsHouseHoldCode = function (houseHoldCode) {
+        return EntityRequest({uri : uri + "/patients/?household_code=" + houseHoldCode, headers : headers()}).get();
+    };
+
+    var getAllPatientsByCatchment = function (catchment) {
+
+        return EntityRequest({uri : uri + "/catchments/" + catchment + "/patients", headers : headers()}).get();
+    };
+
+    var getAllPendingApprovalPatientsByCatchment = function (catchment) {
+        return EntityRequest({uri : uri + "/catchments/" + catchment  + "/approvals", headers : headers()}).get();
+    };
+
+    var getAllPendingApprovalDetailsByHid = function (catchment,hid) {
+        return EntityRequest({uri : uri + "/catchments/" + catchment  + "/approvals/" + hid, headers : headers()}).get();
+    };
+
+    var acceptOrRejectUsingPut = function (catchment,hid) {
+        var url = uri + "/catchments/" + catchment + "/approvals/" + hid;
+        return EntityRequest({uri : url, body : {'gender': 'F'}, headers : headers(), isJSON : true }).put()
+    };
+
+    var getAuditLogsByHid = function (hid) {
+        var url = uri +  "/audit/patients/" + hid;
+        return EntityRequest({uri : url, headers : headers() }).get();
+    };
+
+    var getUpdateFeedForSHR = function (hid) {
+        var url = uri +  "/feed/patients?hid=" + hid;
+        return EntityRequest({uri : url, headers : headers() }).get();
+    };
+
+    var getLocationDetails = function (catchment) {
+        var url = uri +  "/locations?parent="+catchment;
+        return EntityRequest({uri : url, headers : headers() }).get();
+
+    };
+
+    var getPatientDetailsByNameLocation = function (givenName,surName,address) {
+        var url = uri +  "/patients/?given_name="+givenName+"&sur_name="+surName+"&present_address="+address;
+        return EntityRequest({uri : url, headers : headers() }).get();
+    };
+
+
+    return {
+
+        post : post,
+        updatePost : updatePost,
+        updateUsingPut : updateUsingPut,
+        getPatientDetailsByHid : getPatientDetailsByHid,
+        getPatientDetailsByNid : getPatientDetailsByNid,
+        getPatientDetailsByBinBrn : getPatientDetailsByBinBrn,
+        getPatientDetailsHouseHoldCode : getPatientDetailsHouseHoldCode,
+        getAllPatientsByCatchment : getAllPatientsByCatchment,
+        getAllPendingApprovalPatientsByCatchment : getAllPendingApprovalPatientsByCatchment,
+        getAllPendingApprovalDetailsByHid : getAllPendingApprovalDetailsByHid,
+        acceptOrRejectUsingPut : acceptOrRejectUsingPut,
+        getAuditLogsByHid : getAuditLogsByHid,
+        getUpdateFeedForSHR : getUpdateFeedForSHR,
+        getLocationDetails : getLocationDetails,
+        getPatientDetailsByNameLocation : getPatientDetailsByNameLocation
     }
 };
 
- EntityRequest.prototype.get = function (uri) {
-     return {
-         method: 'GET',
-         headers: this.headers(),
-         'uri': uri || this.uri()
-     }
- };
-
-EntityRequest.prototype._post = function (body, url) {
-    return {
-        method: 'POST',
-        'url': url || this.uri(),
-        'headers': this.headers(),
-        'json': true,
-        'body': body
-
-    };
-};
-
-EntityRequest.prototype._put = function (body, url) {
-    return {
-        method: 'PUT',
-        'url': url || this.uri(),
-        'headers': this.headers(),
-        'json': true,
-        'body': body
-
-    };
-};
-
-
-EntityRequest.prototype.approvalPost = function (body, url) {
-    return {
-        method: 'PUT',
-        'url': url || this.approvalUrl(),
-        'headers': this.headers(),
-        'json': true,
-        'body': body
-
-    };
-};
-
-
-var PatientRequest = function(user_detail, patient_detail)
-{
-    this.user_detail = user_detail;
-    this.server = config.mci_dns_name || config.mci_server_ip + ":" + config.mci_server_port;
-    this.patient_detail = patient_detail;
-    this.protocol = config.mci_protocol;
-};
-
-PatientRequest.prototype = new EntityRequest();
-PatientRequest.prototype.uri = function() {
-    return this.protocol + "://" + this.server + "/api/v1/patients";
-};
-
-PatientRequest.prototype.post = function() {
-    return this._post(this.patient_detail);
-};
-
-PatientRequest.prototype.updatePost = function (hid) {
-    return this._post({'gender': 'F'}, this.uri() + "/" + hid)
-};
-
-PatientRequest.prototype.updateUsingPut = function (hid) {
-    return this._put({'gender': 'F'}, this.uri() + "/" + hid)
-};
-
-
-PatientRequest.prototype.getPatientDetailsByHid = function (hid) {
-    return this.get(this.protocol + "://"  + this.server + "/api/v1/patients/" + hid);
-};
-
-PatientRequest.prototype.getPatientDetailsByNid = function (nid) {
-    return this.get(this.protocol + "://"  + this.server + "/api/v1/patients/?nid=" + nid);
-};
-
-
-PatientRequest.prototype.getPatientDetailsByBinBrn = function (binBrn) {
-    return this.get(this.protocol + "://"  + this.server + "/api/v1/patients/?bin_brn=" + binBrn);
-};
-
-PatientRequest.prototype.getPatientDetailsHouseHoldCode = function (houseHoldCode) {
-    return this.get(this.protocol + "://"  + this.server + "/api/v1/patients/?household_code=" + houseHoldCode);
-};
-
-
-PatientRequest.prototype.getAllPatientsByCatchment = function (catchment) {
-    return this.get(this.protocol + "://"  + this.server + "/api/v1/catchments/" + catchment + "/patients");
-};
-
-PatientRequest.prototype.getAllPendingApprovalPatientsByCatchment = function (catchment) {
-    return this.get(this.protocol + "://"  + this.server + "/api/v1/catchments/" + catchment + "/approvals");
-};
-
-PatientRequest.prototype.getAllPendingApprovalDetailsByHid = function (catchment,hid) {
-    return this.get(this.protocol + "://"  + this.server + "/api/v1/catchments/" + catchment + "/approvals/" + hid)
-};
-
-PatientRequest.prototype.approvalUrl = function(catchment,hid) {
-    return this.protocol + "://"  + this.server + "/api/v1/catchments/" + catchment + "/approvals/" + hid
-};
-
-PatientRequest.prototype.acceptOrRejectUsingPut = function (catchment,hid) {
-    return this.approvalPost({'gender': 'F'}, this.approvalUrl(catchment,hid))
-};
-
-PatientRequest.prototype.getAuditLogsByHid = function (hid) {
-    return this.get("https://" + this.server + "/api/v1/audit/patients/" + hid);
-};
-
-PatientRequest.prototype.getUpdateFeedForSHR = function (hid) {
-    return this.get("https://" + this.server + "/api/v1/feed/patients?");
-};
-
-PatientRequest.prototype.getLocationDetails = function (catchment) {
-    return this.get("https://" + this.server + "/api/v1/locations?parent="+catchment);
-};
-
-PatientRequest.prototype.getPatientDetailsByNameLocation = function (givenName,surName,address) {
-    return this.get("https://" + this.server + "/api/v1/patients/?given_name="+givenName+"&sur_name="+surName+"&present_address="+address );
-};
-
-
-exports.PatientRequest = PatientRequest;
+exports.PatientRequest = PatientRequest
 
 var EncounterRequest = function (hid, user_detail, payload) {
-    var config = require('./../Config').config;
-    this.user_detail = user_detail;
-    this.hid = hid;
-    this.encounter = payload || "";
-    this.ip = config.shr_server_ip;
-    this.port = config.shr_server_port;
-    this.protocol = config.shr_protocol || 'http';
-    this.url = config.shr_server_url || this.protocol + "://" + this.ip + ":" + this.port;
 
-};
-
-EncounterRequest.prototype = new EntityRequest();
-
-EncounterRequest.prototype.uri = function() {
-    return this.url + "/patients/" + this.hid + "/encounters";
-}
-
-EncounterRequest.prototype.post = function () {
-    var body = this.encounter.details;
-    return {
-        method: 'POST',
-        url: this.uri(),
-        headers: this.headers("application/xml; charset=utf-8"),
-        body: body,
-        json: false
+    var user_detail = user_detail;
+    var hid = hid;
+    var encounter_payload = payload || "";
+    var ip = config.shr_server_ip;
+    var port = config.shr_server_port;
+    var protocol = config.shr_protocol || 'http';
+    var url = config.shr_server_url || (protocol + "://" + ip + ":" + port);
+    var headers = function()
+    {
+        return {
+            "Content-Type": "application/xml; charset=utf-8",
+            "X-Auth-Token": user_detail.access_token,
+            "From": user_detail.email,
+            "client_id": user_detail.client_id
+        }
     };
+
+    var post = function()
+    {
+        return  EntityRequest({'uri' : url + "/patients/" + hid + "/encounters" , headers : headers(), 'body': encounter_payload.details, isJSON : false }).post();
+    };
+
+    var get = function()
+    {
+        return  EntityRequest({'uri' : url + "/patients/" + hid + "/encounters" , headers : headers() }).get();
+    }
+
+    return {
+        EntityRequest : EntityRequest,
+        post: post,
+        headers: headers,
+        get : get
+    }
+
 };
 
 exports.EncounterRequest = EncounterRequest;
 
 var CatchmentRequest = function (user_detail, catchment_area_code) {
+    var ip = config.shr_server_ip;
+    var port = config.shr_server_port;
+    var user_detail = user_detail;
+    var catchment_area_code = catchment_area_code;
+    var protocol = config.shr_protocol || 'http';
+    var headers = function()
+    {
+        return {
+            "Content-Type": "application/json",
+            "X-Auth-Token": user_detail.access_token,
+            "From": user_detail.email,
+            "client_id": user_detail.client_id
+        }
+    };
+    var url = config.shr_server_url || (protocol + "://" + ip + ":" + port);
+    var pad  = function (n) {
+        return n < 10 ? '0' + n : n;
+    };
+    var ISODateString = function () {
+        var d = new Date();
+        return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + '%3A' + pad(d.getMinutes()) + '%3A' + pad(d.getSeconds()) + "%2B0530";
 
-    var config = require('./../Config').config;
-    this.ip = config.shr_server_ip;
-    this.port = config.shr_server_port;
-    this.user_detail = user_detail;
-    this.catchment_area_code = catchment_area_code;
-    this.protocol = config.shr_protocol || 'http';
-    this.url = config.shr_server_url || this.protocol + "://" + this.ip + ":" + this.port;
+    };
+
+   var  uri =function() {
+        return url + "/v1/catchments/" + catchment_area_code + "/encounters?updatedSince=" + ISODateString();
+    }
+    var get = function()
+    {
+        return  EntityRequest({'uri' : uri()  , headers : headers() }).get();
+    }
+
+    return {
+        get : get
+    }
 };
 
-CatchmentRequest.prototype = new EntityRequest();
 
-CatchmentRequest.prototype.pad = function (n) {
-    return n < 10 ? '0' + n : n;
-};
-CatchmentRequest.prototype.ISODateString = function () {
-    var d = new Date();
-    return d.getFullYear() + '-' + this.pad(d.getMonth() + 1) + '-' + this.pad(d.getDate()) + 'T' + this.pad(d.getHours()) + '%3A' + this.pad(d.getMinutes()) + '%3A' + this.pad(d.getSeconds()) + "%2B0530";
 
-};
 
-CatchmentRequest.prototype.uri =function() {
-    return this.url + "/v1/catchments/" + this.catchment_area_code + "/encounters?updatedSince=" + this.ISODateString();
-}
+//CatchmentRequest.prototype = new EntityRequest();
+//
+//CatchmentRequest.prototype.pad =
+
+//CatchmentRequest.prototype.ISODateString = function () {
+//    var d = new Date();
+//    return d.getFullYear() + '-' + this.pad(d.getMonth() + 1) + '-' + this.pad(d.getDate()) + 'T' + this.pad(d.getHours()) + '%3A' + this.pad(d.getMinutes()) + '%3A' + this.pad(d.getSeconds()) + "%2B0530";
+//
+//};
+
+//CatchmentRequest.prototype.uri =function() {
+//    return this.url + "/v1/catchments/" + this.catchment_area_code + "/encounters?updatedSince=" + this.ISODateString();
+//}
 
 exports.CatchmentRequest = CatchmentRequest;
 

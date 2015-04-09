@@ -32,10 +32,11 @@ describe("MCI Facility User", function () {
     });
 
     describe("MCI APIs for Facility User", function () {
-
         var patientRequest;
-        patientRequest = new PatientRequest(user);
-
+        before(function(done) {
+            patientRequest = new PatientRequest(user);
+            done();
+        })
 
         mci_facility_user("Should be able to view patient By Hid", function (done) {
             request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
