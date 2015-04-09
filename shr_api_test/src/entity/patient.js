@@ -2,7 +2,7 @@ module.exports = function(confidentiality) {
  	var nid = new Date().getTime();
 	var bin_brn =  nid + "0000";
 	var houseHoldCode=Math.ceil(Math.random()*100000000);
-	var name=Math.ceil(Math.random()*10000)
+	var name=Math.ceil(Math.random()*1000000)
 
 	return {
 

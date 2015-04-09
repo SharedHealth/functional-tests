@@ -81,9 +81,9 @@ PatientRequest.prototype.getPatientDetailsByHid = function (hid) {
     return this.get("https://" + this.server + "/api/v1/patients/" + hid);
 };
 
-PatientRequest.prototype.getPatientDetailsByNid = function (nid) {
-    return this.get("https://" + this.server + "/api/v1/patients/?nid=" + nid);
-};
+    PatientRequest.prototype.getPatientDetailsByNid = function (nid) {
+        return this.get("https://" + this.server + "/api/v1/patients/?nid=" + nid);
+    };
 
 PatientRequest.prototype.getPatientDetailsByBinBrn = function (binBrn) {
     return this.get("https://" + this.server + "/api/v1/patients/?bin_brn=" + binBrn);
@@ -126,9 +126,10 @@ PatientRequest.prototype.getLocationDetails = function (catchment) {
     return this.get("https://" + this.server + "/api/v1/locations?parent="+catchment);
 };
 
-//PatientRequest.prototype.getPatientDetailsByName&PhoneNumber = function (nid) {
-//    return this.get("https://" + this.server + "/api/v1/patients/?nid=" + nid);
-//};
+PatientRequest.prototype.getPatientDetailsByNameLocation = function (givenName,surName,address) {
+    return this.get("https://" + this.server + "/api/v1/patients/?given_name="+givenName+"&sur_name="+surName+"&present_address="+address );
+};
+
 
 exports.PatientRequest = PatientRequest;
 

@@ -104,6 +104,31 @@ describe('MCI Patient User', function () {
             });
         });
 
+        mci_patient_user("Should not be able to view patient By Name & Location", function (done) {
+            var given_name;
+            var sur_name;
+            var division_id;
+            var district_id;
+            var upazila_id;
+            var address;
+            var patientHid = user.hid;
+
+            request(patientRequest.getPatientDetailsByHid(patientHid), function (err, res, body) {
+                given_name = JSON.parse(body).given_name;
+                sur_name = JSON.parse(body).sur_name;
+                division_id = JSON.parse(body).present_address.division_id;
+                district_id = JSON.parse(body).present_address.district_id;
+                upazila_id = JSON.parse(body).present_address.upazila_id;
+                address=""+division_id+district_id+upazila_id;
+            request(patientRequest.getPatientDetailsByNameLocation(given_name,sur_name,address), function (err, res, body) {
+                    expect(res.statusCode).to.equal(403);
+                    expect(JSON.parse(body).message).to.equal("Access is denied");
+                    done();
+
+                });
+            });
+        });
+
         mci_patient_user("Should not be able to download patient by Catchment", function (done) {
            request(patientRequest.getAllPatientsByCatchment("302607"), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
@@ -144,16 +169,16 @@ describe('MCI Patient User', function () {
             });
         });
 
-//      mci_patient_user("Should not be able to reject pending approval for patient", function (done) {
-//          request((patientUpdateRequest).updateUsingPut(hid), function (err, res, body) {
-//          request.delete(patientRequest.acceptOrRejectUsingPut("3026", hid), function (err, res, body) {
-//              expect(res.statusCode).to.equal(403);
-//              expect(body.message).to.equal("Access is denied");
-//                done();
-//                });
-//            });
-//        });
 
+      mci_patient_user.skip("Should not be able to reject pending approval for patient", function (done) {
+          request.put(patientUpdateRequest.updatePost(hid), function (err, res, body) {
+          request.del(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
+              expect(res.statusCode).to.equal(403);
+              expect(body.message).to.equal("Access is denied");
+                done();
+                });
+            });
+        });
 
         mci_patient_user("Should not be able to get the audit log details for the  patients", function (done) {
             request(patientRequest.getAuditLogsByHid(hid), function (err, res, body) {

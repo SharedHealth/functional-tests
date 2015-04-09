@@ -131,7 +131,7 @@ module.exports = function (user_type) {
         client_id : 18570,
         api_token : null,
         access_token : "",
-        hid : '11435292990'
+        hid : '11448462025'
 
     };
 
@@ -141,7 +141,7 @@ module.exports = function (user_type) {
         client_id : 18568,
         api_token : null,
         access_token : "",
-        hid : '11435282673'
+        hid : '11448451811'
 
     };
     user["SHOWCASE"]["shr"] = {
