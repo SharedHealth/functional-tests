@@ -57,11 +57,12 @@ var PatientRequest = function(user_detail, patient_detail)
     this.user_detail = user_detail;
     this.server = config.mci_dns_name || config.mci_server_ip + ":" + config.mci_server_port;
     this.patient_detail = patient_detail;
+    this.protocol = config.mci_protocol;
 };
 
 PatientRequest.prototype = new EntityRequest();
 PatientRequest.prototype.uri = function() {
-    return "https://" + this.server + "/api/v1/patients";
+    return this.protocol + "://" + this.server + "/api/v1/patients";
 };
 
 PatientRequest.prototype.post = function() {
@@ -78,36 +79,37 @@ PatientRequest.prototype.updateUsingPut = function (hid) {
 
 
 PatientRequest.prototype.getPatientDetailsByHid = function (hid) {
-    return this.get("https://" + this.server + "/api/v1/patients/" + hid);
+    return this.get(this.protocol + "://"  + this.server + "/api/v1/patients/" + hid);
 };
 
-    PatientRequest.prototype.getPatientDetailsByNid = function (nid) {
-        return this.get("https://" + this.server + "/api/v1/patients/?nid=" + nid);
-    };
+PatientRequest.prototype.getPatientDetailsByNid = function (nid) {
+    return this.get(this.protocol + "://"  + this.server + "/api/v1/patients/?nid=" + nid);
+};
+
 
 PatientRequest.prototype.getPatientDetailsByBinBrn = function (binBrn) {
-    return this.get("https://" + this.server + "/api/v1/patients/?bin_brn=" + binBrn);
+    return this.get(this.protocol + "://"  + this.server + "/api/v1/patients/?bin_brn=" + binBrn);
 };
 
 PatientRequest.prototype.getPatientDetailsHouseHoldCode = function (houseHoldCode) {
-    return this.get("https://" + this.server + "/api/v1/patients/?household_code=" + houseHoldCode);
+    return this.get(this.protocol + "://"  + this.server + "/api/v1/patients/?household_code=" + houseHoldCode);
 };
 
 
 PatientRequest.prototype.getAllPatientsByCatchment = function (catchment) {
-    return this.get("https://" + this.server + "/api/v1/catchments/" + catchment + "/patients");
+    return this.get(this.protocol + "://"  + this.server + "/api/v1/catchments/" + catchment + "/patients");
 };
 
 PatientRequest.prototype.getAllPendingApprovalPatientsByCatchment = function (catchment) {
-    return this.get("https://" + this.server + "/api/v1/catchments/" + catchment + "/approvals");
+    return this.get(this.protocol + "://"  + this.server + "/api/v1/catchments/" + catchment + "/approvals");
 };
 
 PatientRequest.prototype.getAllPendingApprovalDetailsByHid = function (catchment,hid) {
-    return this.get("https://" + this.server + "/api/v1/catchments/" + catchment + "/approvals/" + hid)
+    return this.get(this.protocol + "://"  + this.server + "/api/v1/catchments/" + catchment + "/approvals/" + hid)
 };
 
 PatientRequest.prototype.approvalUrl = function(catchment,hid) {
-    return "https://" + this.server + "/api/v1/catchments/" + catchment + "/approvals/" + hid
+    return this.protocol + "://"  + this.server + "/api/v1/catchments/" + catchment + "/approvals/" + hid
 };
 
 PatientRequest.prototype.acceptOrRejectUsingPut = function (catchment,hid) {
@@ -140,12 +142,15 @@ var EncounterRequest = function (hid, user_detail, payload) {
     this.encounter = payload || "";
     this.ip = config.shr_server_ip;
     this.port = config.shr_server_port;
+    this.protocol = config.shr_protocol || 'http';
+    this.url = config.shr_server_url || this.protocol + "://" + this.ip + ":" + this.port;
+
 };
 
 EncounterRequest.prototype = new EntityRequest();
 
 EncounterRequest.prototype.uri = function() {
-    return "http://" + this.ip + ":" + this.port + "/patients/" + this.hid + "/encounters";
+    return this.url + "/patients/" + this.hid + "/encounters";
 }
 
 EncounterRequest.prototype.post = function () {
@@ -168,6 +173,8 @@ var CatchmentRequest = function (user_detail, catchment_area_code) {
     this.port = config.shr_server_port;
     this.user_detail = user_detail;
     this.catchment_area_code = catchment_area_code;
+    this.protocol = config.shr_protocol || 'http';
+    this.url = config.shr_server_url || this.protocol + "://" + this.ip + ":" + this.port;
 };
 
 CatchmentRequest.prototype = new EntityRequest();
@@ -182,7 +189,7 @@ CatchmentRequest.prototype.ISODateString = function () {
 };
 
 CatchmentRequest.prototype.uri =function() {
-    return "http://" + this.ip + ":" + this.port + "/v1/catchments/" + this.catchment_area_code + "/encounters?updatedSince=" + this.ISODateString();
+    return this.url + "/v1/catchments/" + this.catchment_area_code + "/encounters?updatedSince=" + this.ISODateString();
 }
 
 exports.CatchmentRequest = CatchmentRequest;

@@ -4,6 +4,7 @@ module.exports = function (user_type) {
     var user = {};
     user["QA"] = {};
     user["SHOWCASE"] = {};
+    user["STAGING"] = {};
 
     user["QA"]["datasense"] = {
         email: "rappasam@thoughtworks.com",
@@ -165,6 +166,94 @@ module.exports = function (user_type) {
 
 
     };
+
+
+    user["STAGING"]["datasense"] = {
+        email : "datasense@test.com",
+        password : "thoughtworks",
+        client_id : 18565,
+        api_token : '322d16010e1fb5728f34fbb9bd8567184e7220472e58220c5814ca9f63c01795',
+        access_token : "",
+        catchment : "3026"
+    };
+
+    user["STAGING"]["facility"] = {
+        email : "facility@test.com",
+        password : "thoughtworks",
+        client_id : 18563,
+        api_token : '697a61a6527565d1c98d7b9837ae1f25a6da9884d3fa7f75f66c93e4740e89bf',
+        access_token : "",
+        catchment : ["302607"]
+    };
+
+    user["STAGING"]["mciAdmin"] = {
+        email : "MciAdmin@test.com",
+        password : "thoughtworks",
+        client_id : 18564,
+        api_token : null,
+        access_token : "",
+        catchment : ["3026"]
+    };
+    user["STAGING"]["mci_approver"] = {
+        email : "mciApprover@test.com",
+        password : "thoughtworks",
+        client_id : 18566,
+        api_token : null,
+        access_token : "",
+        catchment : ["3026"]
+    };
+
+
+    user["STAGING"]["provider"] = {
+        email : "provider@test.com",
+        password : "thoughtworks",
+        client_id : 18562,
+        api_token : 'bec81dddaa8a400a51e10710f7a82ef3f04cfddaa9bbe5ac051328c46a6373fd',
+        access_token : "",
+        catchment : ["302607"]
+    };
+
+    user["STAGING"]["confidential_patient"] = {
+        email : "confendial@test.com",
+        password : "thoughtworks",
+        client_id : 18570,
+        api_token : null,
+        access_token : "",
+        hid : '11435292990'
+
+    };
+
+    user["STAGING"]["patient"] = {
+        email : "patient@test.com",
+        password : "thoughtworks",
+        client_id : 18568,
+        api_token : null,
+        access_token : "",
+        hid : '11435282673'
+
+    };
+    user["STAGING"]["shr"] = {
+        email : "shr@test.com",
+        password : "thoughtworks",
+        client_id : 18567,
+        api_token : 'aa0506c979afeccbaaff70bcb6cb88bca7b0371252fdb8d7192ab1db851e59ad',
+        access_token : "",
+        catchment : ["302607"]
+
+
+    };
+
+    user["STAGING"]["PatientJournal"] = {
+        email : "patientJournal@test.com",
+        password : "thoughtworks",
+        client_id : 18569,
+        api_token : '',
+        access_token : ""
+
+
+
+    };
+
 
     return user[environment][user_type];
 
