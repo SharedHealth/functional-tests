@@ -214,22 +214,22 @@ module.exports = function (user_type) {
     };
 
     user["STAGING"]["confidential_patient"] = {
-        email : "confendial@test.com",
+        email : "confendialStage@test.com",
         password : "thoughtworks",
-        client_id : 18570,
+        client_id : 18571,
         api_token : null,
         access_token : "",
-        hid : '11435292990'
+        hid : '11464201473'
 
     };
 
     user["STAGING"]["patient"] = {
-        email : "patient@test.com",
+        email : "patientStage@test.com",
         password : "thoughtworks",
-        client_id : 18568,
+        client_id : 18572,
         api_token : null,
         access_token : "",
-        hid : '11435282673'
+        hid : '11464201877'
 
     };
     user["STAGING"]["shr"] = {
