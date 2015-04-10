@@ -10,5 +10,8 @@ showcase:
 staging:
 	@cd src; ENVIRONMENT=STAGING mocha
 
+sandbox:
+	@echo ${ENVIRONMENT}
+	@cd src/sandbox; ENVIRONMENT=${ENVIRONMENT} mocha ${FILE_NAME} --no-timeouts
 
-.PHONY: test showcase staging
+.PHONY: test showcase staging sandbox
