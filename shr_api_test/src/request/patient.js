@@ -26,6 +26,10 @@ var PatientRequest = function(user_detail, patient_detail){
         return EntityRequest({uri : uri + "/patients/" + hid, body : {'gender': 'F'}, headers : headers(), isJSON:true}).put()
     };
 
+    var multipleUpdateUsingPut = function (hid) {
+        return EntityRequest({uri : uri + "/patients/" + hid, body : {'gender': 'F', 'given_name': 'updatedFirstName'}, headers : headers(), isJSON:true}).put()
+    };
+
     var getPatientDetailsByHid = function (hid) {
         return EntityRequest({uri : uri + "/patients/" + hid, headers : headers()}).get();
     };
@@ -60,6 +64,12 @@ var PatientRequest = function(user_detail, patient_detail){
         var url = uri + "/catchments/" + catchment + "/approvals/" + hid;
         return EntityRequest({uri : url, body : {'gender': 'F'}, headers : headers(), isJSON : true }).put()
     };
+
+    var multipleAcceptOrRejectUsingPut = function (catchment,hid) {
+        var url = uri + "/catchments/" + catchment + "/approvals/" + hid;
+        return EntityRequest({uri : url, body : {'gender': 'F', 'given_name': 'updatedFirstName'}, headers : headers(), isJSON : true }).put()
+    };
+
 
     var getAuditLogsByHid = function (hid) {
         var url = uri +  "/audit/patients/" + hid;
