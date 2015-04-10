@@ -1,13 +1,11 @@
 var request = require('request');
 var User = require('../../../../src/data/user' );
-var Entity = require('../../../../src/request/entity');
-var Encounter = require('../../../../src/entity/encounter');
-var EncounterRequest = Entity.EncounterRequest;
-var CatchmentRequest = Entity.CatchmentRequest;
-
-var SSORequest = Entity.SSORequest;
 var Patient = require('../../../../src/entity/patient');
-var PatientRequest = Entity.PatientRequest;
+var Encounter = require('../../../../src/entity/encounter');
+var EncounterRequest = require('../../../../src/request/encounter').EncounterRequest;
+var SSORequest = require('../../../../src/request/sso').SSORequest;
+var CatchmentRequest = require('../../../../src/request/catchment').CatchmentRequest;
+var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 
 describe('Patient User', function () {
     var user = new User('patient');

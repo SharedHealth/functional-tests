@@ -1,13 +1,11 @@
 var request = require('request');
-var Entity = require('../../../../src/request/entity');
 var User = require('../../../../src/data/user' );
-var Encounter = require('../../../../src/entity/encounter');
-var EncounterRequest = Entity.EncounterRequest;
-
-var SSORequest = Entity.SSORequest;
 var Patient = require('../../../../src/entity/patient');
-var PatientRequest = Entity.PatientRequest;
-var CatchmentRequest = Entity.CatchmentRequest;
+var Encounter = require('../../../../src/entity/encounter');
+var EncounterRequest = require('../../../../src/request/encounter').EncounterRequest;
+var SSORequest = require('../../../../src/request/sso').SSORequest;
+var CatchmentRequest = require('../../../../src/request/catchment').CatchmentRequest;
+var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 
 
 describe("Facility User", function () {
