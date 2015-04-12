@@ -19,8 +19,6 @@
 	};
 
 	config['STAGING']  = {
-		'shr_server_ip' : '172.18.46.167',
-		'shr_server_port' : '9081',
 		'shr_server_url' : "http://shrstg.twhosted.com",
 		'mci_dns_name' : "mcistg.twhosted.com",
 		'sso_server_url' : 'http://hrmtest.dghs.gov.bd/api/1.0/sso/signin',
