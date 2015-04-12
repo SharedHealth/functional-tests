@@ -10,7 +10,7 @@ var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 describe("MCI Provider User", function () {
     var user = new User('provider');
     var hid = "";
-    var nid = ""
+    var nid = "";
     var binBrn = "";
     var confidential_patient_hid = "";
     var mci_provider_user = it;
