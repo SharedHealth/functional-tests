@@ -27,7 +27,7 @@ var PatientRequest = function(user_detail, patient_detail){
     };
 
     var multipleUpdateUsingPut = function (hid) {
-        return EntityRequest({uri : uri + "/patients/" + hid, body : {'gender': 'F', 'given_name': 'updatedFirstName'}, headers : headers(), isJSON:true}).put()
+        return EntityRequest({uri : uri + "/patients/" + hid, body : {'religion': '2', 'given_name': 'updatedFirstName'}, headers : headers(), isJSON:true}).put()
     };
 
     var getPatientDetailsByHid = function (hid) {
@@ -60,14 +60,24 @@ var PatientRequest = function(user_detail, patient_detail){
         return EntityRequest({uri : uri + "/catchments/" + catchment  + "/approvals/" + hid, headers : headers()}).get();
     };
 
-    var acceptOrRejectUsingPut = function (catchment,hid) {
+    var acceptRequest = function (catchment,hid) {
         var url = uri + "/catchments/" + catchment + "/approvals/" + hid;
-        return EntityRequest({uri : url, body : {'gender': 'F'}, headers : headers(), isJSON : true }).put()
+        return EntityRequest({uri : url, body : {'gender': 'F'}, headers : headers(), isJSON : true }).put();
     };
 
-    var multipleAcceptOrRejectUsingPut = function (catchment,hid) {
+    var rejectRequest = function (catchment,hid) {
         var url = uri + "/catchments/" + catchment + "/approvals/" + hid;
-        return EntityRequest({uri : url, body : {'gender': 'F', 'given_name': 'updatedFirstName'}, headers : headers(), isJSON : true }).put()
+        return EntityRequest({uri : url, body : {'gender': 'F'}, headers : headers(), isJSON : true }).del();
+    };
+
+    var multipleRequestAccept = function (catchment,hid) {
+        var url = uri + "/catchments/" + catchment + "/approvals/" + hid;
+        return EntityRequest({uri : url, body : {'religion': '2', 'given_name': 'updatedFirstName'}, headers : headers(), isJSON : true }).put()
+    };
+
+    var multipleRequestReject = function (catchment,hid) {
+        var url = uri + "/catchments/" + catchment + "/approvals/" + hid;
+        return EntityRequest({uri : url, body : {'religion': '2', 'given_name': 'updatedFirstName'}, headers : headers(), isJSON : true }).del();
     };
 
 
@@ -106,8 +116,10 @@ var PatientRequest = function(user_detail, patient_detail){
         getAllPatientsByCatchment : getAllPatientsByCatchment,
         getAllPendingApprovalPatientsByCatchment : getAllPendingApprovalPatientsByCatchment,
         getAllPendingApprovalDetailsByHid : getAllPendingApprovalDetailsByHid,
-        acceptOrRejectUsingPut : acceptOrRejectUsingPut,
-        multipleAcceptOrRejectUsingPut : multipleAcceptOrRejectUsingPut,
+        acceptRequest : acceptRequest,
+        rejectRequest : rejectRequest,
+        multipleRequestAccept : multipleRequestAccept,
+        multipleRequestReject : multipleRequestReject,
         getAuditLogsByHid : getAuditLogsByHid,
         getUpdateFeedForSHR : getUpdateFeedForSHR,
         getLocationDetails : getLocationDetails,

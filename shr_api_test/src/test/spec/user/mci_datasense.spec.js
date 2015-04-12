@@ -157,7 +157,7 @@ describe("MCI Datasense User", function () {
 
         mci_datasense_user("Should not be able to accept pending approval for patient", function (done) {
             request((patientUpdateRequest).updateUsingPut(hid), function (err, res, body) {
-            request(patientRequest.acceptOrRejectUsingPut("3026", hid), function (err, res, body) {
+            request(patientRequest.acceptRequest("302607", hid), function (err, res, body) {
             expect(res.statusCode).to.equal(403);
             expect(body.message).to.equal("Access is denied");
                 done();
@@ -166,9 +166,9 @@ describe("MCI Datasense User", function () {
        });
 
 
-        mci_datasense_user.skip("Should not be able to reject pending approval for patient", function (done) {
-            request.put(patientUpdateRequest.updatePost(hid), function (err, res, body) {
-            request.del(patientRequest.acceptOrRejectRequest("3026", hid), function (err, res, body) {
+        mci_datasense_user("Should not be able to reject pending approval for patient", function (done) {
+            request(patientUpdateRequest.updatePost(hid), function (err, res, body) {
+            request(patientRequest.rejectRequest("302607", hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(403);
                 expect(body.message).to.equal("Access is denied");
                 done();

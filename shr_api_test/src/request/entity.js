@@ -35,10 +35,24 @@ var EntityRequest = function(request){
         };
     };
 
+    var del = function()
+    {
+        return {
+            method: 'DELETE',
+            'url': request.uri,
+            'headers': request.headers,
+            'json': true,
+            'body': request.body
+        };
+
+    }
+
+
     return {
         get : get,
         post : post,
-        put : put
+        put : put,
+        del : del
     }
 
 };

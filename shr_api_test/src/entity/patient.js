@@ -13,6 +13,7 @@ module.exports = function(confidentiality) {
 		"date_of_birth" : "2000-03-01",
 		"gender" : "M",
 		"occupation" : "05",
+		"religion": "1",
 		 "phone_number":
         {
          "country_code": "88",
