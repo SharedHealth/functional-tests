@@ -70,7 +70,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
 
         page.login()
                 .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
-                .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).startConsultation().goToVisitPage()
+                .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).goToVisitPage()
                 .verifyCheifComplainData(firstChiefComplain)
                 .verifyCheifComplainData(secondChiefComplain)
                 .verifyCheifComplainData(thirdChiefComplain);
@@ -141,7 +141,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
 
         page.login()
                 .waitForCatchmentSync()
-                .goToClinicalPage().goToPatientDashboard(primaryPatient).startConsultation().goToVisitPage()
+                .goToClinicalPage().goToPatientDashboard(primaryPatient).goToVisitPage()
                 .verifyCheifComplainData(firstChiefComplain)
                 .verifyCheifComplainData(secondChiefComplain)
                 .verifyCheifComplainData(thirdChiefComplain);

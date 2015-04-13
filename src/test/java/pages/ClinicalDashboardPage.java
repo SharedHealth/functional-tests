@@ -86,4 +86,12 @@ public class ClinicalDashboardPage extends Page {
         Assert.assertEquals("Vital Verification Systolic BP ", patientVitals.getSystolicBloodPressure()+" mm Hg", vitals.get("Systolic"));
         System.out.println("Vitals Data verified for the Patient ");
     }
+
+    public DashBoardVisitPage goToVisitPage() {
+
+        waitForMillis(1000);
+        driver.findElement(By.xpath("(//visits-table//a)[1]")).click();
+        return initialize(webDriver, DashBoardVisitPage.class);
+
+    }
 }

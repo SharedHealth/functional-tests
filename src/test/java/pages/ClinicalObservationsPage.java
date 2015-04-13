@@ -29,7 +29,7 @@ public class ClinicalObservationsPage extends Page {
     @FindBy(xpath = "//strong[text()='Family History']")
     private WebElement familyHistorySection;
 
-    @FindBy(xpath = "//strong[text()='History and Examination']")
+    @FindBy(id = "History_and_Examination")
     private WebElement chiefComplainSection;
 
     @FindBy(linkText = "Visit")
