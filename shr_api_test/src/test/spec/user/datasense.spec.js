@@ -7,7 +7,7 @@ var SSORequest = require('../../../../src/request/sso').SSORequest;
 var CatchmentRequest = require('../../../../src/request/catchment').CatchmentRequest;
 var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 
-describe("Datasense User", function () {
+describe.only("Datasense User", function () {
     var user = new User('datasense');
     var facility_user = new User('facility');
 
