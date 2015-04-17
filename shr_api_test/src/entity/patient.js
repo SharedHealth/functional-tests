@@ -8,6 +8,7 @@ module.exports = function(confidentiality) {
 
 		"nid" : nid,
 		"bin_brn": bin_brn,
+		"uid": "900"+houseHoldCode,
 		"given_name" : "A89 "+name,
 		"sur_name" : "ATEST",
 		"date_of_birth" : "2000-03-01",

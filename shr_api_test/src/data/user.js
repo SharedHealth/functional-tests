@@ -34,7 +34,7 @@ module.exports = function (user_type) {
     user["QA"]["mci_approver"] = {
         email: "ranjan@thoughtworks.com",
         password: "thoughtworks",
-        client_id: 18559,
+            client_id: 18559,
         api_token: null,
         access_token: "",
         catchment: ["3026"]
@@ -56,7 +56,7 @@ module.exports = function (user_type) {
         client_id: 18558,
         api_token: null,
         access_token: "",
-        hid: '11433939491'
+        hid: '11569149358'
 
     };
 
@@ -66,7 +66,7 @@ module.exports = function (user_type) {
         client_id: 18560,
         api_token: null,
         access_token: "",
-        hid: '11434257606'
+        hid: '11569128243'
 
     };
     user["QA"]["shr"] = {
