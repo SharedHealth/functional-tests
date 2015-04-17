@@ -2,21 +2,20 @@ var config = require('./../Config').config;
 var EntityRequest = function(request){
     var get = function()
     {
-        var payload = {
+        var request_content = {
             method :'GET',
             headers : request.headers,
             uri : request.uri
 
         };
-
-        console.log(payload);
-        return payload;
+        
+        return request_content;
 
     };
 
     var post = function()
     {
-        var payload = {
+        var request_content = {
             method: 'POST',
             'url': request.uri,
             'headers': request.headers,
@@ -24,37 +23,33 @@ var EntityRequest = function(request){
             'json': request.isJSON
 
         };
-
-        console.log(payload);
-        return payload;
+        return request_content;
 
     };
 
     var put = function()
     {
-        var payload = {
+        var request_content = {
             method: 'PUT',
             'url': request.uri,
             'headers': request.headers,
             'json': true,
             'body': request.body
         };
-        console.log(payload);
-        return payload;
+        return request_content;
     };
 
     var del = function()
     {
-        var payload = {
+        var request_content = {
             method: 'DELETE',
             'url': request.uri,
             'headers': request.headers,
             'json': true,
             'body': request.body
         };
-
-        console.log(payload);
-        return payload;
+        
+        return request_content;
 
     }
 
