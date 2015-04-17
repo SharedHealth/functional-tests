@@ -80,10 +80,18 @@ public class ClinicalDashboardPage extends Page {
             }
 
         }
-        Assert.assertEquals("Vital Verification Temperature ", patientVitals.getTemperature(), vitals.get("Temperature"));
-        Assert.assertEquals("Vital Verification Pulse ", patientVitals.getPulse(), vitals.get("Pulse"));
-        Assert.assertEquals("Vital Verification Diastolic BP ", patientVitals.getDiastolicBloodPressure(), vitals.get("Diastolic"));
-        Assert.assertEquals("Vital Verification Systolic BP ", patientVitals.getSystolicBloodPressure(), vitals.get("Systolic"));
+        Assert.assertEquals("Vital Verification Temperature ", patientVitals.getTemperature()+" F", vitals.get("Temperature"));
+        Assert.assertEquals("Vital Verification Pulse ", patientVitals.getPulse()+" /min", vitals.get("Pulse"));
+        Assert.assertEquals("Vital Verification Diastolic BP ", patientVitals.getDiastolicBloodPressure()+" mm Hg", vitals.get("Diastolic"));
+        Assert.assertEquals("Vital Verification Systolic BP ", patientVitals.getSystolicBloodPressure()+" mm Hg", vitals.get("Systolic"));
         System.out.println("Vitals Data verified for the Patient ");
+    }
+
+    public DashBoardVisitPage goToVisitPage() {
+
+        waitForMillis(1000);
+        driver.findElement(By.xpath("(//visits-table//a)[1]")).click();
+        return initialize(webDriver, DashBoardVisitPage.class);
+
     }
 }

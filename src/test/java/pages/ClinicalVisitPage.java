@@ -53,23 +53,6 @@ public class ClinicalVisitPage extends Page {
         return initialize(driver, ClinicalObservationsPage.class);
     }
 
-    public ClinicalVisitPage verifyCheifComplainData(ChiefComplain expectedChiefComplain) {
-        waitFindElement(By.xpath("//h2[text()='Observations']"));
-
-        List<WebElement> chiefComplainListElements = driver.findElements(By.cssSelector(".chief-notes"));
-        ArrayList<String> chiefComplainList = new ArrayList<String>();
-
-        String expectedChiefComplainDetails = expectedChiefComplain.getChiefComplainName() + " since " + expectedChiefComplain.getDuration() + " " + expectedChiefComplain.getDurationUnit() + " ";
-
-        for (WebElement chiefComplain : chiefComplainListElements)
-            chiefComplainList.add(chiefComplain.getText());
-
-        Assert.assertEquals("Can not find Chief Complain " + expectedChiefComplainDetails, true, chiefComplainList.contains(expectedChiefComplainDetails));
-        System.out.println("Chief Complain Data verified for Patient: " + expectedChiefComplain.getChiefComplainName());
-        return this;
-
-    }
-
     public void verifyFamilyHistoryData(FamilyHistory expectedFamilyHistory) {
         waitForMillis(1000);
         WebElement familyHistoryTable = webDriver.findElement(By.xpath("//table[contains(., 'Family History')]"));

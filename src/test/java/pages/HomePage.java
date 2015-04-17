@@ -48,8 +48,8 @@ public class HomePage extends Page {
 
     public MCIPatientSearchPage goToNationalRegistry() {
 
-        System.out.println("Waiting 60 Secs for the sync to complete");
-        waitForMillis(60000);
+        System.out.println("Waiting 90 Secs for the sync to complete");
+        waitForMillis(90000);
         nationalRegistrySearchButton.click();
         return initialize(webDriver, MCIPatientSearchPage.class);
     }
