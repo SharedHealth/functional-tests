@@ -1,11 +1,9 @@
 module.exports = function(confidentiality) {
  	var nid = new Date().getTime();
 	var bin_brn =  nid + "0000";
-	//var houseHoldCode=Math.random().toString().substring(2,10);
 	var name=Math.ceil(Math.random()*1000000);
 	var uid = nid.toString().substring(2);
 	var houseHoldCode = nid.toString().substring(5)
-	//"uid": "900" + houseHoldCode,
 	return {
 
 		"nid" : nid,

@@ -5,14 +5,14 @@ var element = et.Element;
 var subelement = et.SubElement;
 var etree = et.ElementTree;
 var uuid = require("uuid");
+var isodate = require('../../src/utility/isodate').isodate;
 
 module.exports = function(hid, isConfidential) {
-
 	var pretty_data = require('pretty-data').pd;
 	var encounter_payload = "";
 	var confidentiality = isConfidential || 'No';
 	var environment = process.env.ENVIRONMENT || 'QA';
-
+	var isoDateTime = new isodate().isoDate();
 	if (environment == 'QA') {
 		encounter_payload =  new feed().get()
 	}
@@ -64,7 +64,9 @@ module.exports = function(hid, isConfidential) {
 			var id = subelement(root, "id");
 			id.text = "urn:" + uid;
 			var updated = subelement(root, "updated");
-			updated.text = "2015-03-12T10:35:54+05:30";
+			updated.text = isoDateTime;
+
+
 			var author = subelement(root, "author");
 			var uri = subelement(author, "uri");
 			uri.text = "http://hrmtest.dghs.gov.bd/api/1.0/facilities/10000069.json";
@@ -98,7 +100,7 @@ module.exports = function(hid, isConfidential) {
 			var id = subelement(entry, "id");
 			id.text = "urn:" + uid;
 			var updated = subelement(entry, "updated");
-			updated.text = "2015-03-12T10:36:40.187+05:30";
+			updated.text = isoDateTime;
 		}
 
 		var addContent = function()
@@ -110,7 +112,7 @@ module.exports = function(hid, isConfidential) {
 			var identifierValue = subelement(identifier, "value");
 			identifierValue.set("value", "urn:" + uid);
 			var date = subelement(composition, "date");
-			date.set("value", "2015-03-12T10:35:54+05:30");
+			date.set("value", isoDateTime);
 			var status = subelement(composition, "status");
 			status.set("value", "final");
 			if(isConfidential == 'Yes')
@@ -160,7 +162,7 @@ module.exports = function(hid, isConfidential) {
 			var id = subelement(entry, "id");
 			id.text = "urn:" + uid;
 			var updated = subelement(entry, "updated");
-			updated.text = "2015-03-12T10:36:40.187+05:30";
+			updated.text = isoDateTime;
 
 		}
 
@@ -246,7 +248,7 @@ module.exports = function(hid, isConfidential) {
 			var id = subelement(entry, "id");
 			id.text = "urn:" + uid;
 			var updated = subelement(entry,"updated");
-			updated.text = "2015-03-12T10:36:40.227+05:30";
+			updated.text = isoDateTime;
 		};
 
 		var addContent = function()
@@ -259,7 +261,7 @@ module.exports = function(hid, isConfidential) {
 			var immunizationValue = subelement(identifier, "value");
 			immunizationValue.set("value", "urn:" + uid);
 			var date = subelement(immunization, "date");
-			date.set("value", "2015-02-12T00:00:00+05:30");
+			date.set("value", isoDateTime);
 			var vaccineType = subelement(immunization, "vaccineType");
 			var coding = subelement(vaccineType,"coding");
 			var system = subelement(coding, "system");
