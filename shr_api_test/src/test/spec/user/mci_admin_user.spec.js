@@ -1,6 +1,6 @@
 var request = require('request');
 var User = require('../../../../src/data/user' );
-var Patient = require('../../../../src/entity/patient');
+var Patient = require('../../../../src/entity/patient').PatientWithHouseHold;
 var Encounter = require('../../../../src/entity/encounter');
 var EncounterRequest = require('../../../../src/request/encounter').EncounterRequest;
 var SSORequest = require('../../../../src/request/sso').SSORequest;
@@ -46,8 +46,6 @@ describe("MCI Admin User", function () {
             patientRequest = new PatientRequest(user);
             done();
         });
-
-
 
 
         mci_admin_user("Should not be able to create patient", function (done) {

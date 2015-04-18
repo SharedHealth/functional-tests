@@ -1,6 +1,6 @@
 var request = require('request');
 var User = require('../../../../src/data/user' );
-var Patient = require('../../../../src/entity/patient');
+var Patient = require('../../../../src/entity/patient').PatientWithHouseHold;
 var Encounter = require('../../../../src/entity/encounter');
 var EncounterRequest = require('../../../../src/request/encounter').EncounterRequest;
 var SSORequest = require('../../../../src/request/sso').SSORequest;
@@ -123,7 +123,7 @@ describe("MCI Facility User", function () {
         });
 
         mci_facility_user("Should be able to update the patient", function (done) {
-            request((patientRequest).updateUsingPut(hid), function (err, res, body) {
+            request(patientRequest.updateUsingPut(hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(202);
                 done();
             });
@@ -146,7 +146,7 @@ describe("MCI Facility User", function () {
         });
 
         mci_facility_user("Should not be able to accept pending approval for patient", function (done) {
-            request((patientRequest).updateUsingPut(hid), function (err, res, body) {
+            request(patientRequest.updateUsingPut(hid), function (err, res, body) {
             request(patientRequest.acceptRequest(user.catchment, hid), function (err, res, body) {
             expect(res.statusCode).to.equal(403);
             expect(body.message).to.equal("Access is denied");

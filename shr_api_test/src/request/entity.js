@@ -8,7 +8,7 @@ var EntityRequest = function(request){
             uri : request.uri
 
         };
-        
+        console.log(request_content);
         return request_content;
 
     };
@@ -23,6 +23,7 @@ var EntityRequest = function(request){
             'json': request.isJSON
 
         };
+        console.log(request_content);
         return request_content;
 
     };
@@ -36,6 +37,7 @@ var EntityRequest = function(request){
             'json': true,
             'body': request.body
         };
+        console.log(request_content);
         return request_content;
     };
 
@@ -48,7 +50,7 @@ var EntityRequest = function(request){
             'json': true,
             'body': request.body
         };
-        
+        console.log(request_content);
         return request_content;
 
     }

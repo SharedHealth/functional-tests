@@ -1,6 +1,6 @@
 var request = require('request');
 var User = require('../../../../src/data/user' );
-var Patient = require('../../../../src/entity/patient');
+var Patient = require('../../../../src/entity/patient').Patient;
 var Encounter = require('../../../../src/entity/encounter');
 var SSORequest = require('../../../../src/request/sso').SSORequest;
 var CatchmentRequest = require('../../../../src/request/catchment').CatchmentRequest;

@@ -23,7 +23,7 @@ var PatientRequest = function(user_detail, patient_detail){
     };
 
     var updateUsingPut = function (hid) {
-        return EntityRequest({uri : uri + "/patients/" + hid, body : {'gender': 'F'}, headers : headers(), isJSON:true}).put()
+        return EntityRequest({uri : uri + "/patients/" + hid.toString(), body : {'gender': 'F'}, headers : headers(), isJSON:true}).put()
     };
 
     var multipleUpdateUsingPut = function (hid) {

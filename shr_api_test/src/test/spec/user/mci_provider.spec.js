@@ -1,6 +1,6 @@
 var request = require('request');
 var User = require('../../../../src/data/user' );
-var Patient = require('../../../../src/entity/patient');
+var Patient = require('../../../../src/entity/patient').PatientWithHouseHold;
 var Encounter = require('../../../../src/entity/encounter');
 var EncounterRequest = require('../../../../src/request/encounter').EncounterRequest;
 var SSORequest = require('../../../../src/request/sso').SSORequest;
