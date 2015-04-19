@@ -1,4 +1,3 @@
-var config = require('./../Config').config;
 var EntityRequest = function(request){
     var get = function()
     {
@@ -53,7 +52,7 @@ var EntityRequest = function(request){
         console.log(request_content);
         return request_content;
 
-    }
+    };
 
 
     return {
