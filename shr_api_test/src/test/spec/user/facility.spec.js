@@ -16,6 +16,7 @@ describe("Facility User", function () {
     
     before(function (done) {
         request(new SSORequest(user).post(), function (err, httpResponse, body) {
+            expect(httpResponse.statusCode).to.equal(200);
             user.access_token = JSON.parse(httpResponse.body).access_token;
             done();
         });
@@ -26,6 +27,7 @@ describe("Facility User", function () {
         request(PatientRequest(user, new Patient()).post(), function (err, res, body) {
             hid = body.id;
             request(new PatientRequest(user, new Patient("Yes")).post(), function (err, res, body) {
+                expect(res.statusCode).to.equal(201);
                 confidential_patient_hid = body.id;
                 done();
             });
@@ -96,7 +98,6 @@ describe("Facility User", function () {
             request(confidential_encounter_request.get(), function (get_err, get_res, res_body) {
                 expect(get_res.statusCode).to.equal(403);
                 expect(Number(JSON.parse(res_body).httpStatus)).to.equal(403);
-                // 				Access for patient 11302488966 data for user 18549 is denied
                 expect(JSON.parse(res_body).message).to.equal("Access is denied to user " + user.client_id + " for patient " + confidential_patient_hid);
                 done();
             });

@@ -58,7 +58,7 @@ describe('Patient User', function () {
         beforeEach(function (done) {
             confidential_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid, "Yes"));
             non_confidentail_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid));
-            encounter_request = new EncounterRequest(hid, user);
+            encounter_request = new EncounterRequest(hid, user, new Encounter(hid));
             request(non_confidentail_encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(post_res.statusCode).to.equal(200);
                 done();

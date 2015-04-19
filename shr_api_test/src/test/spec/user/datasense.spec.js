@@ -18,8 +18,10 @@ describe("Datasense User", function () {
 
     before(function (done) {
         request(new SSORequest(user).post(), function (err, httpResponse, body) {
+            expect(httpResponse.statusCode).to.equal(200)
             user.access_token = JSON.parse(httpResponse.body).access_token;
             request(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
+                expect(httpResponse.statusCode).to.equal(200)
                 facility_user.access_token = JSON.parse(httpResponse.body).access_token;
                 done();
             });
@@ -29,8 +31,10 @@ describe("Datasense User", function () {
 
     beforeEach(function (done) {
         request(new PatientRequest(facility_user, new Patient()).post(), function (err, res, body) {
+            expect(res.statusCode).to.equal(201)
             hid = body.id;
             request(new PatientRequest(facility_user, new Patient("Yes")).post(), function (err, res, body) {
+                expect(res.statusCode).to.equal(201)
                 confidential_patient_hid = body.id;
                 done();
             });
@@ -52,7 +56,7 @@ describe("Datasense User", function () {
         beforeEach(function (done) {
             confidential_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid, "Yes"));
             non_confidentail_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid));
-            encounter_request = new EncounterRequest(hid, user);
+            encounter_request = new EncounterRequest(hid, user, new Encounter(hid));
             request(non_confidentail_encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(post_res.statusCode).to.equal(200);
                 done();
@@ -84,7 +88,6 @@ describe("Datasense User", function () {
 
             request(encounter_request.post(), function (post_err, post_res, post_body) {
                 expect(Number(JSON.parse(post_body).httpStatus)).to.equal(403);
-                // expect(JSON.parse(post_body).message).to.equal("Access for patient " + confidential_patient_hid + " data is denied");
                 expect(JSON.parse(post_body).message).to.equal("Access is denied");
                 request(encounter_request.get(), function (get_err, get_res, get_body) {
                     expect(get_res.statusCode).to.equal(200);

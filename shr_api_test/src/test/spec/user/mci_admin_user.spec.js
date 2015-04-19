@@ -18,11 +18,14 @@ describe("MCI Admin User", function () {
     var mci_admin_user = it;
 
     before(function (done) {
-        request(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
-            facility_user.access_token = JSON.parse(httpResponse.body).access_token;
-            request(new SSORequest(user).postBy(facility_user), function (err, httpResponse, body) {
-                user.access_token = JSON.parse(httpResponse.body).access_token;
+        request(new SSORequest(facility_user).post(), function (err, res, body) {
+            expect(res.statusCode).to.equal(200);
+            facility_user.access_token = JSON.parse(res.body).access_token;
+            request(new SSORequest(user).postBy(facility_user), function (err, res, body) {
+                expect(res.statusCode).to.equal(200);
+                user.access_token = JSON.parse(res.body).access_token;
                 request(new PatientRequest(facility_user, new Patient()).post(), function (err, res, body) {
+                    expect(res.statusCode).to.equal(201);
                     hid = body.id;
                     done();
                 });
@@ -90,6 +93,7 @@ describe("MCI Admin User", function () {
 
         mci_admin_user("Should be able to view patient By houseHoldCode", function (done) {
             request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+                expect(res.statusCode).to.equal(200)
                 houseHoldCode = JSON.parse(body).household_code
                 request(patientRequest.getPatientDetailsHouseHoldCode(houseHoldCode), function (err, res, body) {
                     expect(res.statusCode).to.equal(200);
@@ -187,7 +191,7 @@ describe("MCI Admin User", function () {
             });
         });
 
-        mci_admin_user("Should not be able to get the location details", function (done) {
+        mci_admin_user.skip("Should not be able to get the location details", function (done) {
             request(patientRequest.getLocationDetails(user.catchment), function (err, res, body) {
                 expect(res.statusCode).to.equal(200)
                 done();
