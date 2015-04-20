@@ -13,6 +13,7 @@ var TemperatureEntry = require("./vitalsEntry").TemperatureEntry;
 var SystolicEntry = require("./vitalsEntry").SystolicEntry;
 var DiastolicEntry = require("./vitalsEntry").DiastolicEntry;
 var ImmunizationEntry = require("./immunizationEntry").ImmunizationEntry;
+var DiagnosisEntry = require("./diagnosisEntry").DiagnosisEntry;
 
 exports.Feed = function feed(detail,confidentiality)
 {
@@ -32,6 +33,17 @@ exports.Feed = function feed(detail,confidentiality)
         return new etree(root).write({'xml_declaration': true})
     };
 
+    var withDiagnosisEntry = function()
+    {
+        var diagnosis = new DiagnosisEntry(root, detail, "Fracture in upper arm");
+        var encounter = new EncounterEntry(root,detail);
+        var composition =new CompositionEntry(root,confidentiality,encounter,[encounter,diagnosis], detail);
+        initialize();
+        diagnosis.get();
+        encounter.get();
+        composition.get();
+        return new etree(root).write({'xml_declaration': true})
+    }
     var withVitalsEntry = function()
     {
         var pulse = new PulseEntry(root,detail);
@@ -69,7 +81,8 @@ exports.Feed = function feed(detail,confidentiality)
 
     return {
         withImmunizationEntry : withImmunizationEntry,
-        withVitalsEntry : withVitalsEntry
+        withVitalsEntry : withVitalsEntry,
+        withDiagnosisEntry : withDiagnosisEntry
     };
 }
 

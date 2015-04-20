@@ -37,7 +37,12 @@
 		'shr_server_url' : "http://shrstg.twhosted.com",
 		'mci_dns_name' : "mcistg.twhosted.com",
 		'sso_server_url' : 'http://hrmtest.dghs.gov.bd/api/1.0/sso/signin',
-		'mci_protocol' : 'http'
+		'mci_protocol' : 'http',
+		patient_uri : "http://mcistg.twhosted.com/api/v1/patients/",
+		facility_uri : "http://hrmtest.dghs.gov.bd/api/1.0/facilities/",
+		concept_uri : "http://trstg.twhosted.com/openmrs/ws/rest/v1/tr/",
+		provider_uri : "http://hrmtest.dghs.gov.bd/api/1.0/providers/"
+
 	};
 
 

@@ -219,7 +219,7 @@ module.exports = function (user_type) {
         client_id : 18571,
         api_token : null,
         access_token : "",
-        hid : '11464201473'
+        hid : '11613787492'
 
     };
 
@@ -229,7 +229,7 @@ module.exports = function (user_type) {
         client_id : 18572,
         api_token : null,
         access_token : "",
-        hid : '11464201877'
+        hid : '11613787672'
 
     };
     user["STAGING"]["shr"] = {
