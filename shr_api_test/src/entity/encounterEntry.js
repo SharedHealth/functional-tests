@@ -36,7 +36,8 @@ exports.EncounterEntry = function EncounterEntry(root, detail)
         var encounterClass = subelement(encounter, "class");
         encounterClass.set("value", "outpatient");
         var encounterType = subelement(encounter, "type");
-        encounterType.set("value", "Consultation");
+        var encounterTypeText = subelement(encounterType, "text");
+        encounterTypeText.set("value", "Consultation");
         var subject = subelement(encounter, "subject");
         var subjectReference =subelement(subject, "reference");
         subjectReference.set("value", detail.patient_uri)
