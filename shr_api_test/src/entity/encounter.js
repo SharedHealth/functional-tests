@@ -15,7 +15,7 @@ module.exports = function(hid, isConfidential) {
 			patient_uri: config.patient_uri + hid,
 			facility_uri: config.facility_uri + "10000069.json",
 			entry : {
-			"Immunization" : new Concept("Immunization", "5799c579-3c78-4133-9e02-91c1006d862d", config.concept_uri, "drugs"),
+			"BCG" : new Concept("BCG", "5799c579-3c78-4133-9e02-91c1006d862d", config.concept_uri, "drugs"),
 			"Temperature" : new Concept("Temperature", "a1257651-7473-4c9b-bb0a-1244c5f3c09d", config.concept_uri, "concepts"),
 			"Pulse" : new Concept("Pulse", "22a952b6-cc36-45e8-8b52-ff5a90fa7c4f", config.concept_uri, "concepts"),
 			"Systolic" : new Concept("Systolic", "77405a73-b915-4a93-87a7-f29fe6697fb4", config.concept_uri, "concepts"),
@@ -31,7 +31,15 @@ module.exports = function(hid, isConfidential) {
 			clinical_standard: "http://hl7.org/fhir",
 			patient_uri: config.patient_uri + hid,
 			facility_uri: config.facility_uri + "10019841.json",
-			entry : {"Immunization" : new Concept("Immunization", "5799c579-3c78-4133-9e02-91c1006d862d", config.concept_uri, "drugs")},
+			entry : {
+				"Temperature" : new Concept("Temperature", "ed7401ef-c8ac-4af8-bf7c-1ed1d7147c78", config.concept_uri, "concepts"),
+				"Pulse" : new Concept("Pulse", "ac83596d-5bb9-43b0-8db6-e90fa2a6e1e9", config.concept_uri, "concepts"),
+				"Systolic" : new Concept("Systolic", "dd7d33d9-d7a5-4596-98fa-03a88ba631e1", config.concept_uri, "concepts"),
+				"Diastolic" : new Concept("Diastolic", "7f6af303-e803-4d62-bbb4-e039ada4c837", config.concept_uri, "concepts"),
+				"Blood Pressure" : new Concept("Blood Pressure", "c8e87979-9198-490f-8afe-4673f810825d", config.concept_uri, "concepts"),
+				"Vitals" : new Concept("Vitals", "970b1e8e-ecb7-4c79-aec8-d25b5c551a66", config.concept_uri, "concepts")
+			},
+
 			provider_uri: config.provider_uri + "24.json"
 		};
 
@@ -39,7 +47,7 @@ module.exports = function(hid, isConfidential) {
 		return encounter_details[config.env];
 	}
 		var details = new EncounterDetails();
-		encounter_payload = new Feed(details, confidentiality).withVitalsEntry();
+		encounter_payload = new Feed(details, confidentiality).withImmunizationEntry();
 
 
 	return {
