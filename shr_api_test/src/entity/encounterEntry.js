@@ -19,6 +19,7 @@ exports.EncounterEntry = function EncounterEntry(root, detail)
         id.text = "urn:" + uid;
         var updated = subelement(entry, "updated");
         updated.text = isoDateTime;
+        addContent();
 
     };
 
@@ -56,7 +57,7 @@ exports.EncounterEntry = function EncounterEntry(root, detail)
         var serviceProviderReference = subelement(serviceProvider, "reference");
         serviceProviderReference.set("value", detail.facility_uri);
     }
-
+    initialize();
     var encounterReference = function(composition)
     {
         var encounterSection = subelement(composition, "encounter");
@@ -75,17 +76,9 @@ exports.EncounterEntry = function EncounterEntry(root, detail)
         reference.set("value","urn:" + uid );
         var display = subelement(content, "display");
         display.set("value", "Encounter");
-        return section;
-    };
-
-    var get = function()
-    {
-        initialize();
-        addContent();
     };
 
     return {
-        get : get,
         getSection : sectionForComposition,
         getEncounterReference : encounterReference
     };

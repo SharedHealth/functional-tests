@@ -33,7 +33,7 @@ var EntityRequest = function(request){
             method: 'PUT',
             'url': request.uri,
             'headers': request.headers,
-            'json': true,
+            'json': request.isJSON,
             'body': request.body
         };
         console.log(request_content);

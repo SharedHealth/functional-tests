@@ -29,11 +29,24 @@ var EncounterRequest = function (hid, user_detail, payload) {
         return  EntityRequest({'uri' : url + "/patients/" + hid + "/encounters" , headers : headers() }).get();
     }
 
+    var put = function(encounterId)
+    {
+        return  EntityRequest({'uri' : url + "/patients/" + hid + "/encounters/" + encounterId , headers : headers(), 'body': encounter_payload.details, isJSON : false }).put();
+    }
+
+    var updateEncounterDetails = function(details)
+    {
+        payload = details;
+    }
+
     return {
         EntityRequest : EntityRequest,
         post: post,
         headers: headers,
-        get : get
+        get : get,
+        put : put,
+        updateEncounterDetails : updateEncounterDetails
+
     }
 
 };

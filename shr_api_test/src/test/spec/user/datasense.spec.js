@@ -1,7 +1,7 @@
 var request = require('request');
 var User = require('../../../../src/data/user' );
 var Patient = require('../../../../src/entity/patient').Patient;
-var Encounter = require('../../../../src/entity/encounter');
+var Encounter = require('../../../../src/entity/encounter').DefaultEncounterFeed;
 var EncounterRequest = require('../../../../src/request/encounter').EncounterRequest;
 var SSORequest = require('../../../../src/request/sso').SSORequest;
 var CatchmentRequest = require('../../../../src/request/catchment').CatchmentRequest;
@@ -14,7 +14,6 @@ describe("Datasense User", function () {
     var hid = "";
     var confidential_patient_hid = "";
     var datasense_user = it;
-    
 
     before(function (done) {
         request(new SSORequest(user).post(), function (err, httpResponse, body) {

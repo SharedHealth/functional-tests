@@ -5,11 +5,13 @@ var etree = et.ElementTree;
 var uuid = require("uuid");
 var isodate = require('../../src/utility/isodate').isodate;
 
-exports.CompositionEntry = function CompositionEntry(root, isConfidential,encounterEntry, entries,detail) {
+exports.CompositionEntry = function CompositionEntry(root, isConfidential,encounterEntry,detail) {
     var entry = subelement(root, "entry");
     var encounterEntry = encounterEntry;
     var uid = uuid.v4();
     var isoDateTime = new isodate().isoDate();
+    var composition;
+    var detail = detail;
 
     var initialize = function () {
         var title = subelement(entry, "title");
@@ -18,11 +20,12 @@ exports.CompositionEntry = function CompositionEntry(root, isConfidential,encoun
         id.text = "urn:" + uid;
         var updated = subelement(entry, "updated");
         updated.text = isoDateTime;
+        addContent();
     }
 
     var addContent = function () {
         var content = subelement(entry, "content");
-        var composition = subelement(content, "Composition");
+        composition = subelement(content, "Composition");
         composition.set("xmlns", detail.clinical_standard);
         var identifier = subelement(composition, "identifier");
         var identifierValue = subelement(identifier, "value");
@@ -51,17 +54,13 @@ exports.CompositionEntry = function CompositionEntry(root, isConfidential,encoun
         var authorReference = subelement(author, "reference");
         authorReference.set("value", detail.facility_uri);
         encounterEntry.getEncounterReference(composition);
-        for (var index = 0; index < entries.length; index++) {
-            entries[index].getSection(composition);
-        }
     };
-
-    var get = function () {
-        initialize();
-        addContent();
-    };
-
+    initialize();
+    function addSection(entry)
+    {
+        entry.getSection(composition)
+    }
     return {
-        get: get
+        addSection : addSection
     };
 };

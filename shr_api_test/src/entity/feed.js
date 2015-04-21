@@ -15,56 +15,15 @@ var DiastolicEntry = require("./vitalsEntry").DiastolicEntry;
 var ImmunizationEntry = require("./immunizationEntry").ImmunizationEntry;
 var DiagnosisEntry = require("./diagnosisEntry").DiagnosisEntry;
 
-exports.Feed = function feed(detail,confidentiality)
+exports.Feed = function ModifiedFeed(detail, confidentiality)
 {
     var root = element("feed");
     var uid = uuid.v4();
     var detail = detail;
     var isoDateTime = new isodate().isoDate();
-    var withImmunizationEntry = function()
-    {
-        var immunization = new ImmunizationEntry(root,detail,"BCG");
-        var encounter = new EncounterEntry(root,detail);
-        var composition =new CompositionEntry(root,confidentiality,encounter,[encounter,immunization], detail);
-        initialize();
-        immunization.get();
-        encounter.get();
-        composition.get();
-        return new etree(root).write({'xml_declaration': true})
-    };
+    var encounter = new EncounterEntry(root, detail);
+    var composition = new CompositionEntry(root,confidentiality, encounter, detail);
 
-    var withDiagnosisEntry = function()
-    {
-        var diagnosis = new DiagnosisEntry(root, detail, "Fracture in upper arm");
-        var encounter = new EncounterEntry(root,detail);
-        var composition =new CompositionEntry(root,confidentiality,encounter,[encounter,diagnosis], detail);
-        initialize();
-        diagnosis.get();
-        encounter.get();
-        composition.get();
-        return new etree(root).write({'xml_declaration': true})
-    }
-    var withVitalsEntry = function()
-    {
-        var pulse = new PulseEntry(root,detail);
-        var temperature = new TemperatureEntry(root, detail);
-        var systolic = new SystolicEntry(root, detail);
-        var diastolic = new DiastolicEntry(root, detail);
-        var bloodPressure = new BloodPressureEntry(root, detail, [systolic, diastolic]);
-        var vitals = new VitalsEntry(root, detail, [bloodPressure, pulse, temperature]);
-        var encounter = new EncounterEntry(root, detail);
-        var composition = new CompositionEntry(root,confidentiality,encounter,[pulse,temperature,systolic,diastolic, bloodPressure,vitals, encounter],detail);
-        initialize();
-        pulse.get();
-        temperature.get();
-        systolic.get();
-        diastolic.get();
-        bloodPressure.get();
-        vitals.get();
-        encounter.get();
-        composition.get();
-        return new etree(root).write({'xml_declaration': true});
-    }
     var initialize = function()
     {
         root.set("xmlns", "http://www.w3.org/2005/Atom");
@@ -77,14 +36,60 @@ exports.Feed = function feed(detail,confidentiality)
         var author = subelement(root, "author");
         var uri = subelement(author, "uri");
         uri.text = detail.facility_uri;
+        composition.addSection(encounter);
+    };
+    initialize();
+    var addEntry = function(entry)
+    {
+        entry.get();
+        composition.addSection(entry);
+    };
+
+    var addEntries = function(entries)
+    {
+        for(var i = 0; i < entries.length; i++)
+        {
+            entries[i].get();
+            composition.addSection(entries[i]);
+        }
     }
+    var get = function()
+    {
+        return new etree(root).write({'xml_declaration': true});
+    };
+
+    var withImmunizationEntry = function(immunizationCode)
+    {
+        addEntry(new ImmunizationEntry(root,detail,immunizationCode));
+    };
+
+    var withDiagnosisEntry = function(diagnosis)
+    {
+        addEntry(new DiagnosisEntry(root,detail, diagnosis));
+    };
+
+    var withVitalsEntry = function()
+    {
+        var pulse = new PulseEntry(root,detail);
+        var temperature = new TemperatureEntry(root, detail);
+        var systolic = new SystolicEntry(root, detail);
+        var diastolic = new DiastolicEntry(root, detail);
+        var bloodPressure = new BloodPressureEntry(root, detail, [systolic, diastolic]);
+        var vitals = new VitalsEntry(root, detail, [bloodPressure, pulse, temperature]);
+        addEntries([pulse,temperature,systolic,diastolic,bloodPressure,vitals]);
+    };
 
     return {
-        withImmunizationEntry : withImmunizationEntry,
-        withVitalsEntry : withVitalsEntry,
-        withDiagnosisEntry : withDiagnosisEntry
-    };
-}
+        get : get,
+        withImmunizationEntry: withImmunizationEntry,
+        withDiagnosisEntry : withDiagnosisEntry,
+        withVitalsEntry : withVitalsEntry
+    }
+
+
+};
+
+
 
 
 
