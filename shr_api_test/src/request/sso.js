@@ -21,16 +21,18 @@ exports.SSORequest = function (user_detail) {
     };
 
     var post = function () {
-        return {
+        var request_content ={
             method: 'POST',
             url: url,
             headers: headers(),
             formData: sso_form_data()
         };
+        console.log(request_content);
+        return request_content;
     };
 
     var postBy = function (poster) {
-        return {
+        var request_content = {
             method: 'POST',
             url: url,
             headers: {
@@ -39,6 +41,8 @@ exports.SSORequest = function (user_detail) {
             },
             formData: sso_form_data()
         };
+        console.log(request_content);
+        return request_content;
     };
 
     return {
