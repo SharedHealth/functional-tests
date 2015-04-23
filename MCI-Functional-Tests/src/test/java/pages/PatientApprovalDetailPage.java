@@ -27,6 +27,12 @@ public class PatientApprovalDetailPage extends Page{
     @FindBy(css=".form-control.hid")
     private WebElement enterHID;
 
+    @FindBy(css=".dropdown-toggle")
+    private WebElement user;
+
+    @FindBy(linkText = "Logout")
+    private WebElement logout;
+
     public PatientApprovalDetailPage(WebDriver driver) {
         super(driver);
     }
@@ -50,8 +56,8 @@ public class PatientApprovalDetailPage extends Page{
         System.out.println(patient.getFieldGender()+ " field is mark for approval");
         assertTrue(patient.getFieldGiven_name()+ " field is mark for approval", isValuePresent(allFields, patient.getFieldGiven_name()));
         System.out.println(patient.getFieldGiven_name()+ " field is mark for approval");
-        assertTrue(patient.getFieldSur_name()+ " field is mark for approval", isValuePresent(allFields,patient.getSur_name()));
-        System.out.println(patient.getFieldSur_name()+ " field is mark for approval");
+    //    assertTrue(patient.getFieldSur_name()+ " field is mark for approval", isValuePresent(allFields,patient.getSur_name()));
+    //    System.out.println(patient.getFieldSur_name()+ " field is mark for approval");
 
         return initialize(webDriver, PatientApprovalDetailPage.class);
 
@@ -64,8 +70,8 @@ public class PatientApprovalDetailPage extends Page{
         System.out.println("Male"+ " is old value of this patient");
         assertTrue(patient.getGiven_name()+ " is old value of this patient", isValuePresent(allOldValues,patient.getGiven_name()));
         System.out.println(patient.getGiven_name()+ " is old value of this patient");
-        assertTrue(patient.getSur_name()+ " is old value of this patient", isValuePresent(allOldValues,patient.getSur_name()));
-        System.out.println(patient.getSur_name()+ " is old value of this patient");
+   //     assertTrue(patient.getSur_name()+ " is old value of this patient", isValuePresent(allOldValues,patient.getSur_name()));
+   //     System.out.println(patient.getSur_name()+ " is old value of this patient");
 
         return initialize(webDriver, PatientApprovalDetailPage.class);
 
@@ -79,8 +85,8 @@ public class PatientApprovalDetailPage extends Page{
         System.out.println(updatedpatient.getGender()+ " is new value of this patient which needs approval");
         assertTrue(updatedpatient.getGiven_name()+ " is new value of this patient which needs approval", isValuePresent(allNewValues,updatedpatient.getGiven_name()));
         System.out.println(updatedpatient.getGiven_name()+ " is new value of this patient which needs approval");
-        assertTrue(updatedpatient.getSur_name()+ " is new value of this patient which needs approval", isValuePresent(allNewValues,updatedpatient.getSur_name()));
-        System.out.println(updatedpatient.getSur_name()+ " is new value of this patient which needs approval");
+  //      assertTrue(updatedpatient.getSur_name()+ " is new value of this patient which needs approval", isValuePresent(allNewValues,updatedpatient.getSur_name()));
+  //      System.out.println(updatedpatient.getSur_name()+ " is new value of this patient which needs approval");
 
 
         return initialize(webDriver, PatientApprovalDetailPage.class);
@@ -91,7 +97,7 @@ public class PatientApprovalDetailPage extends Page{
 
         acceptRequest("field_name=gender", hid);
         acceptRequest("field_name=given_name", hid);
-        acceptRequest("field_name=sur_name", hid);
+    //    acceptRequest("field_name=sur_name", hid);
 
         return initialize(webDriver, PatientApprovalDetailPage.class);
 
@@ -158,5 +164,14 @@ public class PatientApprovalDetailPage extends Page{
 
 
         return false;
+    }
+
+    public void logout() throws InterruptedException {
+
+        user.click();
+        Thread.sleep(1000);
+        logout.click();
+
+
     }
 }

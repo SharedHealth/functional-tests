@@ -44,15 +44,20 @@ public class WebDriverProperties {
         RestAssured.config = new RestAssuredConfig().encoderConfig(encoderConfig().defaultContentCharset("UTF-8"));
 
         JSONObject credential = new JSONObject();
-        credential.put("user", WebDriverProperties.getProperty("MCI_USER_NAME"));
-        credential.put("password", WebDriverProperties.getProperty("MCI_USER_PASSWORD"));
+        credential.put("email", WebDriverProperties.getProperty("MCI_Facility_User"));
+        credential.put("password", WebDriverProperties.getProperty("MCI_Facility_User_Password"));
 
-        Response response = given().contentType("application/json")
-                .body(credential.toString())
-                .post("/login").andReturn();
+        Response response = given().contentType("application/x-www-form-urlencoded")
+                .header("client_id", WebDriverProperties.getProperty("MCI_Facility_User_Client_id"))
+                .header(WebDriverProperties.getProperty("MCI_API_TOKEN_NAME"), WebDriverProperties.getProperty("MCI_Facility_User_API_Token"))
+                .formParam("email", WebDriverProperties.getProperty("MCI_Facility_User"))
+                .formParam("password", WebDriverProperties.getProperty("MCI_Facility_User_Password"))
+                .when().post("/signin").andReturn();
 
+        System.out.println(response.getBody().asString());
+        JSONObject jsonObject = new JSONObject(response.getBody().asString());
 
-        return response.getBody().asString().replace("\"", "");
+        return jsonObject.get("access_token").toString();
 
     }
 }

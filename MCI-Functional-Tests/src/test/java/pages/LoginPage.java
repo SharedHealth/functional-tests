@@ -12,7 +12,7 @@ import static utils.PageFactoryWithWait.initialize;
  */
 public class LoginPage extends Page {
 
-   @FindBy(id="name")
+   @FindBy(id="email")
    private WebElement userName;
    @FindBy(id="password")
    private WebElement password;
@@ -26,7 +26,7 @@ public class LoginPage extends Page {
         wait.until(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
-                return null != webDriver.findElement(By.id("name"));
+                return null != webDriver.findElement(By.id("email"));
             }
         });
 
@@ -37,13 +37,23 @@ public class LoginPage extends Page {
         this.webDriver = webDriver;
     }
 
-    public PatientSearchPage login(){
-        String givenUser = WebDriverProperties.getProperty("MCI_USER_NAME");
-        String givenPassword = WebDriverProperties.getProperty("MCI_USER_PASSWORD");
+    public DashboardPage adminLogin(){
+        String givenUser = WebDriverProperties.getProperty("MCI_USER_Admin");
+        String givenPassword = WebDriverProperties.getProperty("MCI_USER_Admin_Password");
         userName.sendKeys(givenUser);
         password.sendKeys(givenPassword);
         loginButton.click();
-        return initialize(webDriver, PatientSearchPage.class);
+        return initialize(webDriver, DashboardPage.class);
+
+    }
+
+    public DashboardPage approverLogin(){
+        String givenUser = WebDriverProperties.getProperty("MCI_USER_Approver");
+        String givenPassword = WebDriverProperties.getProperty("MCI_USER_Approver_Password");
+        userName.sendKeys(givenUser);
+        password.sendKeys(givenPassword);
+        loginButton.click();
+        return initialize(webDriver, DashboardPage.class);
 
     }
 

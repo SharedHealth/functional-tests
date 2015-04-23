@@ -38,13 +38,17 @@ public class UpdatePatientTests extends TestSetup{
 
         driver.get(WebDriverProperties.getProperty("MCI_URL"));
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login().goPatientDetailsPage(hid).EditPatientDetails().goToPatientPersonalInfo()
+        page.adminLogin().goToPatientSearchPage().goPatientDetailsPage(hid).EditPatientDetails().goToPatientPersonalInfo()
             .updatePatientPersonalInfo(primaryPatient, updatedPatient).goPatientDetailsPage(hid)
-            .verifyUpdateHeaderInfo(primaryPatient).goToPatientApprovalPage().selectCatchment(primaryPatient)
+            .verifyUpdateHeaderInfo(primaryPatient).logout();
+
+        page.approverLogin().goToPatientApprovalPage().selectCatchment(primaryPatient)
             .verifyPatientNeedsApproval(hid).goToPatientApprovalDetailPage(hid)
             .verifyPendingApprovalFields(primaryPatient,hid).verifyPendingApprovalOldValues(primaryPatient)
-            .verifyPendingApprovalNewValues(updatedPatient).approveRequest(primaryPatient,hid)
-            .searchByHID(hid).verifyApprovedPatientUpdatedDetails(primaryPatient, updatedPatient);
+            .verifyPendingApprovalNewValues(updatedPatient).approveRequest(primaryPatient,hid).logout();
+
+
+        page.adminLogin().searchByHID(hid).verifyApprovedPatientUpdatedDetails(primaryPatient, updatedPatient).logout();
 
     }
 
@@ -61,13 +65,17 @@ public class UpdatePatientTests extends TestSetup{
 
         driver.get(WebDriverProperties.getProperty("MCI_URL"));
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login().goPatientDetailsPage(hid).EditPatientDetails().goToPatientPersonalInfo()
+        page.adminLogin().goToPatientSearchPage().goPatientDetailsPage(hid).EditPatientDetails().goToPatientPersonalInfo()
                 .updatePatientPersonalInfo(primaryPatient, updatedPatient).goPatientDetailsPage(hid)
-                .verifyUpdateHeaderInfo(primaryPatient).goToPatientApprovalPage().selectCatchment(primaryPatient)
+                .verifyUpdateHeaderInfo(primaryPatient).logout();
+
+        page.approverLogin().goToPatientApprovalPage().selectCatchment(primaryPatient)
                 .verifyPatientNeedsApproval(hid).goToPatientApprovalDetailPage(hid)
                 .verifyPendingApprovalFields(primaryPatient,hid).verifyPendingApprovalOldValues(primaryPatient)
-                .verifyPendingApprovalNewValues(updatedPatient).rejectRequest(primaryPatient, hid)
-                .searchByHID(hid).verifyRejectPatientUpdatedDetails(primaryPatient, updatedPatient);
+                .verifyPendingApprovalNewValues(updatedPatient).rejectRequest(primaryPatient,hid).logout();
+
+        page.adminLogin().searchByHID(hid).verifyRejectPatientUpdatedDetails(primaryPatient, updatedPatient).logout();
+
 
     }
 

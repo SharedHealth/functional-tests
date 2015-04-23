@@ -39,7 +39,7 @@ public class SearchPatientTests extends TestSetup{
 
         driver.get(WebDriverProperties.getProperty("MCI_URL"));
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
-        page.login();
+        page.adminLogin();
 
     }
 

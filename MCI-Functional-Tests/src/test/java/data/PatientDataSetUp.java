@@ -59,6 +59,8 @@ public class PatientDataSetUp {
     protected String createPatient(JSONObject patient) throws JSONException {
 
         Response response = given().contentType("application/json")
+                .header("From", WebDriverProperties.getProperty("MCI_Facility_User"))
+                .header("client_id", WebDriverProperties.getProperty("MCI_Facility_User_Client_id"))
                 .header(WebDriverProperties.getProperty("MCI_API_TOKEN_NAME"), token.trim())
                 .body(patient.toString())
                 .when().post("/patients")

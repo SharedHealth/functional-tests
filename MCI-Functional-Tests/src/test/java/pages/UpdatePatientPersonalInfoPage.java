@@ -102,7 +102,7 @@ public class UpdatePatientPersonalInfoPage extends Page{
 
         List<WebElement> personalInfo= webDriver.findElements(By.cssSelector(".form-group"));
         enterUpdatedPatientData(personalInfo, currentPatientInfo.getFieldGiven_name(), updatedPatientInfo.getGiven_name());
-        enterUpdatedPatientData(personalInfo, currentPatientInfo.getFieldSur_name(), updatedPatientInfo.getSur_name());
+ //       enterUpdatedPatientData(personalInfo, currentPatientInfo.getFieldSur_name(), updatedPatientInfo.getSur_name());
         selectUpdatedPatientData(personalInfo, currentPatientInfo.getFieldGender(), updatedPatientInfo.getGender());
         clickSave();
         Thread.sleep(2000);
