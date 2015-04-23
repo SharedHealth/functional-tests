@@ -104,7 +104,7 @@ describe("MCI Approver User", function () {
             });
         });
 
-        mci_approver("Should be able to view patient By houseHoldCode", function (done) {
+        mci_approver("Should not be able to view patient By houseHoldCode", function (done) {
             request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(200);

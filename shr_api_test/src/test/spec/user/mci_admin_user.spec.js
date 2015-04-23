@@ -211,7 +211,7 @@ describe("MCI Admin User", function () {
             });
         });
 
-        mci_admin_user.skip("Should not be able to get the location details", function (done) {
+        mci_admin_user("Should be able to get the location details", function (done) {
             request(patientRequest.getLocationDetails(user.catchment), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(200)

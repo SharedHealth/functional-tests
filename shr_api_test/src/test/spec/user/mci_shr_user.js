@@ -93,7 +93,7 @@ describe("MCI SHR User", function () {
             });
         });
 
-        mci_shr_user("Should be able to view patient By houseHoldCode", function (done) {
+        mci_shr_user("Should not be able to view patient By houseHoldCode", function (done) {
             request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
                 console.log(body);
                 houseHoldCode = JSON.parse(body).household_code

@@ -105,7 +105,7 @@ describe("MCI Datasense User", function () {
             });
         });
 
-        mci_datasense_user("Should be able to view patient By houseHoldCode", function (done) {
+        mci_datasense_user("Should not be able to view patient By houseHoldCode", function (done) {
             request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(200);
@@ -194,11 +194,11 @@ describe("MCI Datasense User", function () {
         });
 
 
-        mci_datasense_user.skip("Should not be able to reject pending approval for patient", function (done) {
-            request(patientUpdateRequest.updatePost(hid), function (err, res, body) {
+        mci_datasense_user("Should not be able to reject pending approval for patient", function (done) {
+            request(patientUpdateRequest.multipleUpdateUsingPut(hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(202);
-                request(patientRequest.rejectRequest("302607", hid), function (err, res, body) {
+                request(patientRequest.multipleRequestReject("302607", hid), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(403);
                     expect(body.message).to.equal("Access is denied");

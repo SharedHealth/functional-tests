@@ -93,11 +93,10 @@ describe('MCI Patient User', function () {
                 });
             });
         });
-        mci_patient_user.skip("Should not be able to view patient By BinBrn", function (done) {
+        mci_patient_user("Should not be able to view patient By BinBrn", function (done) {
             var patientHid = user.hid;
             request(patientRequest.getPatientDetailsByHid(patientHid), function (err, res, body) {
                 console.log(body);
-                //bin brn is not set for this user. bin_brn is undefined????
                 binBrn = JSON.parse(body).bin_brn
                 request(patientRequest.getPatientDetailsByBinBrn(binBrn), function (err, res, body) {
                     console.log(body);
@@ -108,10 +107,10 @@ describe('MCI Patient User', function () {
             });
         });
 
-        mci_patient_user.skip("Should be able to view patient By houseHoldCode", function (done) {
-            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+        mci_patient_user("Should not be able to view patient By houseHoldCode", function (done) {
+            var patientHid = user.hid;
+            request(patientRequest.getPatientDetailsByHid(patientHid), function (err, res, body) {
                 console.log(body);
-                //getting an access denied message in body. Hence household_code is undefined
                 houseHoldCode = JSON.parse(body).household_code
                 request(patientRequest.getPatientDetailsHouseHoldCode(houseHoldCode), function (err, res, body) {
                     console.log(body);
@@ -228,8 +227,8 @@ describe('MCI Patient User', function () {
         });
 
         //catchment details are not set for the user. Hence the user.catchment is set to undefined
-        mci_patient_user.skip("Should not be able to get the location details", function (done) {
-            request(patientRequest.getLocationDetails(user.catchment), function (err, res, body) {
+        mci_patient_user("Should not be able to get the location details", function (done) {
+            request(patientRequest.getLocationDetails("3026"), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(403)
                 expect(JSON.parse(body).message).to.equal("Access is denied");
