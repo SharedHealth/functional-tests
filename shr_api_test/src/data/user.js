@@ -210,7 +210,7 @@ module.exports = function (user_type) {
         client_id : 18562,
         api_token : 'bec81dddaa8a400a51e10710f7a82ef3f04cfddaa9bbe5ac051328c46a6373fd',
         access_token : "",
-        catchment : ["302607"]
+        catchment : ["302618"]
     };
 
     user["STAGING"]["confidential_patient"] = {
