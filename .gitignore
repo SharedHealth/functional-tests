@@ -17,3 +17,6 @@ classes
 
 #Mac
 *.DS_Store
+
+shr_api_test/.project
+

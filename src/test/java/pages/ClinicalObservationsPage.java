@@ -20,16 +20,16 @@ public class ClinicalObservationsPage extends Page {
 
     public WebDriver driver;
 
-    @FindBy(xpath = "//button[text()='ave']")
+    @FindBy(className = "save-consultation")
     private WebElement saveButton;
 
-    @FindBy(xpath = "//strong[text()='Vitals']")
+    @FindBy(id = "Vitals")
     private WebElement vitalsSection;
 
     @FindBy(xpath = "//strong[text()='Family History']")
     private WebElement familyHistorySection;
 
-    @FindBy(xpath = "//strong[text()='History and Examination']")
+    @FindBy(id = "History_and_Examination")
     private WebElement chiefComplainSection;
 
     @FindBy(linkText = "Visit")
@@ -47,7 +47,7 @@ public class ClinicalObservationsPage extends Page {
         wait.until(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
-                return null != (webDriver.findElement(By.xpath("//span[text()='Temperature']")));
+                return null != (webDriver.findElement(By.xpath("//div[@id='Vitals']")));
             }
         });
 
@@ -95,8 +95,8 @@ public class ClinicalObservationsPage extends Page {
     }
 
     public void enterVitals(Vitals patientVitals) {
-//        vitalsSection.click();
-//        waitForMillis(1000);
+        vitalsSection.click();
+        waitForMillis(1000);
         List<WebElement> vitalsList = driver.findElements(By.cssSelector(".form-field-group"));
         enterVitalObservation(vitalsList, "Systolic", patientVitals.getSystolicBloodPressure());
         enterVitalObservation(vitalsList, "Diastolic", patientVitals.getDiastolicBloodPressure());
