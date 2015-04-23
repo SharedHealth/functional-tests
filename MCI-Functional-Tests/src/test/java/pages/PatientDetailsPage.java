@@ -110,7 +110,7 @@ public class PatientDetailsPage extends Page{
                 + patient.getGiven_name()+" "+patient.getSur_name()+" to "+updatedPatient.getGiven_name()+" "+patient.getSur_name());
         assertTrue(patient.getFieldGender()+ " is not updated from " + patient.getGender()+ " to "+ updatedPatient.getGender()
                 , isvaluePresent(patient.getFieldGender(), updatedPatient.getGender()));
-        System.out.println(patient.getFieldGender()+ " is not updated from "+ patient.getGender()+" to "+updatedPatient.getGender());
+        System.out.println(patient.getFieldGender()+ " is updated from "+ patient.getGender()+" to "+updatedPatient.getGender());
         return  initialize(webDriver, PatientDetailsPage.class);
 
     }
