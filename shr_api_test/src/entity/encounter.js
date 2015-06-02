@@ -19,7 +19,7 @@ function EncounterConfig(hid) {
 			"Diastolic" : new Concept("Diastolic", "af747d2f-8946-4ca2-93ec-5eb76986aff8", config.concept_uri, "concepts"),
 			"Blood Pressure" : new Concept("Blood Pressure", "e69ef886-6914-4ed7-93a8-7b951dbf7139", config.concept_uri, "concepts"),
 			"Vitals" : new Concept("Vitals", "44c245dd-d234-4991-a8b2-3c4a54d5092b", config.concept_uri, "concepts"),
-			"Fracture in upper arm" : new Concept("Fracture in upper arm", "2218636a-0ef0-4fb1-ac7e-cf2a915b0ee4", config.concept_uri, "condition")
+			"Fracture in upper arm" : new Concept("Fracture in upper arm", "2218636a-0ef0-4fb1-ac7e-cf2a915b0ee4", config.concept_uri, "concepts")
 		},
 		provider_uri: config.provider_uri + "24.json"
 	};
@@ -47,7 +47,7 @@ function EncounterConfig(hid) {
 		patient_uri: config.patient_uri + hid,
 		facility_uri: config.facility_uri + "10019841.json",
 		entry : {
-			"Fracture in upper arm" : new Concept("Fracture in upper arm", "f8c01f13-136b-48c9-8b3c-c4cf3850eb24", config.concept_uri, "condition")
+			"Fracture in upper arm" : new Concept("Fracture in upper arm", "f8c01f13-136b-48c9-8b3c-c4cf3850eb24", config.concept_uri, "concepts")
 		},
 
 		provider_uri: config.provider_uri + "24.json"

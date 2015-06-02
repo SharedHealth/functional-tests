@@ -22,6 +22,15 @@ var PatientRequest = function(user_detail, patient_detail){
         return EntityRequest({'uri' : uri + "/patients", body : {'gender': 'F'}, headers : headers(), isJSON:true}).post()
     };
 
+    var makePatientInactive = function(inActiveHid, activeHid){
+        return EntityRequest({'uri' : uri + "/mergerequest/"+inActiveHid, body : {'active': false, 'merged_with': activeHid}, headers : headers(), isJSON:true}).put()
+    };
+
+    var updateActiveFieldUsingPut = function(inActiveHid){
+        return EntityRequest({uri : uri + "/patients/" + inActiveHid, body : {'active': true}, headers : headers(), isJSON:true}).put()
+    };
+
+
     var updateUsingPut = function (hid) {
         return EntityRequest({uri : uri + "/patients/" + hid.toString(), body : {'gender': 'F'}, headers : headers(), isJSON:true}).put()
     };
@@ -108,6 +117,8 @@ var PatientRequest = function(user_detail, patient_detail){
         post : post,
         updatePost : updatePost,
         updateUsingPut : updateUsingPut,
+        makePatientInactive:makePatientInactive,
+        updateActiveFieldUsingPut:updateActiveFieldUsingPut,
         multipleUpdateUsingPut : multipleUpdateUsingPut,
         getPatientDetailsByHid : getPatientDetailsByHid,
         getPatientDetailsByNid : getPatientDetailsByNid,
