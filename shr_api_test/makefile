@@ -14,4 +14,7 @@ sandbox:
 	@echo ${ENVIRONMENT}
 	@cd src/sandbox; ENVIRONMENT=${ENVIRONMENT} mocha ${FILE_NAME} --no-timeouts
 
-.PHONY: test showcase staging sandbox
+local:
+	@cd src; ENVIRONMENT=LOCAL mocha
+
+.PHONY: test showcase staging sandbox local
