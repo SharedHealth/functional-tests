@@ -1,13 +1,11 @@
 package tests.datasetup;
 
-import categories.FunctionalTest;
 import data.ConceptData;
 import domain.Concept;
 import domain.ConceptReferenceTerm;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.TRLoginPage;
