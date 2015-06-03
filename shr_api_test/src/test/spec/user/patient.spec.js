@@ -146,7 +146,7 @@ describe('Patient User', function () {
 
     });
 
-    describe.only("Encounter post request from patient himself", function () {
+    describe("Encounter post request from patient himself", function () {
         var confidential_encounter_request;
         var non_confidential_encounter_request;
         var encounter_request;
@@ -158,17 +158,14 @@ describe('Patient User', function () {
             non_confidential_encounter_request = new EncounterRequest(user.hid, datasense_user);
 
             request(non_confidential_encounter_request.get(), function (get_err, get_res, get_body) {
-                var body = JSON.stringify(get_body);
-                var parsed_body = JSON.parse(body);
-                console.log(parsed_body);
-                user_encounter_count = parsed_body['entries'].length;
+                console.log(get_body);
+                user_encounter_count = JSON.parse(get_body).entries.length;
                 request(confidential_encounter_request.get(), function (get_err, get_res, get_body) {
-                    body = JSON.stringify(get_body);
-                    parsed_body = JSON.parse(body);
-                    console.log(parsed_body);
-                    confidential_user_encounter_count = parsed_body['entries'].length;
+                    console.log("-----------------")
+                    console.log(get_body);
+                    console.log("-----------------")
+                    confidential_user_encounter_count = JSON.parse(get_body).entries.length;
                     done();
-
                 });
 
             });
