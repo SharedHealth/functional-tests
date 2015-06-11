@@ -49,7 +49,7 @@ describe("Encounter Update", function () {
         done();
     });
 
-    describe.skip("Encounter Post and Request for non confidential patient", function () {
+    describe("Encounter Post and Request for non confidential patient", function () {
 
         var encounter_request;
         var encounterFeed;

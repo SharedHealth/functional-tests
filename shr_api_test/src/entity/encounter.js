@@ -12,7 +12,7 @@ function EncounterConfig(hid) {
 		patient_uri: config.patient_uri + hid,
 		facility_uri: config.facility_uri + "10000069.json",
 		entry : {
-			"BCG" : new Concept("BCG", "5799c579-3c78-4133-9e02-91c1006d862d", config.concept_uri, "drugs"),
+			"BCG" : new Concept("BCG", "751c9b29-6f70-4e2a-90b0-068c4f8a5fe6", config.concept_uri, "drugs"),
 			"Temperature" : new Concept("Temperature", "a1257651-7473-4c9b-bb0a-1244c5f3c09d", config.concept_uri, "concepts"),
 			"Pulse" : new Concept("Pulse", "22a952b6-cc36-45e8-8b52-ff5a90fa7c4f", config.concept_uri, "concepts"),
 			"Systolic" : new Concept("Systolic", "77405a73-b915-4a93-87a7-f29fe6697fb4", config.concept_uri, "concepts"),
