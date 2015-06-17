@@ -8,7 +8,7 @@ var CatchmentRequest = require('../../../../../src/request/catchment').Catchment
 var PatientRequest = require('../../../../../src/request/patient').PatientRequest;
 
 
-describe("de duplication- test", function () {
+describe.skip("de duplication- test", function () {
     var userFacility = new User('facility');
     var userMciAdmin = new User('mciAdmin');
     var userMciApprover = new User('mci_approver');
