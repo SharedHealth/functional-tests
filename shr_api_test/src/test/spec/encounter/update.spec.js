@@ -8,7 +8,7 @@ var CatchmentRequest = require('../../../../src/request/catchment').CatchmentReq
 var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 
 
-describe("Encounter Update", function () {
+describe.skip("Encounter Update", function () {
     var create_user = new User('facility');
     var view_user = new User("datasense");
     var hid = "";
