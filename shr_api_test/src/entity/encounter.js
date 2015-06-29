@@ -63,12 +63,20 @@ function EncounterConfig(hid) {
 		hid: hid,
 		clinical_standard: "http://hl7.org/fhir",
 		patient_uri: config.patient_uri + hid,
-		facility_uri: config.facility_uri + "10019841.json",
+		facility_uri: config.facility_uri + "10019842.json",
 		entry : {
-			"Fracture in upper arm" : new Concept("Fracture in upper arm", "f8c01f13-136b-48c9-8b3c-c4cf3850eb24", config.concept_uri, "concepts")
+			//name, concept_code,concept_code_value, reference_code, reference_code_value, base_uri, type
+			"Pulse": new Concept("Pulse", "20195aec-1a76-11e5-b5a9-00505682700b","20195aec-1a76-11e5-b5a9-00505682700b", "201adc08-1a76-11e5-b5a9-00505682700b", "78564009", config.concept_uri, "concepts"),
+			"Temperature" : new Concept("Temperature", "2017b7c5-1a76-11e5-b5a9-00505682700b","2017b7c5-1a76-11e5-b5a9-00505682700b","20183c53-1a76-11e5-b5a9-00505682700b", "386725007" ,config.concept_uri, "concepts"),
+			"Systolic blood pressure" : new Concept("Systolic blood pressure", "200f2911-1a76-11e5-b5a9-00505682700b","200f2911-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts"),
+			"Diastolic blood pressure" : new Concept("Diastolic blood pressure", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts"),
+			"Blood Pressure" : new Concept("Blood Pressure", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts"),
+			"Vitals" : new Concept("Vitals", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts"),
+			"BCG" : new Concept("BCG", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "BCG", config.concept_uri, "concepts"),
+			"Fracture in upper arm" : new Concept("Fracture in upper arm", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts")
 		},
 
-		provider_uri: config.provider_uri + "24.json"
+		provider_uri: config.provider_uri + "113084.json"
 	};
 
 	return encounter_details[config.env];
@@ -81,7 +89,7 @@ exports.DefaultEncounterFeed = function(hid, isConfidential) {
 	var confidentiality = isConfidential || 'No';
 		var details = new EncounterConfig(hid);
 		var feed = new Feed(details, confidentiality);
-		feed.withDiagnosisEntry("Fracture in upper arm");
+		feed.withImmunizationEntry("BCG");
 		encounter_payload = feed.get();
 	return {
 		details: encounter_payload,

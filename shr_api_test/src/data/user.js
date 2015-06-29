@@ -64,7 +64,7 @@ module.exports = function (user_type) {
     user["QA"]["patient"] = {
         email: "hitansuj@thoughtworks.com",
         password: "thoughtworks",
-        client_id: 18560,
+        client_id: 18561,
         api_token: null,
         access_token: "",
         hid: '98504688444'

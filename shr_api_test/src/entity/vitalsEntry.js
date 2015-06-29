@@ -33,10 +33,10 @@ function VitalsSectionEntry(root,detail,concept_name, entries)
 
         var coding = subelement(observationName,"coding");
         var system = subelement(coding, "system");
-        system.set("value", detail.entry[concept_name].uri);
+        system.set("value", detail.entry[concept_name].concept_uri);
         var code = subelement(coding, "code");
-        code.set("value",detail.entry[concept_name].code );
-        var codingDisplay = subelement(coding, "display")
+        code.set("value",detail.entry[concept_name].concept_code_value );
+        var codingDisplay = subelement(coding, "display");
         codingDisplay.set("value", detail.entry[concept_name].name);
         var status = subelement(observation, "status");
         status.set("value", "final");
@@ -119,11 +119,20 @@ function SubVitalsEntry(root,detail, concept_name, entry_value)
 
         var coding = subelement(observationName,"coding");
         var system = subelement(coding, "system");
-        system.set("value", detail.entry[concept_name].uri);
+        system.set("value", detail.entry[concept_name].concept_uri);
         var code = subelement(coding, "code");
-        code.set("value",detail.entry[concept_name].code );
+        code.set("value",detail.entry[concept_name].concept_code_value );
         var codingDisplay = subelement(coding, "display")
         codingDisplay.set("value", detail.entry[concept_name].name);
+
+        var trcoding = subelement(observationName, "coding");
+        var trsystem = subelement(trcoding, "system");
+        trsystem.set("value", detail.entry[concept_name].reference_uri);
+        var trcode = subelement(trcoding, "code");
+        trcode.set("value", detail.entry[concept_name].reference_code_value);
+        var trCodingDisplay = subelement(trcoding, "display");
+        trCodingDisplay.set("value", detail.entry[concept_name].name)
+
         var valueDecimal = subelement(observation, "valueDecimal");
         valueDecimal.set("value", entry_value);
         var status = subelement(observation, "status");
@@ -195,14 +204,14 @@ exports.BloodPressureEntry = function BloodPressureEntry(root,detail, entries)
 
 exports.SystolicEntry = function SystolicEntry(root,detail)
 {
-    var systolic_entry = new SubVitalsEntry(root,detail,'Systolic');
+    var systolic_entry = new SubVitalsEntry(root,detail,'Systolic blood pressure');
 
     return systolic_entry;
 };
 
 exports.DiastolicEntry = function DiastolicEntry(root,detail)
 {
-    var diastolic_entry = new SubVitalsEntry(root,detail,'Diastolic');
+    var diastolic_entry = new SubVitalsEntry(root,detail,'Diastolic blood pressure');
 
     return diastolic_entry;
 };

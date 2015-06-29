@@ -36,9 +36,11 @@ exports.ImmunizationEntry = function ImmunizationEntry(root,detail, drug)
         var vaccineType = subelement(immunization, "vaccineType");
         var coding = subelement(vaccineType,"coding");
         var system = subelement(coding, "system");
-        system.set("value", detail.entry[drug].uri);
+        console.log("-----")
+        console.log(drug);
+        system.set("value", detail.entry[drug].drug_uri);
         var code = subelement(coding, "code");
-        code.set("value",detail.entry[drug].code );
+        code.set("value",detail.entry[drug].concept_code );
         var codingDisplay = subelement(coding, "display")
         codingDisplay.set("value", drug);
         var subject = subelement(immunization, "subject");
@@ -46,6 +48,8 @@ exports.ImmunizationEntry = function ImmunizationEntry(root,detail, drug)
         subjectReference.set("value", detail.patient_uri );
         var subjectDisplay = subelement(subject, "display");
         subjectDisplay.set("value", detail.hid);
+        var refusedIndicator = subelement(immunization, "refusedIndicator");
+        refusedIndicator.set("value", "false");
         var reported = subelement(immunization, "reported");
         reported.set("value", "true");
         var requester = subelement(immunization, "requester");
