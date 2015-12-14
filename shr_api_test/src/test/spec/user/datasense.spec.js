@@ -10,7 +10,6 @@ var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 describe("Datasense User", function () {
     var user = new User('datasense');
     var facility_user = new User('facility');
-
     var hid = "";
     var confidential_patient_hid = "";
     var datasense_user = it;
@@ -60,6 +59,9 @@ describe("Datasense User", function () {
             confidential_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid, "Yes"));
             non_confidentail_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid));
             encounter_request = new EncounterRequest(hid, user, new Encounter(hid));
+
+            console.log(non_confidentail_encounter_request.post());
+
             request(non_confidentail_encounter_request.post(), function (post_err, post_res, post_body) {
                 console.log(post_body);
                 expect(post_res.statusCode).to.equal(200);

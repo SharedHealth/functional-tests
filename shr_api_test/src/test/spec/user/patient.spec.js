@@ -161,9 +161,7 @@ describe('Patient User', function () {
                 console.log(get_body);
                 user_encounter_count = JSON.parse(get_body).entries.length;
                 request(confidential_encounter_request.get(), function (get_err, get_res, get_body) {
-                    console.log("-----------------")
                     console.log(get_body);
-                    console.log("-----------------")
                     confidential_user_encounter_count = JSON.parse(get_body).entries.length;
                     done();
                 });

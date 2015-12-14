@@ -183,7 +183,7 @@ module.exports = function (user_type) {
         catchment : ["3026"]
     };
     user["SHOWCASE"]["mci_approver"] = {
-        email : "mciApprover@test.com",
+        email : "mc",
         password : "thoughtworks",
         client_id : 18566,
         api_token : null,

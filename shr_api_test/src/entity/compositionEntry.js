@@ -1,7 +1,6 @@
 var et = require("elementtree");
 var element = et.Element;
 var subelement = et.SubElement;
-var etree = et.ElementTree;
 var uuid = require("uuid");
 var isodate = require('../../src/utility/isodate').isodate;
 
@@ -12,36 +11,52 @@ exports.CompositionEntry = function CompositionEntry(root, isConfidential,encoun
     var isoDateTime = new isodate().isoDate();
     var composition;
     var detail = detail;
-
+    //<fullUrl value=\"urn:uuid:5abe40a4-dea4-49db-9429-ae30cbf382cb\"/>
     var initialize = function () {
-        var title = subelement(entry, "title");
-        title.text = "Composition";
-        var id = subelement(entry, "id");
-        id.text = "urn:" + uid;
-        var updated = subelement(entry, "updated");
-        updated.text = isoDateTime;
+        var fullURL = subelement(entry, "fullUrl");
+        fullURL.set("value", "urn:uuid:" + uid);
         addContent();
     }
 
     var addContent = function () {
-        var content = subelement(entry, "content");
-        composition = subelement(content, "Composition");
+        var resource = subelement(entry, "resource");
+        composition = subelement(resource, "Composition");
         composition.set("xmlns", detail.clinical_standard);
         var identifier = subelement(composition, "identifier");
         var identifierValue = subelement(identifier, "value");
         identifierValue.set("value", "urn:" + uid);
+
+
+        var compositionType = subelement(composition, "type");
+        var coding = subelement(compositionType, "coding");
+        var compositionTypeSystem = subelement(coding,"system");
+        compositionTypeSystem.set("value", detail.clinical_standard + "/vs/doc-typecodes");
+        var compoisitionCodeValue = subelement(coding, "code");
+        compoisitionCodeValue.set("value", "51899-3");
+        var compositionDisplay = subelement(coding, "display");
+        compositionDisplay.set("value", "Details Document");
+        //<title value="Patient Clinical Encounter"/>
+        var compositionTitle = subelement(composition, "title");
+        compositionTitle.set("value", "Patient Clinical Encounter");
         var date = subelement(composition, "date");
         date.set("value", isoDateTime);
         var status = subelement(composition, "status");
         status.set("value", "final");
+        //<confidentiality value=\"N\"/>
+        var confidentiality = subelement(composition, "confidentiality");
         if (isConfidential == 'Yes') {
-            var confidentiality = subelement(composition, "confidentiality");
-            var system = subelement(confidentiality, "system");
-            system.set("value", detail.clinical_standard + "/v3/Confidentiality");
-            var code = subelement(confidentiality, "code");
-            code.set("value", "V");
-            var confidentialityDisplay = subelement(confidentiality, "display");
-            confidentialityDisplay.set("value", "very restricted");
+
+            //var system = subelement(confidentiality, "system");
+            //system.set("value", detail.clinical_standard + "/v3/Confidentiality");
+            //var code = subelement(confidentiality, "code");
+            //code.set("value", "V");
+            //var confidentialityDisplay = subelement(confidentiality, "display");
+            //confidentialityDisplay.set("value", "very restricted");
+            confidentiality.set("value", "V");
+        }
+        else
+        {
+            confidentiality.set("value", "N");
         }
         var subject = subelement(composition, "subject");
         var subjectReference = subelement(subject, "reference");

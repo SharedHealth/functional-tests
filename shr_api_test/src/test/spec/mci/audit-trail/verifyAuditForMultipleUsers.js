@@ -129,7 +129,7 @@ describe("Audit test", function () {
             });
         });
 
-        it("Update multiple field of patient by facility and accept it", function (done) {
+        it.skip("Update multiple field of patient by facility and accept it", function (done) {
 
 
             request((patientRequestFacility).multipleUpdateUsingPut(hid), function (err, res, body) {
@@ -141,7 +141,7 @@ describe("Audit test", function () {
             });
         });
 
-        it("Update multiple field of patient by Provider and accept it", function (done) {
+        it.skip("Update multiple field of patient by Provider and accept it", function (done) {
 
 
             request((patientRequestProvider).multipleUpdateUsingPut(hid), function (err, res, body) {
@@ -163,7 +163,7 @@ describe("Audit test", function () {
             });
         });
 
-        it("Update patient multiple field multiple times by facility,provider and admin and then accept it", function (done) {
+        it.skip("Update patient multiple field multiple times by facility,provider and admin and then accept it", function (done) {
 
 
             request((patientRequestFacility).multipleUpdateUsingPut(hid), function (err, res, body) {
