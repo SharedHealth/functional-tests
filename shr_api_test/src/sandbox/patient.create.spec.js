@@ -1,6 +1,6 @@
 var request = require('request');
 var User = require('../../src/data/user' );
-var Patient = require('../../src/entity/patient');
+var Patient = require('../../src/entity/patient').Patient;
 var Encounter = require('../../src/entity/encounter');
 var EncounterRequest = require('../../src/request/encounter').EncounterRequest;
 var SSORequest = require('../../src/request/sso').SSORequest;
@@ -32,7 +32,7 @@ describe("Create User", function () {
         });
     });
 
-it("should have created patients", function(done) {
+it.only("should have created patients", function(done) {
     console.log("non_confidential_patient_hid " + non_confidential_patient_hid);
     console.log("confidential_patient_hid " + confidential_patient_hid);
     done();
