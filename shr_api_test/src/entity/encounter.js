@@ -83,9 +83,11 @@ function EncounterConfig(hid) {
 			"Diastolic blood pressure" : new Concept("Diastolic blood pressure", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts"),
 			"Blood Pressure" : new Concept("Blood Pressure", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts"),
 			"Vitals" : new Concept("Vitals", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts"),
-			"BCG" : new ConceptDrug("BCG", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "BCG", config.concept_uri, "concepts"),
+			"BCG" : new ConceptDrug("BCG", "d2e2d3d2-878d-11e5-95dd-005056b0145c", config.concept_uri, "drugs"),
 			"Fracture in upper arm" : new Concept("Fracture in upper arm", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts")
 		},
+
+
 
 		provider_uri: config.provider_uri + "113084.json"
 	};

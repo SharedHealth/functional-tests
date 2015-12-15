@@ -35,8 +35,9 @@ var PatientRequest = function(user_detail, patient_detail){
         return EntityRequest({uri : uri + "/patients/" + hid.toString(), body : {'gender': 'F'}, headers : headers(), isJSON:true}).put()
     };
 
+
     var multipleUpdateUsingPut = function (hid) {
-        return EntityRequest({uri : uri + "/patients/" + hid, body : {'religion': '2', 'given_name': 'updatedFirstName'}, headers : headers(), isJSON:true}).put()
+        return EntityRequest({uri : uri + "/patients/" + hid, body : {"occupation" :  "04" , 'given_name': 'updatedFirstName'}, headers : headers(), isJSON:true}).put()
     };
 
     var getPatientDetailsByHid = function (hid) {
@@ -81,12 +82,12 @@ var PatientRequest = function(user_detail, patient_detail){
 
     var multipleRequestAccept = function (catchment,hid) {
         var url = uri + "/catchments/" + catchment + "/approvals/" + hid;
-        return EntityRequest({uri : url, body : {'religion': '2', 'given_name': 'updatedFirstName'}, headers : headers(), isJSON : true }).put()
+        return EntityRequest({uri : url, body : { "occupation" :  "04" , 'given_name': 'updatedFirstName'}, headers : headers(), isJSON : true }).put()
     };
 
     var multipleRequestReject = function (catchment,hid) {
         var url = uri + "/catchments/" + catchment + "/approvals/" + hid;
-        return EntityRequest({uri : url, body : { 'given_name': 'updatedFirstName'}, headers : headers(), isJSON : true }).del();
+        return EntityRequest({uri : url, body : { "occupation" :  "04"  , 'given_name': 'updatedFirstName'}, headers : headers(), isJSON : true }).del();
     };
 
 
