@@ -192,8 +192,7 @@ describe("MCI Approver User", function () {
             });
         });
 
-
-        mci_approver.skip("Should be able to reject pending approval for patient", function (done) {
+        mci_approver("Should be able to reject pending approval for patient", function (done) {
             request(patientUpdateRequest.multipleUpdateUsingPut(hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(202);

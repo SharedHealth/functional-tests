@@ -11,7 +11,7 @@ describe("MCI Admin User", function () {
     var facility_user = new User('facility');
     var user = new User('mciAdmin')
     var hid = "";
-    var nid = ""
+    var nid = "";
     var binBrn = "";
     var houseHoldCode="";
     var confidential_patient_hid = "";

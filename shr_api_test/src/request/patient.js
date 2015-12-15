@@ -86,7 +86,7 @@ var PatientRequest = function(user_detail, patient_detail){
 
     var multipleRequestReject = function (catchment,hid) {
         var url = uri + "/catchments/" + catchment + "/approvals/" + hid;
-        return EntityRequest({uri : url, body : {'religion': '2', 'given_name': 'updatedFirstName'}, headers : headers(), isJSON : true }).del();
+        return EntityRequest({uri : url, body : { 'given_name': 'updatedFirstName'}, headers : headers(), isJSON : true }).del();
     };
 
 

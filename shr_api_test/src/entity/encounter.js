@@ -1,6 +1,8 @@
 "use strict";
 var config = require('./../Config').config;
-var Concept = require('./concept').Concept;
+var Concept = require('./concept').ConceptDrug;
+var ConceptDrug = require('./concept').ConceptDrug;
+
 var Feed = require('./bundle').Feed;
 var pd = require("pretty-data").pd;
 
@@ -21,7 +23,7 @@ function EncounterConfig(hid) {
 	//</vaccineCode>
 	//	concept_uri	http://172.18.46.56:9080/openmrs/ws/rest/v1/tr/
 			//name, concept_code,concept_code_value, reference_code, reference_code_value, base_uri, type
-			"BCG" : new Concept("BCG", "e90ee3ac-83b0-11e5-aa01-0050568276cf", config.concept_uri, "drugs"),
+			"BCG" : new ConceptDrug("BCG", "e90ee3ac-83b0-11e5-aa01-0050568276cf", config.concept_uri),
 			"Temperature" : new Concept("Temperature", "a1257651-7473-4c9b-bb0a-1244c5f3c09d", config.concept_uri, "concepts"),
 			"Pulse" : new Concept("Pulse", "22a952b6-cc36-45e8-8b52-ff5a90fa7c4f", config.concept_uri, "concepts"),
 			"Systolic" : new Concept("Systolic", "77405a73-b915-4a93-87a7-f29fe6697fb4", config.concept_uri, "concepts"),
@@ -39,7 +41,7 @@ function EncounterConfig(hid) {
 		patient_uri: config.patient_uri + hid,
 		facility_uri: config.facility_uri + "10000069.json",
 		entry : {
-			"BCG" : new Concept("BCG", "5799c579-3c78-4133-9e02-91c1006d862d", config.concept_uri, "drugs"),
+			"BCG" : new ConceptDrug("BCG", "5799c579-3c78-4133-9e02-91c1006d862d", config.concept_uri, "drugs"),
 			"Temperature" : new Concept("Temperature", "a1257651-7473-4c9b-bb0a-1244c5f3c09d", config.concept_uri, "concepts"),
 			"Pulse" : new Concept("Pulse", "22a952b6-cc36-45e8-8b52-ff5a90fa7c4f", config.concept_uri, "concepts"),
 			"Systolic" : new Concept("Systolic", "77405a73-b915-4a93-87a7-f29fe6697fb4", config.concept_uri, "concepts"),
@@ -81,7 +83,7 @@ function EncounterConfig(hid) {
 			"Diastolic blood pressure" : new Concept("Diastolic blood pressure", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts"),
 			"Blood Pressure" : new Concept("Blood Pressure", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts"),
 			"Vitals" : new Concept("Vitals", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts"),
-			"BCG" : new Concept("BCG", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "BCG", config.concept_uri, "concepts"),
+			"BCG" : new ConceptDrug("BCG", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "d84c3505-8bd2-4123-8885-ab9e431ef0cd", "BCG", config.concept_uri, "concepts"),
 			"Fracture in upper arm" : new Concept("Fracture in upper arm", "201500c9-1a76-11e5-b5a9-00505682700b","201500c9-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts")
 		},
 

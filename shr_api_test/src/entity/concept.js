@@ -1,10 +1,11 @@
 "use strict"
 
-exports.Concept = function Concept(name, reference_uuid, base_uri, concept_type)
+exports.ConceptDrug = function ConceptDrug(name, reference_uuid, base_uri)
 {
     var name = name;
     var reference_uuid = reference_uuid;
-    var concept_uri = base_uri + concept_type + "/" + reference_uuid;
+
+    var concept_uri = base_uri + "drugs" + "/" + reference_uuid;
 
 
     return {
@@ -14,4 +15,8 @@ exports.Concept = function Concept(name, reference_uuid, base_uri, concept_type)
         };
 
 };
+
+//exports.ObservationConcept = function Observation(name, concept_uuid, base_uri, ) {
+//
+//}
 

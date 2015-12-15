@@ -1,5 +1,5 @@
 "use strict"
- function Patient(confidentiality) {
+ function Patient(confidentiality, divisionId, districtId, upazila_id) {
  	var nid = new Date().getTime().toString();
 	var bin_brn =  nid.concat("0000");
 	var name=Math.ceil(Math.random()*1000000);
@@ -21,9 +21,9 @@
          },
 		"present_address" : {
 			"address_line" : "Test",
-			"division_id" : "30",
-			"district_id" : "26",
-			"upazila_id" : "07"
+			"division_id" : divisionId || "30",
+			"district_id" : districtId || "26",
+			"upazila_id" : upazila_id || "07"
 		},
 		"status" : {
 			"type" : "1"
@@ -36,6 +36,10 @@
 
 exports.Patient = Patient;
 
+exports.PatientWithDifferentCatchment = function(confidentiality) {
+	var patient = new Patient(confidentiality || "No", "30", "33", "34");
+	return patient;
+}
 exports.PatientWithHouseHold = function(confidentiality)
 {
 	var patient = new Patient(confidentiality);
