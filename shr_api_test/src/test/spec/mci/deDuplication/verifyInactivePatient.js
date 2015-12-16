@@ -287,7 +287,7 @@ describe("de duplication- test", function () {
         });
 
 
-        deDuplication.only("Get the Audit Log for Inactive Patient data by hid", function (done) {
+        deDuplication("Get the Audit Log for Inactive Patient data by hid", function (done) {
 
             request((patientRequestMciApprover).makePatientInactive(inActiveHid, activeHid), function (err, res, body) {
                 console.log(body);
