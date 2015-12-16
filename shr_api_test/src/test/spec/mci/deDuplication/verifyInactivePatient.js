@@ -8,7 +8,7 @@ var CatchmentRequest = require('../../../../../src/request/catchment').Catchment
 var PatientRequest = require('../../../../../src/request/patient').PatientRequest;
 
 
-describe.skip("de duplication- test", function () {
+describe.only("de duplication- test", function () {
     var userFacility = new User('facility');
     var userMciAdmin = new User('mciAdmin');
     var userMciApprover = new User('mci_approver');
@@ -44,8 +44,6 @@ describe.skip("de duplication- test", function () {
         var patientRequestMciAdmin;
         var patientRequestMciApprover;
 
-
-
         before(function (done) {
             patientRequestFacility = new PatientRequest(userFacility);
             patientRequestMciAdmin = new PatientRequest(userMciAdmin);
@@ -54,12 +52,11 @@ describe.skip("de duplication- test", function () {
         });
         beforeEach(function (done) {
             request(new PatientRequest(userFacility, new Patient()).post(), function (err, res, body) {
-                //console.log(body);
+                console.log(body);
                 activeHid = body.id;
                 console.log(activeHid);
                 request(new PatientRequest(userFacility, new Patient()).post(), function (err, res, body) {
-                    //  console.log(body);
-
+                    console.log(body);
                     inActiveHid = body.id;
                     console.log(inActiveHid);
                     done();
@@ -72,8 +69,6 @@ describe.skip("de duplication- test", function () {
 
         deDuplication("Mark the Patient Inactive & merge with other patient", function (done) {
 
-
-
             request((patientRequestMciApprover).makePatientInactive(inActiveHid, activeHid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(202);
@@ -82,9 +77,6 @@ describe.skip("de duplication- test", function () {
         });
 
         deDuplication("Mark the Patient Inactive & do not merge with any patient", function (done) {
-
-
-
             request((patientRequestMciApprover).makePatientInactive(inActiveHid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(202);
@@ -149,7 +141,7 @@ describe.skip("de duplication- test", function () {
 
                 request(patientRequestMciAdmin.updateUsingPut(inActiveHid), function (err, res, body) {
                     console.log(body);
-                    expect(res.statusCode).to.equal(403);
+                    expect(res.statusCode).to.equal(400);
                     expect(body.message).to.equal("Cannot update inactive patient, already merged with " + activeHid);
 
                     done();
@@ -167,7 +159,7 @@ describe.skip("de duplication- test", function () {
                 expect(res.statusCode).to.equal(202);
                 request(patientRequestMciAdmin.updateUsingPut(inActiveHid), function (err, res, body) {
                     console.log(body);
-                    expect(res.statusCode).to.equal(403);
+                    expect(res.statusCode).to.equal(400);
                     expect(body.message).to.equal("Cannot update inactive patient");
 
                     done();
@@ -176,6 +168,8 @@ describe.skip("de duplication- test", function () {
                 });
             });
         });
+
+        //This scenario should be treated as bad request and not forbidden. status check should be 400 and not 403
         deDuplication("Should not be able to merge with his own patient hid", function (done) {
 
 
@@ -221,8 +215,6 @@ describe.skip("de duplication- test", function () {
 
         deDuplication("Active Patient should not be merge with inactive patient", function (done) {
 
-
-
             request((patientRequestMciApprover).makePatientInactive(inActiveHid, activeHid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(202);
@@ -249,7 +241,7 @@ describe.skip("de duplication- test", function () {
                     expect(res.statusCode).to.equal(202);
                     request(patientRequestMciAdmin.updateActiveFieldUsingPut(inActiveHid), function (err, res, body) {
                         console.log(body);
-                        expect(res.statusCode).to.equal(403);
+                        expect(res.statusCode).to.equal(400);
                         expect(body.message).to.equal("Cannot update active field or merge with other patient");
 
                         done();
@@ -295,7 +287,7 @@ describe.skip("de duplication- test", function () {
         });
 
 
-        deDuplication.skip("Get the Audit Log for Inactive Patient data by hid", function (done) {
+        deDuplication.only("Get the Audit Log for Inactive Patient data by hid", function (done) {
 
             request((patientRequestMciApprover).makePatientInactive(inActiveHid, activeHid), function (err, res, body) {
                 console.log(body);
@@ -307,8 +299,9 @@ describe.skip("de duplication- test", function () {
                     expect(JSON.parse(body).active).to.be.false;
                     expect(JSON.parse(body).merged_with).to.equal(activeHid);
 
-                    request(patientRequestMciAdmin.getAuditLogsByHid("98446739735"), function (err, res, body) {
-                      console.log(JSON.parse(body).updates[0].change_set.active);
+                    request(patientRequestMciAdmin.getAuditLogsByHid(inActiveHid), function (err, res, body) {
+                        console.log(body);
+                        console.log(JSON.parse(body).updates[0].change_set.active);
                       expect(res.statusCode).to.equal(200);
 //                      expect(JSON.parse(body).hid).to.equal(inActiveHid);
 //                      expect(JSON.parse(body).active).to.be.false;
