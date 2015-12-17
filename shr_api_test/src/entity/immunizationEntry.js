@@ -15,7 +15,7 @@ exports.ImmunizationEntry = function ImmunizationEntry(root,detail, drug, encoun
     var encounter_reference = encounter_reference;
     var addContent = function()
     {
-        var fullUrl = subelement(entry,"fullurl");
+        var fullUrl = subelement(entry,"fullUrl");
         fullUrl.set("value","urn:uuid:" + uid);
         var resource = subelement(entry, "resource");
         //resource.set("type", "text/xml");
@@ -56,10 +56,10 @@ exports.ImmunizationEntry = function ImmunizationEntry(root,detail, drug, encoun
     var sectionForComposition = function(parent)
     {
         var section = subelement(parent, "section");
-        var content = subelement(section, "content");
-        var reference = subelement(content, "reference");
-        reference.set("value","urn:" + uid );
-        var display = subelement(content, "display");
+        var entry = subelement(section, "entry");
+        var reference = subelement(entry, "reference");
+        reference.set("value","urn:uuid:" + uid );
+        var display = subelement(entry, "display");
         display.set("value", "Immunization");
         return section;
     }

@@ -24,7 +24,7 @@ exports.CompositionEntry = function CompositionEntry(root, isConfidential,encoun
         composition.set("xmlns", detail.clinical_standard);
         var identifier = subelement(composition, "identifier");
         var identifierValue = subelement(identifier, "value");
-        identifierValue.set("value", "urn:" + uid);
+        identifierValue.set("value", "urn:uuid:" + uid);
 
 
         var compositionType = subelement(composition, "type");

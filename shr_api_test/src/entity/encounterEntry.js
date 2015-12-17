@@ -26,7 +26,7 @@ exports.EncounterEntry = function EncounterEntry(root, detail)
         encounter.set("xmlns", detail.clinical_standard);
         var identifier = subelement(encounter, "identifier");
         var identifierValue = subelement(identifier, "value");
-        identifierValue.set("value", "urn:" + uid);
+        identifierValue.set("value", "urn:uuid:" + uid);
         var status = subelement(encounter, "status");
         status.set("value", "finished");
         var encounterClass = subelement(encounter, "class");
@@ -52,7 +52,7 @@ exports.EncounterEntry = function EncounterEntry(root, detail)
     {
         var encounterSection = subelement(composition, "encounter");
         var encounterReference = subelement(encounterSection, "reference");
-        encounterReference.set("value", "urn:" + uid);
+        encounterReference.set("value", "urn:uuid:" + uid);
         //var encounterDisplay = subelement(encounterSection, "display");
         //encounterDisplay.set("value", "Encounter");
 
@@ -63,7 +63,7 @@ exports.EncounterEntry = function EncounterEntry(root, detail)
         var section = subelement(parent, "section");
         var entry = subelement(section, "entry");
         var reference = subelement(entry, "reference");
-        reference.set("value","urn:" + uid );
+        reference.set("value","urn:uuid:" + uid );
         var display = subelement(entry, "display");
         display.set("value", "Encounter");
     };

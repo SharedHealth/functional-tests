@@ -30,7 +30,7 @@ exports.Feed = function Bundle(detail, confidentiality)
         //var title = subelement(root, "title");
         //title.text = "Encounter";
         var id = subelement(root, "id");
-        id.set("value","urn:" + uid);
+        id.set("value",  uid);
         var meta = subelement(root, "meta");
         var lastUpdated = subelement(meta, "lastUpdated");
         lastUpdated.set("value", isoDateTime);
