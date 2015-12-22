@@ -35,6 +35,9 @@ var PatientRequest = function(user_detail, patient_detail){
         return EntityRequest({uri : uri + "/patients/" + hid.toString(), body : {'gender': 'F'}, headers : headers(), isJSON:true}).put()
     };
 
+    var updateUsingPutWithGivenValues = function(hid, givenValue){
+        return EntityRequest({uri : uri + "/patients/" + hid.toString(), body : givenValue, headers : headers(), isJSON:true}).put()
+    };
 
     var multipleUpdateUsingPut = function (hid) {
         return EntityRequest({uri : uri + "/patients/" + hid, body : {"occupation" :  "04" , 'given_name': 'updatedFirstName'}, headers : headers(), isJSON:true}).put()
@@ -135,7 +138,8 @@ var PatientRequest = function(user_detail, patient_detail){
         getAuditLogsByHid : getAuditLogsByHid,
         getUpdateFeedForSHR : getUpdateFeedForSHR,
         getLocationDetails : getLocationDetails,
-        getPatientDetailsByNameLocation : getPatientDetailsByNameLocation
+        getPatientDetailsByNameLocation : getPatientDetailsByNameLocation,
+        updateUsingPutWithGivenValues : updateUsingPutWithGivenValues
     }
 };
 

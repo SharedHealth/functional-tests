@@ -14,11 +14,9 @@ exports.EncounterEntry = function EncounterEntry(root, detail)
     {
         var fullURL = subelement(entry,"fullUrl");
         fullURL.set("value", "urn:uuid:" + uid);
-
-
         addContent();
-
     };
+
     var addContent = function()
     {
         var resource = subelement(entry,"resource");
@@ -46,16 +44,13 @@ exports.EncounterEntry = function EncounterEntry(root, detail)
         var serviceProvider = subelement(encounter, "serviceProvider");
         var serviceProviderReference = subelement(serviceProvider, "reference");
         serviceProviderReference.set("value", detail.facility_uri);
-    }
+    };
 
     var encounterReference = function(composition)
     {
         var encounterSection = subelement(composition, "encounter");
         var encounterReference = subelement(encounterSection, "reference");
         encounterReference.set("value", "urn:uuid:" + uid);
-        //var encounterDisplay = subelement(encounterSection, "display");
-        //encounterDisplay.set("value", "Encounter");
-
     };
 
     var sectionForComposition = function(parent)

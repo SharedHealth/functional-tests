@@ -2,11 +2,30 @@
  function Patient(confidentiality, divisionId, districtId, upazila_id) {
  	var nid = new Date().getTime().toString();
 	var bin_brn =  nid.concat("0000");
-	var name=Math.ceil(Math.random()*1000000);
-	return {
+	 var getCodedName = function(random_code)
+	 {
+		 return random_code.split("").map(convertToCharIfNumeric).join("");
+	 };
+
+	 var convertToCharIfNumeric = function(char) {
+		 var codeValue = char.charCodeAt(0);
+		 if ( codeValue >= 48 && codeValue <= 57) {
+			 return String.fromCharCode(65 + parseInt(char));
+		 }
+		 else
+		 {	return char;
+		 }
+	 };
+	 var   convertNumericToChar = function(char){
+		 return String.fromCharCode(65 + parseInt(char));
+	 }
+
+	 var name= "AHI " + getCodedName(Math.ceil(Math.random()*1000000).toString());
+
+	 return {
 		"nid" : nid,
 		"bin_brn": bin_brn,
-		"given_name" : "A89 " + name,
+		"given_name" : name,
 		"sur_name" : "ATEST",
 		"date_of_birth" : "2000-03-01",
 		"gender" : "M",

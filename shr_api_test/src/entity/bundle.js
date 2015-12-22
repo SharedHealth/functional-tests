@@ -15,7 +15,7 @@ var DiastolicEntry = require("./vitalsEntry").DiastolicEntry;
 var ImmunizationEntry = require("./immunizationEntry").ImmunizationEntry;
 var DiagnosisEntry = require("./diagnosisEntry").DiagnosisEntry;
 
-exports.Feed = function Bundle(detail, confidentiality)
+exports.Bundle = function Bundle(detail, confidentiality)
 {
     var root = element("Bundle");
     var uid = uuid.v4();
@@ -27,8 +27,6 @@ exports.Feed = function Bundle(detail, confidentiality)
     var initialize = function()
     {
         root.set("xmlns", "http://hl7.org/fhir");
-        //var title = subelement(root, "title");
-        //title.text = "Encounter";
         var id = subelement(root, "id");
         id.set("value",  uid);
         var meta = subelement(root, "meta");

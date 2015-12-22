@@ -18,15 +18,17 @@ var EncounterRequest = function (hid, user_detail, payload) {
             "client_id": user_detail.client_id
         }
     };
-
+    var isEncounterId = function(){
+        (encounter_id != "") ? true : false;
+    };
     var post = function()
     {
         return  EntityRequest({'uri' : url + "/patients/" + hid + "/encounters" , headers : headers(), 'body': encounter_payload.details, isJSON : false }).post();
     };
 
-    var get = function()
+    var get = function(encounter_id)
     {
-        return  EntityRequest({'uri' : url + "/patients/" + hid + "/encounters" , headers : headers() }).get();
+        return  (encounter_id != undefined) ? EntityRequest({'uri' : url + "/patients/" + hid + "/encounters/" + encounter_id , headers : headers() }).get() : EntityRequest({'uri' : url + "/patients/" + hid + "/encounters" , headers : headers() }).get();
     }
 
     var put = function(encounterId)
@@ -52,3 +54,6 @@ var EncounterRequest = function (hid, user_detail, payload) {
 };
 
 exports.EncounterRequest = EncounterRequest;
+
+
+

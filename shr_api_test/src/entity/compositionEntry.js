@@ -42,16 +42,8 @@ exports.CompositionEntry = function CompositionEntry(root, isConfidential,encoun
         date.set("value", isoDateTime);
         var status = subelement(composition, "status");
         status.set("value", "final");
-        //<confidentiality value=\"N\"/>
         var confidentiality = subelement(composition, "confidentiality");
         if (isConfidential == 'Yes') {
-
-            //var system = subelement(confidentiality, "system");
-            //system.set("value", detail.clinical_standard + "/v3/Confidentiality");
-            //var code = subelement(confidentiality, "code");
-            //code.set("value", "V");
-            //var confidentialityDisplay = subelement(confidentiality, "display");
-            //confidentialityDisplay.set("value", "very restricted");
             confidentiality.set("value", "V");
         }
         else

@@ -146,7 +146,7 @@ describe("MCI Admin User", function () {
         });
 
         mci_admin_user("Should be able to update the patient", function (done) {
-            request(patientRequest.updateUsingPut(hid), function (err, res, body) {
+            request(patientRequest.updateUsingPutWithGivenValues(hid, {'gender': 'F'}), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(202);
                 done();

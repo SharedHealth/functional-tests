@@ -13,19 +13,16 @@ exports.ImmunizationEntry = function ImmunizationEntry(root,detail, drug, encoun
     var drug = drug;
     var detail = detail;
     var encounter_reference = encounter_reference;
-    var addContent = function()
+    var get = function()
     {
         var fullUrl = subelement(entry,"fullUrl");
         fullUrl.set("value","urn:uuid:" + uid);
         var resource = subelement(entry, "resource");
-        //resource.set("type", "text/xml");
         var immunization = subelement(resource, "Immunization");
         immunization.set("xmlns", detail.clinical_standard);
         var identifier = subelement(immunization, "identifier");
         var immunizationValue = subelement(identifier, "value");
         immunizationValue.set("value", "urn:uuid:" + uid);
-        //var date = subelement(immunization, "date");
-        //date.set("value", isoDateTime);
         var immunizationStatus = subelement(immunization, "status");
         immunizationStatus.set("value", "completed");
         var vaccineType = subelement(immunization, "vaccineCode");
@@ -62,22 +59,9 @@ exports.ImmunizationEntry = function ImmunizationEntry(root,detail, drug, encoun
         var display = subelement(entry, "display");
         display.set("value", "Immunization");
         return section;
-    }
-
-    var withDrug = function(drug)
-    {
-        drug = drug;
-    }
-
-    var get = function()
-    {
-        addContent();
-
     };
-
     return {
         get : get,
-        getSection : sectionForComposition,
-        withDrug : drug
+        getSection : sectionForComposition
     };
 };

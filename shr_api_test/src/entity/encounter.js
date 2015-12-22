@@ -3,7 +3,7 @@ var config = require('./../Config').config;
 var Concept = require('./concept').ConceptDrug;
 var ConceptDrug = require('./concept').ConceptDrug;
 
-var Feed = require('./bundle').Feed;
+var Bundle = require('./bundle').Bundle;
 var pd = require("pretty-data").pd;
 
 function EncounterConfig(hid) {
@@ -14,15 +14,6 @@ function EncounterConfig(hid) {
 		patient_uri: config.patient_uri + hid,
 		facility_uri: config.facility_uri + "10000069.json",
 		entry : {
-	//	<vaccineCode>
-	//	<coding>
-	//	<system value=\"http://trstg.twhosted.com/openmrs/ws/rest/v1/tr/drugs/d2e2d3d2-878d-11e5-95dd-005056b0145c\"/>
-	//<code value=\"d2e2d3d2-878d-11e5-95dd-005056b0145c\"/>
-	//<display value=\"BCG\"/>
-	//</coding>
-	//</vaccineCode>
-	//	concept_uri	http://172.18.46.56:9080/openmrs/ws/rest/v1/tr/
-			//name, concept_code,concept_code_value, reference_code, reference_code_value, base_uri, type
 			"BCG" : new ConceptDrug("BCG", "e90ee3ac-83b0-11e5-aa01-0050568276cf", config.concept_uri),
 			"Temperature" : new Concept("Temperature", "a1257651-7473-4c9b-bb0a-1244c5f3c09d", config.concept_uri, "concepts"),
 			"Pulse" : new Concept("Pulse", "22a952b6-cc36-45e8-8b52-ff5a90fa7c4f", config.concept_uri, "concepts"),
@@ -76,7 +67,6 @@ function EncounterConfig(hid) {
 		patient_uri: config.patient_uri + hid,
 		facility_uri: config.facility_uri + "10019842.json",
 		entry : {
-			//name, concept_code,concept_code_value, reference_code, reference_code_value, base_uri, type
 			"Pulse": new Concept("Pulse", "20195aec-1a76-11e5-b5a9-00505682700b","20195aec-1a76-11e5-b5a9-00505682700b", "201adc08-1a76-11e5-b5a9-00505682700b", "78564009", config.concept_uri, "concepts"),
 			"Temperature" : new Concept("Temperature", "2017b7c5-1a76-11e5-b5a9-00505682700b","2017b7c5-1a76-11e5-b5a9-00505682700b","20183c53-1a76-11e5-b5a9-00505682700b", "386725007" ,config.concept_uri, "concepts"),
 			"Systolic blood pressure" : new Concept("Systolic blood pressure", "200f2911-1a76-11e5-b5a9-00505682700b","200f2911-1a76-11e5-b5a9-00505682700b","201435f6-1a76-11e5-b5a9-00505682700b", "271649006" ,config.concept_uri, "concepts"),
@@ -101,7 +91,7 @@ exports.DefaultEncounterFeed = function(hid, isConfidential) {
 	var encounter_payload = "";
 	var confidentiality = isConfidential || 'No';
 		var details = new EncounterConfig(hid);
-		var feed = new Feed(details, confidentiality);
+		var feed = new Bundle(details, confidentiality);
 		feed.withImmunizationEntry("BCG");
 		encounter_payload = feed.get();
 	return {
@@ -115,7 +105,7 @@ exports.EncounterFeed = function(hid, isConfidential) {
 	var feed_detatails = "";
 	var confidentiality = isConfidential || 'No';
 	var config = new EncounterConfig(hid);
-	var feed = new Feed(config, confidentiality);
+	var feed = new Bundle(config, confidentiality);
 
 	var withDiagnosisDetails = function (diagnosis)
 	{
