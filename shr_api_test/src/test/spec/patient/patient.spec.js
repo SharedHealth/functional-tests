@@ -46,7 +46,7 @@ describe("Patient", function () {
         });
     });
 
-    it.only("Should update an existing patient on all fields match", function (done) {
+    it("Should update an existing patient on all fields match", function (done) {
         var updatable_patient = JSON.parse(fs.readFileSync(__dirname + "/../../../data/updatable_patient.json", "utf8"));
         console.log(updatable_patient);
         request(new PatientRequest(facility_user, updatable_patient.details).post(), function (err, res, body) {
