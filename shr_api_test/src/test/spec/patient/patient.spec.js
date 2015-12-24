@@ -24,8 +24,7 @@ describe("Patient", function () {
         var patient = new Patient();
         request(new PatientRequest(facility_user, patient).post(), function (err, res, body) {
             console.log(body);
-            expect(JSON.parse(body).http_status).to.equal(201);
-
+            expect(body.http_status).to.equal(201);
             done();
         });
     });
