@@ -17,4 +17,7 @@ sandbox:
 local:
 	@cd src; ENVIRONMENT=LOCAL mocha
 
-.PHONY: test showcase staging sandbox local
+datasetup:
+	@cd src/utility; ENVIRONMENT=${ENVIRONMENT} node data_setup.js
+
+.PHONY: test showcase staging sandbox local datasetup
