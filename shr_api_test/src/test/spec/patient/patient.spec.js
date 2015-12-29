@@ -7,7 +7,7 @@ var SSORequest = require('../../../../src/request/sso').SSORequest;
 var CatchmentRequest = require('../../../../src/request/catchment').CatchmentRequest;
 var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 var fs = require("fs");
-describe.only("Patient Creation And Updatation", function () {
+describe("Patient Creation And Updatation", function () {
 
     var facility_user = new User('facility');
     var patient_list = null;
