@@ -7,15 +7,6 @@ var async = require('async');
 var fs = require('fs');
 
 function SuiteDataSetup() {
-    //The below patient creation doesn't create unique patients because of execution speed of code. They create patients with same nid, uid, binbrn
-    //var patient_with_duplicate_details = { details: new Patient(), hid: null};
-    //var patient_for_common_uid = {details: new Patient(), hid: null};
-    //var patient_for_common_nid =  {details: new Patient(), hid: null};
-    //var patient_for_common_binbrn =  {details: new Patient(), hid: null};
-    //var patient_for_common_uid_and_nid =  {details: new Patient(), hid: null};
-    //var patient_for_common_uid_and_binbrn =  {details: new Patient(), hid: null};
-    //var patient_for_common_uid_nid_and_binbrn =  {details: new Patient(), hid: null};
-    //var patient_for_common_nid_and_binbrn =  {details: new Patient(), hid: null};
     var patient_list = {};
     var facility_user = new User("facility");
 
