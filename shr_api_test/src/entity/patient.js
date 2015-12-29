@@ -59,8 +59,13 @@ exports.PatientWithDifferentCatchment = function(confidentiality) {
 	var patient = new Patient(confidentiality || "No", "30", "33", "34");
 	return patient;
 }
-exports.PatientWithHouseHold = function(confidentiality)
-{
+
+exports.PatientWithUID = function(confidentiality){
+	var patient = new Patient(confidentiality);
+	patient.uid = new Date().getTime().toString(16);
+	return patient;
+}
+exports.PatientWithHouseHold = function(confidentiality) {
 	var patient = new Patient(confidentiality);
 	patient.uid = "9".concat(patient.nid.toString().substring(3));
 	patient.household_code = "9".concat(patient.nid.toString().substring(6));

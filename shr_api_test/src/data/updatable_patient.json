@@ -1,1 +1,242 @@
-{"details":{"nid":"1450958287587","bin_brn":"14509582875870000","given_name":"AHI HIFEJB","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"Test","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No"},"hid":"98001002073"}
+{
+  "duplicate": {
+    "details": {
+      "nid": "1451369460419",
+      "bin_brn": "14513694604190000",
+      "given_name": "AHI HADGII",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "Test",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "151ec5c72c3"
+    },
+    "hid": "98000153323"
+  },
+  "common_uid": {
+    "details": {
+      "nid": "1451369460853",
+      "bin_brn": "14513694608530000",
+      "given_name": "AHI JHBCIJ",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "Test",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "151ec5c7475"
+    },
+    "hid": "98000161284"
+  },
+  "common_nid": {
+    "details": {
+      "nid": "1451369461277",
+      "bin_brn": "14513694612770000",
+      "given_name": "AHI GHBJGJ",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "Test",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "151ec5c761d"
+    },
+    "hid": "98000145352"
+  },
+  "common_binbrn": {
+    "details": {
+      "nid": "1451369461673",
+      "bin_brn": "14513694616730000",
+      "given_name": "AHI FJGDCB",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "Test",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "151ec5c77a9"
+    },
+    "hid": "98000175227"
+  },
+  "common_uid_and_nid": {
+    "details": {
+      "nid": "1451369462069",
+      "bin_brn": "14513694620690000",
+      "given_name": "AHI HJHDJG",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "Test",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "151ec5c7935"
+    },
+    "hid": "98000145642"
+  },
+  "common_nid_and_binbrn": {
+    "details": {
+      "nid": "1451369462551",
+      "bin_brn": "14513694625510000",
+      "given_name": "AHI DEDHFI",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "Test",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "151ec5c7b17"
+    },
+    "hid": "98000109473"
+  },
+  "common_uid_and_binbrn": {
+    "details": {
+      "nid": "1451369463010",
+      "bin_brn": "14513694630100000",
+      "given_name": "AHI IJFHFB",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "Test",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "151ec5c7ce2"
+    },
+    "hid": "98000171358"
+  },
+  "common_uid_nid_and_binbrn": {
+    "details": {
+      "nid": "1451369463394",
+      "bin_brn": "14513694633940000",
+      "given_name": "AHI CAEEAC",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "Test",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "151ec5c7e62"
+    },
+    "hid": "98000172091"
+  }
+}
