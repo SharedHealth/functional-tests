@@ -32,7 +32,7 @@ var getFormattedDate = function()
 
 function xml_verify()
 {
-    var xml = builder.create("feed", { "xmlns" : 'http://www.w3.org/2005/Atom'})
+    var xml = builder.setupData("feed", { "xmlns" : 'http://www.w3.org/2005/Atom'})
         .ele("title","Encounter")
         .up()
 
@@ -75,7 +75,7 @@ function xml_verify()
 
 function Square()
 {
-    var root = builder.create("square");
+    var root = builder.setupData("square");
     builder.com("Given below are the square numbers")
     for(var i = 1; i < 10; i++){
         var item= root.ele('data');

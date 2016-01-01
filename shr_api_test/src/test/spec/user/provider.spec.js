@@ -10,9 +10,9 @@ var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 describe("Provider User", function () {
 
     var user = new User('provider');
-    var hid = "";
-    var confidential_patient_hid = "";
     var provider_user = it;
+    var non_confidential_patient = null;
+    var confidential_patient = null;
 
     before(function (done) {
         request(new SSORequest(user).post(), function (err, httpResponse, body) {
@@ -23,12 +23,14 @@ describe("Provider User", function () {
     });
 
     beforeEach(function (done) {
-        request(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
+        non_confidential_patient = new Patient();
+        request(new PatientRequest(user, non_confidential_patient.details).post(), function (err, res, body) {
             console.log(body);
-            hid = body.id;
-            request(new PatientRequest(user, new Patient("Yes")).post(), function (err, res, body) {
+            non_confidential_patient.hid = body.id;
+            confidential_patient = new Patient("Yes");
+            request(new PatientRequest(user, confidential_patient.details).post(), function (err, res, body) {
                 console.log(body);
-                confidential_patient_hid = body.id;
+                confidential_patient.hid = body.id;
                 done();
             });
         });
@@ -36,8 +38,8 @@ describe("Provider User", function () {
     });
 
     afterEach(function (done) {
-        hid = "";
-        confidential_patient_hid = "";
+        confidential_patient = null;
+        non_confidential_patient = null;
         done();
     });
 
@@ -46,8 +48,8 @@ describe("Provider User", function () {
         var non_confidential_encounter_request;
 
         beforeEach(function (done) {
-            confidential_encounter_request = new EncounterRequest(hid, user, new Encounter(hid, "Yes"));
-            non_confidential_encounter_request = new EncounterRequest(hid, user, new Encounter(hid));
+            confidential_encounter_request = new EncounterRequest(non_confidential_patient.hid, user, new Encounter(non_confidential_patient.hid, "Yes"));
+            non_confidential_encounter_request = new EncounterRequest(non_confidential_patient.hid, user, new Encounter(non_confidential_patient.hid));
             request(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                 console.log(post_body);
                 expect(post_res.statusCode).to.equal(200);
@@ -85,8 +87,8 @@ describe("Provider User", function () {
             var non_confidential_encounter_request;
 
             beforeEach(function (done) {
-                confidential_encounter_request = new EncounterRequest(confidential_patient_hid, user, new Encounter(confidential_patient_hid, "Yes"));
-                non_confidential_encounter_request = new EncounterRequest(confidential_patient_hid, user, new Encounter(confidential_patient_hid));
+                confidential_encounter_request = new EncounterRequest(confidential_patient.hid, user, new Encounter(confidential_patient.hid, "Yes"));
+                non_confidential_encounter_request = new EncounterRequest(confidential_patient.hid, user, new Encounter(confidential_patient.hid));
                 request(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                     console.log(post_body);
                     expect(post_res.statusCode).to.equal(200);
@@ -105,7 +107,7 @@ describe("Provider User", function () {
                     expect(get_res.statusCode).to.equal(403);
                     expect(Number(JSON.parse(res_body).httpStatus)).to.equal(403);
                     // Access for patient 11302580553 data for user 18556 is denied
-                    expect(JSON.parse(res_body).message).to.equal("Access is denied to user " + user.client_id + " for patient " + confidential_patient_hid);
+                    expect(JSON.parse(res_body).message).to.equal("Access is denied to user " + user.client_id + " for patient " + confidential_patient.hid);
                     done();
                 });
             });

@@ -7,8 +7,6 @@ var SSORequest = require('../../../../../src/request/sso').SSORequest;
 var CatchmentRequest = require('../../../../../src/request/catchment').CatchmentRequest;
 var PatientRequest = require('../../../../../src/request/patient').PatientRequest;
 
-
-
 describe("Audit test", function () {
     var userProvider = new User('provider');
     var userFacility = new User('facility');
@@ -16,11 +14,11 @@ describe("Audit test", function () {
     var userMciApprover = new User('mci_approver');
     var userDatasense = new User('datasense');
     var userShr = new User('shr');
-    var hid = "";
-    var nid = ""
+    var nid = "";
     var binBrn = "";
     var houseHoldCode = "";
-    var confidential_patient_hid = "";
+    var non_confidential_patient = null;
+
 
     before(function (done) {
         request(new SSORequest(userFacility).post(), function (err, httpResponse, body) {
@@ -40,11 +38,10 @@ describe("Audit test", function () {
 
 
     after(function (done) {
-        hid = "";
+        non_confidential_patient = null;
         nid = "";
         binBrn = "";
         houseHoldCode = "";
-        confidential_patient_hid = "";
         done();
     });
 
@@ -67,24 +64,22 @@ describe("Audit test", function () {
             done();
         });
         beforeEach(function (done) {
-            request(new PatientRequest(userFacility, new Patient()).post(), function (err, res, body) {
-                hid = body.id;
-                console.log(hid);
+            non_confidential_patient = new Patient();
+            request(new PatientRequest(userFacility, non_confidential_patient.details).post(), function (err, res, body) {
+                non_confidential_patient.hid = body.id;
+                console.log(non_confidential_patient.hid);
                 done();
             });
         });
 
-
         it("Update patient same field multiple times by facility,provider and admin and then accept it", function (done) {
-
-
-            request((patientRequestFacility).updateUsingPut(hid), function (err, res, body) {
+            request((patientRequestFacility).updateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(202);
-                    request((patientRequestProvider).updateUsingPut(hid), function (err, res, body) {
+                    request((patientRequestProvider).updateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                         expect(res.statusCode).to.equal(202);
-                            request((patientRequestMciAdmin).updateUsingPut(hid), function (err, res, body) {
+                            request((patientRequestMciAdmin).updateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                                 expect(res.statusCode).to.equal(202);
-                                    request(patientRequestMciApprover.acceptRequest("3026", hid), function (err, res, body) {
+                                    request(patientRequestMciApprover.acceptRequest("3026", non_confidential_patient.hid), function (err, res, body) {
                                         expect(res.statusCode).to.equal(202);
                                         done();
                                     });
@@ -96,9 +91,9 @@ describe("Audit test", function () {
         it("Update patient field by facility and accept it", function (done) {
 
 
-            request((patientRequestFacility).updateUsingPut(hid), function (err, res, body) {
-                expect(res.statusCode).to.equal(202);;
-                    request(patientRequestMciApprover.acceptRequest(userMciApprover.catchment, hid), function (err, res, body) {
+            request((patientRequestFacility).updateUsingPut(non_confidential_patient.hid), function (err, res, body) {
+                expect(res.statusCode).to.equal(202);
+                    request(patientRequestMciApprover.acceptRequest(userMciApprover.catchment, non_confidential_patient.hid), function (err, res, body) {
                         expect(res.statusCode).to.equal(202);
                         done();
                     });
@@ -108,20 +103,20 @@ describe("Audit test", function () {
         it("Update patient field by provider and accept it", function (done) {
 
 
-            request((patientRequestProvider).updateUsingPut(hid), function (err, res, body) {
+            request((patientRequestProvider).updateUsingPut(non_confidential_patient.hid), function (err, res, body) {
             console.log(body);
                 expect(res.statusCode).to.equal(202);
-                    request(patientRequestMciApprover.acceptRequest(userMciApprover.catchment, hid), function (err, res, body) {
+                    request(patientRequestMciApprover.acceptRequest(userMciApprover.catchment, non_confidential_patient.hid), function (err, res, body) {
                         expect(res.statusCode).to.equal(202);
                         console.log(body);
                         done();
-                    });;
+                    });
             });
         });
         it("Update patient field by Mci Admin and accept it", function (done) {
 
 
-            request((patientRequestMciAdmin).updateUsingPut(hid), function (err, res, body) {
+            request((patientRequestMciAdmin).updateUsingPut(non_confidential_patient.hid), function (err, res, body) {
 
                 expect(res.statusCode).to.equal(202);
                         done();
@@ -132,10 +127,10 @@ describe("Audit test", function () {
         it("Update multiple field of patient by facility and accept it", function (done) {
 
 
-            request((patientRequestFacility).multipleUpdateUsingPut(hid), function (err, res, body) {
+            request((patientRequestFacility).multipleUpdateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(202);
-                    request(patientRequestMciApprover.multipleRequestAccept(userMciApprover.catchment, hid), function (err, res, body) {
+                    request(patientRequestMciApprover.multipleRequestAccept(userMciApprover.catchment, non_confidential_patient.hid), function (err, res, body) {
                         expect(res.statusCode).to.equal(202);
                         done();
                     });
@@ -145,9 +140,9 @@ describe("Audit test", function () {
         it("Update multiple field of patient by Provider and accept it", function (done) {
 
 
-            request((patientRequestProvider).multipleUpdateUsingPut(hid), function (err, res, body) {
+            request((patientRequestProvider).multipleUpdateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(202);
-                    request(patientRequestMciApprover.multipleRequestAccept(userMciApprover.catchment, hid), function (err, res, body) {
+                    request(patientRequestMciApprover.multipleRequestAccept(userMciApprover.catchment, non_confidential_patient.hid), function (err, res, body) {
                         expect(res.statusCode).to.equal(202);
                         done();
                     });
@@ -157,7 +152,7 @@ describe("Audit test", function () {
         it("Update multiple field of patient by Admin and accept it", function (done) {
 
 
-            request((patientRequestMciAdmin).multipleUpdateUsingPut(hid), function (err, res, body) {
+            request((patientRequestMciAdmin).multipleUpdateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                 expect(res.statusCode).to.equal(202);
                         done();
 
@@ -167,18 +162,18 @@ describe("Audit test", function () {
         it("Update patient multiple field multiple times by facility,provider and admin and then accept it", function (done) {
 
 
-            request((patientRequestFacility).multipleUpdateUsingPut(hid), function (err, res, body) {
+            request((patientRequestFacility).multipleUpdateUsingPut(non_confidential_patient.hid), function (err, res, body) {
 
             console.log(body);
 
                 expect(res.statusCode).to.equal(202);
-                    request((patientRequestProvider).multipleUpdateUsingPut(hid), function (err, res, body) {
+                    request((patientRequestProvider).multipleUpdateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                     console.log(body);
                         expect(res.statusCode).to.equal(202);
-                            request((patientRequestMciAdmin).multipleUpdateUsingPut(hid), function (err, res, body) {
+                            request((patientRequestMciAdmin).multipleUpdateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                             console.log(body);
                                 expect(res.statusCode).to.equal(202);
-                                    request(patientRequestMciApprover.multipleRequestAccept(userMciApprover.catchment, hid), function (err, res, body) {
+                                    request(patientRequestMciApprover.multipleRequestAccept(userMciApprover.catchment, non_confidential_patient.hid), function (err, res, body) {
                                     console.log(body);
                                         expect(res.statusCode).to.equal(202);
 

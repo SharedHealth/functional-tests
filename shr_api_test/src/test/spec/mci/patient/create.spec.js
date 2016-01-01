@@ -1,11 +1,11 @@
 var request = require('request');
-var User = require('../../../../src/data/user');
-var Patient = require('../../../../src/entity/patient').PatientWithUID;
-var Encounter = require('../../../../src/entity/encounter').DefaultEncounterFeed;
-var EncounterRequest = require('../../../../src/request/encounter').EncounterRequest;
-var SSORequest = require('../../../../src/request/sso').SSORequest;
-var CatchmentRequest = require('../../../../src/request/catchment').CatchmentRequest;
-var PatientRequest = require('../../../../src/request/patient').PatientRequest;
+var User = require('./../../../../../src/data/user');
+var Patient = require('./../../../../../src/entity/patient').PatientWithUID;
+var Encounter = require('./../../../../../src/entity/encounter').DefaultEncounterFeed;
+var EncounterRequest = require('./../../../../../src/request/encounter').EncounterRequest;
+var SSORequest = require('./../../../../../src/request/sso').SSORequest;
+var CatchmentRequest = require('./../../../../../src/request/catchment').CatchmentRequest;
+var PatientRequest = require('./../../../../../src/request/patient').PatientRequest;
 var fs = require("fs");
 describe("Patient Creation And Updatation", function () {
 
@@ -13,7 +13,7 @@ describe("Patient Creation And Updatation", function () {
     var patient_list = null;
 
     before(function (done) {
-         patient_list = JSON.parse(fs.readFileSync(__dirname + "/../../../data/updatable_patient.json", "utf8"));
+         patient_list = JSON.parse(fs.readFileSync(__dirname + "/../../../../data/updatable_patient.json", "utf8"));
         request(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
             console.log(body);
             facility_user.access_token = JSON.parse(httpResponse.body).access_token;
@@ -24,7 +24,7 @@ describe("Patient Creation And Updatation", function () {
 
     it("Should create a new non confidential patient", function (done) {
         var patient = new Patient();
-        request(new PatientRequest(facility_user, patient).post(), function (err, res, body) {
+        request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
             console.log(body);
             expect(body.http_status).to.equal(201);
             done();
@@ -32,14 +32,13 @@ describe("Patient Creation And Updatation", function () {
     });
 
     //This test case is failing because cassandra takes time to update the contents.
-    // CAP Theorem - Consistency is sacrificied for performance and avalaibility
+    // CAP Theorem - Consistency is sacrificed for performance and availability
     it.skip("Should update an existing patient", function (done) {
         var patient = new Patient();
-        request(new PatientRequest(facility_user, patient).post(), function (err, res, body) {
+        request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
             console.log(body);
-            //user.access_token = JSON.parse(httpResponse.body).access_token;
             expect(body.http_status).to.equal(201);
-            request(new PatientRequest(facility_user, patient).post(), function (err, res, body) {
+            request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
                 console.log(body);
                 expect(body.http_status).to.equal(202);
                 done();
@@ -62,12 +61,12 @@ describe("Patient Creation And Updatation", function () {
         var patient = new Patient();
         console.log("Already Created Patient is ...");
         console.log(similar_patient);
-        patient.nid = similar_patient.details.nid;
-        patient.bin_brn = similar_patient.details.bin_brn;
-        patient.uid = similar_patient.details.uid;
+        patient.details.nid = similar_patient.details.nid;
+        patient.details.bin_brn = similar_patient.details.bin_brn;
+        patient.details.uid = similar_patient.details.uid;
         console.log("New patient details are ...");
         console.log(patient);
-        request(new PatientRequest(facility_user, patient).post(), function (err, res, body) {
+        request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
             console.log(body);
             expect(body.http_status).to.equal(202);
             expect(body.id).to.equal(similar_patient.hid);
@@ -79,11 +78,11 @@ describe("Patient Creation And Updatation", function () {
         var similar_patient = patient_list["common_nid_and_binbrn"];
         var patient = new Patient();
         console.log(similar_patient);
-        patient.nid = similar_patient.details.nid;
-        patient.bin_brn = similar_patient.details.bin_brn;
-        console.log("New patient details are ...")
+        patient.details.nid = similar_patient.details.nid;
+        patient.details.bin_brn = similar_patient.details.bin_brn;
+        console.log("New patient details are ...");
         console.log(patient);
-        request(new PatientRequest(facility_user, patient).post(), function (err, res, body) {
+        request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
             console.log(body);
             expect(body.http_status).to.equal(202);
             expect(body.id).to.equal(similar_patient.hid);
@@ -96,11 +95,11 @@ describe("Patient Creation And Updatation", function () {
         var patient = new Patient();
         console.log("Already Created Patient is ...");
         console.log(similar_patient);
-        patient.bin_brn = similar_patient.details.bin_brn;
-        patient.uid = similar_patient.details.uid;
+        patient.details.bin_brn = similar_patient.details.bin_brn;
+        patient.details.uid = similar_patient.details.uid;
         console.log("New patient details are ...");
         console.log(patient);
-        request(new PatientRequest(facility_user, patient).post(), function (err, res, body) {
+        request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
             console.log(body);
             expect(body.http_status).to.equal(202);
             expect(body.id).to.equal(similar_patient.hid);
@@ -113,11 +112,11 @@ describe("Patient Creation And Updatation", function () {
         var patient = new Patient();
         console.log("Already Created Patient is ...");
         console.log(similar_patient);
-        patient.bin_brn = similar_patient.details.bin_brn;
-        patient.nid = similar_patient.details.nid;
+        patient.details.bin_brn = similar_patient.details.bin_brn;
+        patient.details.nid = similar_patient.details.nid;
         console.log("New patient details are ...");
         console.log(patient);
-        request(new PatientRequest(facility_user, patient).post(), function (err, res, body) {
+        request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
             console.log(body);
             expect(body.http_status).to.equal(202);
             expect(body.id).to.equal(similar_patient.hid);
@@ -130,10 +129,10 @@ describe("Patient Creation And Updatation", function () {
         var patient = new Patient();
         console.log("Already Created Patient is ...");
         console.log(similar_patient);
-        patient.nid = similar_patient.details.nid;
+        patient.details.nid = similar_patient.details.nid;
         console.log("New patient details are ...");
         console.log(patient);
-        request(new PatientRequest(facility_user, patient).post(), function (err, res, body) {
+        request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
             console.log(body);
             expect(body.http_status).to.equal(201);
             done();
@@ -145,10 +144,10 @@ describe("Patient Creation And Updatation", function () {
         var patient = new Patient();
         console.log("Already Created Patient is ...");
         console.log(similar_patient);
-        patient.uid = similar_patient.details.uid;
+        patient.details.uid = similar_patient.details.uid;
         console.log("New patient details are ...");
         console.log(patient);
-        request(new PatientRequest(facility_user, patient).post(), function (err, res, body) {
+        request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
             console.log(body);
             expect(body.http_status).to.equal(201);
             done();
@@ -158,10 +157,10 @@ describe("Patient Creation And Updatation", function () {
             var patient = new Patient();
             console.log("Already Created Patient is ...");
             console.log(similar_patient);
-            patient.bin_brn = similar_patient.details.bin_brn;
+            patient.details.bin_brn = similar_patient.details.bin_brn;
             console.log("New patient details are ...");
             console.log(patient);
-            request(new PatientRequest(facility_user, patient).post(), function (err, res, body) {
+            request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
                 console.log(body);
                 expect(body.http_status).to.equal(201);
                 done();

@@ -10,8 +10,8 @@ var PatientRequest = require('../../src/request/patient').PatientRequest;
 
 describe("Create User", function () {
     var user = new User('facility');
-    var confidential_patient_hid = "";
-    var non_confidential_patient_hid = "";
+    var confidential_patient = null;
+    var non_confidential_patient = null;
 
 
     before(function (done) {
@@ -23,18 +23,20 @@ describe("Create User", function () {
     });
 
     beforeEach(function (done) {
-        request(PatientRequest(user, new Patient()).post(), function (err, res, body) {
-            non_confidential_patient_hid = body.id;
-            request(new PatientRequest(user, new Patient("Yes")).post(), function (err, res, body) {
-                confidential_patient_hid = body.id;
+        non_confidential_patient = new Patient();
+        request(PatientRequest(user, non_confidential_patient.details).post(), function (err, res, body) {
+            non_confidential_patient.hid = body.id;
+            confidential_patient = new Patient("Yes");
+            request(new PatientRequest(user, confidential_patient.details).post(), function (err, res, body) {
+                confidential_patient.hid = body.id;
                 done();
             });
         });
     });
 
 it.only("should have created patients", function(done) {
-    console.log("non_confidential_patient_hid " + non_confidential_patient_hid);
-    console.log("confidential_patient_hid " + confidential_patient_hid);
+    console.log("non_confidential_patient_hid " + non_confidential_patient.hid);
+    console.log("confidential_patient_hid " + confidential_patient.hid);
     done();
 });
 });

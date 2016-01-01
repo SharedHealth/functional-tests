@@ -9,24 +9,27 @@ var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 
 describe("MCI Admin User", function () {
     var facility_user = new User('facility');
-    var user = new User('mciAdmin')
-    var hid = "";
+    var user = new User('mciAdmin');
     var nid = "";
     var binBrn = "";
     var houseHoldCode="";
-    var confidential_patient_hid = "";
     var mci_admin_user = it;
+    var non_confidential_patient = null;
+
 
     before(function (done) {
         request(new SSORequest(facility_user).post(), function (err, res, body) {
+            console.log(body);
             expect(res.statusCode).to.equal(200);
             facility_user.access_token = JSON.parse(res.body).access_token;
             request(new SSORequest(user).postBy(facility_user), function (err, res, body) {
+                console.log(body);
                 expect(res.statusCode).to.equal(200);
                 user.access_token = JSON.parse(res.body).access_token;
-                request(new PatientRequest(facility_user, new Patient()).post(), function (err, res, body) {
+                non_confidential_patient = new Patient();
+                request(new PatientRequest(facility_user, non_confidential_patient.details).post(), function (err, res, body) {
                     expect(res.statusCode).to.equal(201);
-                    hid = body.id;
+                    non_confidential_patient.hid = body.id;
                     done();
                 });
             });
@@ -34,11 +37,10 @@ describe("MCI Admin User", function () {
     });
 
     after(function (done) {
-        hid = "";
         nid = "";
         binBrn = "";
         houseHoldCode="";
-        confidential_patient_hid = "";
+        non_confidential_patient = null;
         done();
     });
 
@@ -52,7 +54,7 @@ describe("MCI Admin User", function () {
 
 
         mci_admin_user("Should not be able to create patient", function (done) {
-            request(new PatientRequest(user, new Patient()).post(), function (err, res, body) {
+            request(new PatientRequest(user, new Patient().details).post(), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(403);
                 expect(body.message).to.equal("Access is denied");
@@ -62,18 +64,18 @@ describe("MCI Admin User", function () {
         });
 
         mci_admin_user("Should be able to view patient By Hid", function (done) {
-            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(200);
-                expect(JSON.parse(body).hid).to.equal(hid);
+                expect(JSON.parse(body).hid).to.equal(non_confidential_patient.hid);
                 done();
             });
         });
 
         mci_admin_user("Should be able to view patient By Nid", function (done) {
-            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
-                nid = JSON.parse(body).nid
+                nid = JSON.parse(body).nid;
                 request(patientRequest.getPatientDetailsByNid(nid), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(200);
@@ -84,9 +86,9 @@ describe("MCI Admin User", function () {
         });
 
         mci_admin_user("Should be able to view patient By BinBrn", function (done) {
-            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
-                binBrn = JSON.parse(body).bin_brn
+                binBrn = JSON.parse(body).bin_brn;
                 request(patientRequest.getPatientDetailsByBinBrn(binBrn), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(200);
@@ -98,14 +100,14 @@ describe("MCI Admin User", function () {
         });
 
         mci_admin_user("Should be able to view patient By houseHoldCode", function (done) {
-            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
-                expect(res.statusCode).to.equal(200)
-                houseHoldCode = JSON.parse(body).household_code
+                expect(res.statusCode).to.equal(200);
+                houseHoldCode = JSON.parse(body).household_code;
                 request(patientRequest.getPatientDetailsHouseHoldCode(houseHoldCode), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(200);
-                    expect(JSON.parse(body).results[0].hid).to.equal(hid);
+                    expect(JSON.parse(body).results[0].hid).to.equal(non_confidential_patient.hid);
                     done();
 
                 });
@@ -119,7 +121,7 @@ describe("MCI Admin User", function () {
             var district_id;
             var upazila_id;
             var address;
-            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 given_name = JSON.parse(body).given_name;
                 sur_name = JSON.parse(body).sur_name;
@@ -130,7 +132,7 @@ describe("MCI Admin User", function () {
             request(patientRequest.getPatientDetailsByNameLocation(given_name,sur_name,address), function (err, res, body) {
                 console.log(body);
                     expect(res.statusCode).to.equal(200);
-                    expect(JSON.parse(body).results[0].hid).to.equal(hid);
+                    expect(JSON.parse(body).results[0].hid).to.equal(non_confidential_patient.hid);
                     done();
 
                 });
@@ -140,13 +142,13 @@ describe("MCI Admin User", function () {
         mci_admin_user("Should not be able to download patients by catchment", function (done) {
            request(patientRequest.getAllPatientsByCatchment("302607"), function (err, res, body) {
                console.log(body);
-                expect(res.statusCode).to.equal(403)
+               expect(res.statusCode).to.equal(403);
                 done();
             });
         });
 
         mci_admin_user("Should be able to update the patient", function (done) {
-            request(patientRequest.updateUsingPutWithGivenValues(hid, {'gender': 'F'}), function (err, res, body) {
+            request(patientRequest.updateUsingPutWithGivenValues(non_confidential_patient.hid, {'gender': 'F'}), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(202);
                 done();
@@ -163,7 +165,7 @@ describe("MCI Admin User", function () {
         });
 
         mci_admin_user("Should not be able to view pending approval details for patient by hid", function (done) {
-            request(patientRequest.getAllPendingApprovalDetailsByHid("3026", hid), function (err, res, body) {
+            request(patientRequest.getAllPendingApprovalDetailsByHid("3026", non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(403);
                 expect(JSON.parse(body).message).to.equal("Access is denied");
@@ -172,9 +174,9 @@ describe("MCI Admin User", function () {
         });
 
         mci_admin_user("Should not be able to accept pending approval for patient", function (done) {
-            request(patientRequest.updateUsingPut(hid), function (err, res, body) {
+            request(patientRequest.updateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
-            request(patientRequest.acceptRequest("302607", hid), function (err, res, body) {
+            request(patientRequest.acceptRequest("302607", non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
             expect(res.statusCode).to.equal(403);
             expect(body.message).to.equal("Access is denied");
@@ -184,9 +186,9 @@ describe("MCI Admin User", function () {
         });
 
         mci_admin_user("Should not be able to reject pending approval for patient", function (done) {
-            request(patientRequest.updateUsingPut(hid), function (err1, res1, body1) {
+            request(patientRequest.updateUsingPut(non_confidential_patient.hid), function (err1, res1, body1) {
                 console.log(body1);
-            request(patientRequest.rejectRequest("302607", hid), function (err, res, body) {
+            request(patientRequest.rejectRequest("302607", non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
             expect(res.statusCode).to.equal(403);
             expect(body.message).to.equal("Access is denied");
@@ -196,14 +198,14 @@ describe("MCI Admin User", function () {
         });
 
         mci_admin_user("Should be able to get the audit log details for the  patients", function (done) {
-            request(patientRequest.getAuditLogsByHid(hid), function (err, res, body) {
+            request(patientRequest.getAuditLogsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
-                expect(res.statusCode).to.equal(200)
+                expect(res.statusCode).to.equal(200);
                 done();
             });
         });
         mci_admin_user("Should be able to get shr feed for the  patients", function (done) {
-            request(patientRequest.getUpdateFeedForSHR(hid), function (err, res, body) {
+            request(patientRequest.getUpdateFeedForSHR(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
             expect(res.statusCode).to.equal(403);
             expect(JSON.parse(body).message).to.equal("Access is denied");
@@ -214,7 +216,7 @@ describe("MCI Admin User", function () {
         mci_admin_user("Should be able to get the location details", function (done) {
             request(patientRequest.getLocationDetails(user.catchment), function (err, res, body) {
                 console.log(body);
-                expect(res.statusCode).to.equal(200)
+                expect(res.statusCode).to.equal(200);
                 done();
             });
         })

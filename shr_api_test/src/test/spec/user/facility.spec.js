@@ -10,9 +10,9 @@ var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 
 describe("Facility User", function () {
     var user = new User('facility');
-    var hid = "";
-    var confidential_patient_hid = "";
     var facility_user = it;
+    var non_confidential_patient = null;
+    var confidential_patient = null;
     
     before(function (done) {
         request(new SSORequest(user).post(), function (err, httpResponse, body) {
@@ -25,22 +25,24 @@ describe("Facility User", function () {
     });
 
     beforeEach(function (done) {
-        request(PatientRequest(user, new Patient()).post(), function (err, res, body) {
+        non_confidential_patient = new Patient();
+        
+        request(PatientRequest(user, non_confidential_patient.details).post(), function (err, res, body) {
             console.log(body);
-            hid = body.id;
-            request(new PatientRequest(user, new Patient("Yes")).post(), function (err, res, body) {
+            non_confidential_patient.hid = body.id;
+            confidential_patient = new Patient("Yes");
+            request(new PatientRequest(user, confidential_patient.details).post(), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(201);
-                confidential_patient_hid = body.id;
+                confidential_patient.hid = body.id;
                 done();
             });
         });
     });
 
     afterEach(function () {
-        hid = "";
-        confidential_patient_hid = "";
-
+        non_confidential_patient = null;
+        confidential_patient = null;
     });
 
     describe("Encounter Post and Request for non confidential patient", function () {
@@ -49,8 +51,8 @@ describe("Facility User", function () {
         var non_confidential_encounter_request;
 
         beforeEach(function (done) {
-            confidential_encounter_request = EncounterRequest(hid, user,  Encounter(hid, "Yes"));
-            non_confidential_encounter_request = EncounterRequest(hid, user, Encounter(hid));
+            confidential_encounter_request = EncounterRequest(non_confidential_patient.hid, user,  Encounter(non_confidential_patient.hid, "Yes"));
+            non_confidential_encounter_request = EncounterRequest(non_confidential_patient.hid, user, Encounter(non_confidential_patient.hid));
             request(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                 console.log(post_body);
                 expect(post_res.statusCode).to.equal(200);
@@ -90,8 +92,8 @@ describe("Facility User", function () {
         var non_confidential_encounter_request;
 
         beforeEach(function (done) {
-            confidential_encounter_request = new EncounterRequest(confidential_patient_hid, user, new Encounter(confidential_patient_hid, "Yes"));
-            non_confidential_encounter_request = new EncounterRequest(confidential_patient_hid, user, new Encounter(confidential_patient_hid));
+            confidential_encounter_request = new EncounterRequest(confidential_patient.hid, user, new Encounter(confidential_patient.hid, "Yes"));
+            non_confidential_encounter_request = new EncounterRequest(confidential_patient.hid, user, new Encounter(confidential_patient.hid));
             request(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                 console.log(post_body);
                 expect(post_res.statusCode).to.equal(200);
@@ -109,7 +111,7 @@ describe("Facility User", function () {
                 console.log(res_body);
                 expect(get_res.statusCode).to.equal(403);
                 expect(Number(JSON.parse(res_body).httpStatus)).to.equal(403);
-                expect(JSON.parse(res_body).message).to.equal("Access is denied to user " + user.client_id + " for patient " + confidential_patient_hid);
+                expect(JSON.parse(res_body).message).to.equal("Access is denied to user " + user.client_id + " for patient " + confidential_patient.hid);
                 done();
             });
         });

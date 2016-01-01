@@ -18,7 +18,7 @@ exports.CassandraClient = function CassandraClient(contact_point, key_space, use
                 },
 
                 function select(next) {
-                    client.execute(query, function (err, result) {
+                    client.execute(query,null, {fetchSize: 20000},  function (err, result) {
                         if (err) return next(err);
 
                         next(null, result.rows);

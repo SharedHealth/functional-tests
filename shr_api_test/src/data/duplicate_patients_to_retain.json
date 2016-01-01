@@ -1,0 +1,62 @@
+{
+  "patient_1_to_retain": {
+    "details": {
+      "nid": "1451639188404",
+      "bin_brn": "14516391884040000",
+      "given_name": "AHI EIHAHC",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "Test",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "151fc702bb4"
+    },
+    "hid": "98000134620"
+  },
+  "patient_2_to_retain": {
+    "details": {
+      "nid": "1451639188404",
+      "bin_brn": "14516391907740000",
+      "given_name": "AHI HAIAJJ",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "Test",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "151fc7034f6"
+    },
+    "hid": "98000187768"
+  }
+}

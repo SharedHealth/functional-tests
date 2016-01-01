@@ -8,11 +8,10 @@ var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 
 describe("MCI Datasense User", function () {
     var facility_user = new User('facility');
-    var user = new User('datasense')
-    var hid = "";
-    var nid = ""
+    var user = new User('datasense');
+    var non_confidential_patient = null;
+    var nid = "";
     var binBrn = "";
-    var confidential_patient_hid = "";
     var mci_datasense_user = it;
 
     before(function (done) {
@@ -25,11 +24,11 @@ describe("MCI Datasense User", function () {
                 console.log(body);
                 expect(res.statusCode).to.equal(200);
                 user.access_token = JSON.parse(res.body).access_token;
-                request(new PatientRequest(facility_user, new Patient()).post(), function (err, res, body) {
-                    console.log(body);
+                non_confidential_patient = new Patient();
+                request(new PatientRequest(facility_user, non_confidential_patient.details).post(), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(201);
-                    hid = body.id;
+                    non_confidential_patient.hid = body.id;
                     done();
                 });
 
@@ -39,10 +38,9 @@ describe("MCI Datasense User", function () {
     });
 
     after(function (done) {
-        hid = "";
+        non_confidential_patient = null;
         nid = "";
         binBrn = "";
-        confidential_patient_hid = "";
         done();
     });
 
@@ -66,21 +64,20 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should be able to view patient By Hid", function (done) {
-            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(200);
-                expect(JSON.parse(body).hid).to.equal(hid);
+                expect(JSON.parse(body).hid).to.equal(non_confidential_patient.hid);
                 done();
 
             });
         });
 
-
         mci_datasense_user("Should not be able to view patient By Nid", function (done) {
-            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(200);
-                nid = JSON.parse(body).nid
+                nid = JSON.parse(body).nid;
                 request(patientRequest.getPatientDetailsByNid(nid), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(403);
@@ -92,10 +89,10 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should not be able to view patient By BinBrn", function (done) {
-            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(200);
-                var binBrn = JSON.parse(body).bin_brn
+                var binBrn = JSON.parse(body).bin_brn;
                 request(patientRequest.getPatientDetailsByBinBrn(binBrn), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(403);
@@ -106,10 +103,10 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should not be able to view patient By houseHoldCode", function (done) {
-            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(200);
-                houseHoldCode = JSON.parse(body).household_code
+                houseHoldCode = JSON.parse(body).household_code;
                 request(patientRequest.getPatientDetailsHouseHoldCode(houseHoldCode), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(403);
@@ -128,7 +125,7 @@ describe("MCI Datasense User", function () {
             var upazila_id;
             var address;
 
-            request(patientRequest.getPatientDetailsByHid(hid), function (err, res, body) {
+            request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(200);
                 given_name = JSON.parse(body).given_name;
@@ -156,7 +153,7 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should not be able to update the patient", function (done) {
-            request((patientRequest).updateUsingPut(hid), function (err, res, body) {
+            request((patientRequest).updateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(403);
                 done();
@@ -172,7 +169,7 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should not be able to view pending approval details for patient by hid", function (done) {
-            request(patientRequest.getAllPendingApprovalDetailsByHid(user.catchment, hid), function (err, res, body) {
+            request(patientRequest.getAllPendingApprovalDetailsByHid(user.catchment, non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(403);
                 expect(JSON.parse(body).message).to.equal("Access is denied");
@@ -181,10 +178,10 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should not be able to accept pending approval for patient", function (done) {
-            request((patientUpdateRequest).updateUsingPut(hid), function (err, res, body) {
+            request((patientUpdateRequest).updateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(202);
-                request(patientRequest.acceptRequest("302607", hid), function (err, res, body) {
+                request(patientRequest.acceptRequest("302607", non_confidential_patient.hid), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(403);
                     expect(body.message).to.equal("Access is denied");
@@ -195,10 +192,10 @@ describe("MCI Datasense User", function () {
 
 
         mci_datasense_user("Should not be able to reject pending approval for patient", function (done) {
-            request(patientUpdateRequest.multipleUpdateUsingPut(hid), function (err, res, body) {
+            request(patientUpdateRequest.multipleUpdateUsingPut(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(202);
-                request(patientRequest.multipleRequestReject("302607", hid), function (err, res, body) {
+                request(patientRequest.multipleRequestReject("302607", non_confidential_patient.hid), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(403);
                     expect(body.message).to.equal("Access is denied");
@@ -208,16 +205,16 @@ describe("MCI Datasense User", function () {
         });
 
         mci_datasense_user("Should not be able to get the audit log details for the  patients", function (done) {
-            request(patientRequest.getAuditLogsByHid(hid), function (err, res, body) {
+            request(patientRequest.getAuditLogsByHid(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
-                expect(res.statusCode).to.equal(403)
+                expect(res.statusCode).to.equal(403);
                 expect(JSON.parse(body).message).to.equal("Access is denied");
                 done();
             });
         });
 
         mci_datasense_user("Should be able to get shr feed for the  patients", function (done) {
-            request(patientRequest.getUpdateFeedForSHR(hid), function (err, res, body) {
+            request(patientRequest.getUpdateFeedForSHR(non_confidential_patient.hid), function (err, res, body) {
                 console.log(body);
                 expect(res.statusCode).to.equal(200);
                 done();

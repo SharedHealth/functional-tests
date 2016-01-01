@@ -10,18 +10,18 @@ var PatientRequest = require('../../../../src/request/patient').PatientRequest;
 describe("Datasense User", function () {
     var user = new User('datasense');
     var facility_user = new User('facility');
-    var hid = "";
-    var confidential_patient_hid = "";
     var datasense_user = it;
+    var non_confidential_patient = null;
+    var confidential_patient = null;
 
     before(function (done) {
         request(new SSORequest(user).post(), function (err, httpResponse, body) {
             console.log(body);
-            expect(httpResponse.statusCode).to.equal(200)
+            expect(httpResponse.statusCode).to.equal(200);
             user.access_token = JSON.parse(httpResponse.body).access_token;
             request(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
-                console.log(body)
-                expect(httpResponse.statusCode).to.equal(200)
+                console.log(body);
+                expect(httpResponse.statusCode).to.equal(200);
                 facility_user.access_token = JSON.parse(httpResponse.body).access_token;
                 done();
             });
@@ -30,22 +30,24 @@ describe("Datasense User", function () {
     });
 
     beforeEach(function (done) {
-        request(new PatientRequest(facility_user, new Patient()).post(), function (err, res, body) {
-            console.log(body)
-            expect(res.statusCode).to.equal(201)
-            hid = body.id;
-            request(new PatientRequest(facility_user, new Patient("Yes")).post(), function (err, res, body) {
-                console.log(body)
-                expect(res.statusCode).to.equal(201)
-                confidential_patient_hid = body.id;
+        non_confidential_patient = new Patient();
+        request(new PatientRequest(facility_user, non_confidential_patient.details).post(), function (err, res, body) {
+            console.log(body);
+            expect(res.statusCode).to.equal(201);
+            non_confidential_patient.hid = body.id;
+            confidential_patient = new Patient("Yes");
+            request(new PatientRequest(facility_user, confidential_patient.details).post(), function (err, res, body) {
+                console.log(body);
+                expect(res.statusCode).to.equal(201);
+                confidential_patient.hid = body.id;
                 done();
             });
         });
     });
 
     afterEach(function (done) {
-        hid = "";
-        confidential_patient_hid = "";
+        //non_confidential_patient = null;
+        //confidential_patient = null;
         done();
     });
 
@@ -56,9 +58,9 @@ describe("Datasense User", function () {
         var encounter_request;
 
         beforeEach(function (done) {
-            confidential_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid, "Yes"));
-            non_confidentail_encounter_request = new EncounterRequest(hid, facility_user, new Encounter(hid));
-            encounter_request = new EncounterRequest(hid, user, new Encounter(hid));
+            confidential_encounter_request = new EncounterRequest(non_confidential_patient.hid, facility_user, new Encounter(non_confidential_patient.hid, "Yes"));
+            non_confidentail_encounter_request = new EncounterRequest(non_confidential_patient.hid, facility_user, new Encounter(non_confidential_patient.hid));
+            encounter_request = new EncounterRequest(non_confidential_patient.hid, user, new Encounter(non_confidential_patient.hid));
 
             console.log(non_confidentail_encounter_request.post());
 
@@ -116,9 +118,9 @@ describe("Datasense User", function () {
         var encounter_request;
 
         beforeEach(function (done) {
-            confidential_encounter_request = new EncounterRequest(confidential_patient_hid, facility_user, new Encounter(confidential_patient_hid, "Yes"));
-            non_confidential_encounter_request = new EncounterRequest(confidential_patient_hid, facility_user, new Encounter(confidential_patient_hid));
-            encounter_request = new EncounterRequest(confidential_patient_hid, user);
+            confidential_encounter_request = new EncounterRequest(confidential_patient.hid, facility_user, new Encounter(confidential_patient.hid, "Yes"));
+            non_confidential_encounter_request = new EncounterRequest(confidential_patient.hid, facility_user, new Encounter(confidential_patient.hid));
+            encounter_request = new EncounterRequest(confidential_patient.hid, user);
             request(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
                 console.log(post_body);
                 expect(post_res.statusCode).to.equal(200);
