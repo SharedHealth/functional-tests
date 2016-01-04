@@ -16,6 +16,7 @@ describe.only("Deduplication", function () {
     var patient_2 = null;
     var patient_1 = null;
     var to_be_retained_patients = JSON.parse(fs.readFileSync(__dirname + "/../../../../data/duplicate_patients_to_retain.json", "utf8"));
+    console.log(JSON.stringify(to_be_retained_patients));
     before(function (done) {
         request(new SSORequest(userFacility).post(), function (err, httpResponse, body) {
             userFacility.access_token = JSON.parse(httpResponse.body).access_token;
@@ -48,20 +49,21 @@ describe.only("Deduplication", function () {
             done();
         });
         beforeEach(function (done) {
-            patient_1 = new Patient();
-            request(new PatientRequest(userFacility, patient_1.details).post(), function (err, res, body) {
-                console.log(body);
-                patient_1.hid = body.id;
-                console.log(patient_1.hid);
-                patient_2 = new Patient();
-                patient_2.details.nid = patient_1.details.nid;
-                request(new PatientRequest(userFacility, patient_2.details).post(), function (err, res, body) {
-                    console.log(body);
-                    patient_2.hid = body.id;
-                    console.log(patient_2.hid);
-                    done();
-                });
-            });
+            done();
+            //patient_1 = new Patient();
+            //request(new PatientRequest(userFacility, patient_1.details).post(), function (err, res, body) {
+            //    console.log(body);
+            //    patient_1.hid = body.id;
+            //    console.log(patient_1.hid);
+            //    patient_2 = new Patient();
+            //    patient_2.details.nid = patient_1.details.nid;
+            //    request(new PatientRequest(userFacility, patient_2.details).post(), function (err, res, body) {
+            //        console.log(body);
+            //        patient_2.hid = body.id;
+            //        console.log(patient_2.hid);
+            //        done();
+            //    });
+            //});
         });
 
         describe("Merge", function () {
