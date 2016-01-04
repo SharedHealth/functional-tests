@@ -164,6 +164,10 @@ describe.only("Deduplication", function () {
 
         describe("Retain", function () {
             it("Should retain both patients as not duplicates on match of nid", function (done) {
+                console.log("Patient 1 is ..");
+                console.log(to_be_retained_patients["patient_1_with_same_nid"]);
+                console.log("Patient 2 is ..");
+                console.log(to_be_retained_patients["patient_2_with_same_nid"]);
                 request((patientRequestMciApprover).retainBoth(to_be_retained_patients["patient_2_with_same_nid"], to_be_retained_patients["patient_1_with_same_nid"]), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(202);
@@ -171,6 +175,10 @@ describe.only("Deduplication", function () {
                 });
             });
             it("Should retain both patients as not duplicates on match of uid", function (done) {
+                console.log("Patient 1 is ..");
+                console.log(to_be_retained_patients["patient_1_with_same_uid"]);
+                console.log("Patient 2 is ..");
+                console.log(to_be_retained_patients["patient_2_with_same_uid"]);
                 request((patientRequestMciApprover).retainBoth(to_be_retained_patients["patient_2_with_same_uid"], to_be_retained_patients["patient_1_with_same_uid"]), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(202);
@@ -178,6 +186,10 @@ describe.only("Deduplication", function () {
                 });
             });
             it("Should retain both patients as not duplicates on match of binbrn", function (done) {
+                console.log("Patient 1 is ..");
+                console.log(to_be_retained_patients["patient_1_with_same_binbrn"]);
+                console.log("Patient 2 is ..");
+                console.log(to_be_retained_patients["patient_2_with_same_binbrn"]);
                 request((patientRequestMciApprover).retainBoth(to_be_retained_patients["patient_2_with_same_binbrn"], to_be_retained_patients["patient_1_with_same_binbrn"]), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(202);
@@ -185,6 +197,10 @@ describe.only("Deduplication", function () {
                 });
             });
             it("Should retain both patients as not duplicates on match of name and address", function (done) {
+                console.log("Patient 1 is ..");
+                console.log(to_be_retained_patients["patient_1_with_matching_name_and_address"]);
+                console.log("Patient 2 is ..");
+                console.log(to_be_retained_patients["patient_2_with_matching_name_and_address"]);
                 request((patientRequestMciApprover).retainBoth(to_be_retained_patients["patient_2_with_matching_name_and_address"], to_be_retained_patients["patient_1_with_matching_name_and_address"]), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(202);
