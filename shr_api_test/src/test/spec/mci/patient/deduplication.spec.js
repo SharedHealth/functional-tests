@@ -8,14 +8,14 @@ var CatchmentRequest = require('../../../../request/catchment').CatchmentRequest
 var PatientRequest = require('../../../../request/patient').PatientRequest;
 var fs = require("fs");
 
-describe("Deduplication", function () {
+describe.only("Deduplication", function () {
     var userFacility = new User('facility');
     var userMciAdmin = new User('mciAdmin');
     var userMciApprover = new User('mci_approver');
     var houseHoldCode = "";
     var patient_2 = null;
     var patient_1 = null;
-    var retained_patients = JSON.parse(fs.readFileSync(__dirname + "/../../../../data/duplicate_patients_to_retain.json", "utf8"));
+    var to_be_retained_patients = JSON.parse(fs.readFileSync(__dirname + "/../../../../data/duplicate_patients_to_retain.json", "utf8"));
     before(function (done) {
         request(new SSORequest(userFacility).post(), function (err, httpResponse, body) {
             userFacility.access_token = JSON.parse(httpResponse.body).access_token;
@@ -65,14 +65,17 @@ describe("Deduplication", function () {
         });
 
         describe("Merge", function () {
-            it("Should mark a patient as inactive and merge with other patient", function (done) {
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("Should mark a patient as inactive and merge with other patient", function (done) {
                 request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_1.hid), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(202);
                     done();
                 });
             });
-            it("Should not update inactive patient status again if merged", function (done) {
+
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("Should not update inactive patient status again if merged", function (done) {
 
 
                 request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_1.hid), function (err, res, body) {
@@ -91,7 +94,8 @@ describe("Deduplication", function () {
                 });
             });
             //This scenario should be treated as bad request and not forbidden. status check should be 400 and not 403
-            it("Should fail if merged with same patient", function (done) {
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("Should fail if merged with same patient", function (done) {
 
 
                 request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_2.hid), function (err, res, body) {
@@ -104,7 +108,8 @@ describe("Deduplication", function () {
 
                 });
             });
-            it("Should fail on invalid healthid for merging patient", function (done) {
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("Should fail on invalid healthid for merging patient", function (done) {
 
                 var invalidHid = patient_2.hid + 1;
 
@@ -118,7 +123,8 @@ describe("Deduplication", function () {
 
                 });
             });
-            it("Should fail on invalid healthid for mergeable patient", function (done) {
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("Should fail on invalid healthid for mergeable patient", function (done) {
 
                 var invalidHid = patient_2.hid + 1;
                 request((patientRequestMciApprover).makePatientInactive(invalidHid, patient_2.hid), function (err, res, body) {
@@ -131,7 +137,8 @@ describe("Deduplication", function () {
 
                 });
             });
-            it("Should not merge active patient with inactive patient", function (done) {
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("Should not merge active patient with inactive patient", function (done) {
 
                 request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_1.hid), function (err, res, body) {
                     console.log(body);
@@ -154,8 +161,29 @@ describe("Deduplication", function () {
         });
 
         describe("Retain", function () {
-            it("Should retain both patients as not duplicates", function (done) {
-                request((patientRequestMciApprover).retainBoth(retained_patients["patient_2_to_retain"], retained_patients["patient_1_to_retain"]), function (err, res, body) {
+            it("Should retain both patients as not duplicates on match of nid", function (done) {
+                request((patientRequestMciApprover).retainBoth(to_be_retained_patients["patient_2_with_same_nid"], to_be_retained_patients["patient_1_with_same_nid"]), function (err, res, body) {
+                    console.log(body);
+                    expect(res.statusCode).to.equal(202);
+                    done();
+                });
+            });
+            it("Should retain both patients as not duplicates on match of uid", function (done) {
+                request((patientRequestMciApprover).retainBoth(to_be_retained_patients["patient_2_with_same_uid"], to_be_retained_patients["patient_1_with_same_uid"]), function (err, res, body) {
+                    console.log(body);
+                    expect(res.statusCode).to.equal(202);
+                    done();
+                });
+            });
+            it("Should retain both patients as not duplicates on match of binbrn", function (done) {
+                request((patientRequestMciApprover).retainBoth(to_be_retained_patients["patient_2_with_same_binbrn"], to_be_retained_patients["patient_1_with_same_binbrn"]), function (err, res, body) {
+                    console.log(body);
+                    expect(res.statusCode).to.equal(202);
+                    done();
+                });
+            });
+            it("Should retain both patients as not duplicates on match of name and address", function (done) {
+                request((patientRequestMciApprover).retainBoth(to_be_retained_patients["patient_2_with_matching_name_and_address"], to_be_retained_patients["patient_1_with_matching_name_and_address"]), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(202);
                     done();
@@ -164,9 +192,8 @@ describe("Deduplication", function () {
         });
 
         describe("Update", function () {
-            it("Should not update inactive patient status again even if not merged", function (done) {
-
-
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("Should not update inactive patient status again even if not merged", function (done) {
                 request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_1.hid), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(202);
@@ -184,7 +211,8 @@ describe("Deduplication", function () {
         });
 
         describe("Deactivate without merge", function () {
-            it("Should mark a patient as inactive and do not merge with any other patient", function (done) {
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("Should mark a patient as inactive and do not merge with any other patient", function (done) {
                 //We are able to merge with undefined active patient this is a bug
                 //To reproduce do not pass activePatientDetails.hid
                 request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_1.hid), function (err, res, body) {
@@ -203,7 +231,8 @@ describe("Deduplication", function () {
                     });
                 });
             });
-            it("Should not reverse inactive patient status", function (done) {
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("Should not reverse inactive patient status", function (done) {
 
 
                 request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_1.hid), function (err, res, body) {
@@ -222,7 +251,8 @@ describe("Deduplication", function () {
         });
 
         describe("Inactive patient Search", function () {
-            it("should get the inactive patient status by household_code", function (done) {
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("should get the inactive patient status by household_code", function (done) {
                 request(patientRequestMciAdmin.getPatientDetailsByHid(patient_2.hid), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(200)
@@ -241,7 +271,8 @@ describe("Deduplication", function () {
                     });
                 });
             });
-            it("Should show inactive status and merged details or request", function (done) {
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("Should show inactive status and merged details or request", function (done) {
                 request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_1.hid), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(202);
@@ -259,7 +290,8 @@ describe("Deduplication", function () {
         });
 
         describe("Pending Approval", function () {
-            it("Patient should be removed from pending approval list if patient is mark inactive", function (done) {
+            //This test is being skipped since merge patient api is no longer used
+            it.skip("Patient should be removed from pending approval list if patient is mark inactive", function (done) {
 
 
                 request((patientRequestFacility).updateUsingPut(patient_2.hid), function (err, res, body) {
@@ -276,7 +308,9 @@ describe("Deduplication", function () {
                     });
                 });
             });
-            it("Should not be displayed in pending approval details after patient mark inactive", function (done) {
+            //This test is being skipped since merge patient api is no longer used
+
+            it.skip("Should not be displayed in pending approval details after patient mark inactive", function (done) {
 
 
                 request((patientRequestFacility).updateUsingPut(patient_2.hid), function (err, res, body) {
@@ -296,7 +330,8 @@ describe("Deduplication", function () {
         });
 
         describe("Audit Log", function () {
-            it("Get the Audit Log for Inactive Patient data by hid", function (done) {
+
+            it.skip("Get the Audit Log for Inactive Patient data by hid", function (done) {
 
                 request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_1.hid), function (err, res, body) {
                     console.log(body);

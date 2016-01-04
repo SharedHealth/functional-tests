@@ -16,11 +16,11 @@
 		 {	return char;
 		 }
 	 };
-	 var   convertNumericToChar = function(char){
+	 var convertNumericToChar = function (char) {
 		 return String.fromCharCode(65 + parseInt(char));
-	 }
+	 };
 
-	 var name= "AHI " + getCodedName(Math.ceil(Math.random()*1000000).toString());
+	 var name= "AHI " + getCodedName(nid).toString();
 
 	 return{
 		 details : {
@@ -40,7 +40,7 @@
 				 "extension": null
 			 },
 			 "present_address" : {
-				 "address_line" : "Test",
+				 "address_line" : getCodedName(nid) + " Street",
 				 "division_id" : divisionId || "30",
 				 "district_id" : districtId || "26",
 				 "upazila_id" : upazila_id || "07"
@@ -59,16 +59,23 @@
 
 exports.Patient = Patient;
 
-exports.PatientWithDifferentCatchment = function(confidentiality) {
+exports.PatientWithDifferentCatchment = function (confidentiality) {
 	var patient = new Patient(confidentiality || "No", "30", "33", "34");
 	return patient;
-}
+};
 
 
-exports.PatientWithCatchmentForDedup = function(confidentiality) {
+exports.PatientForDedup = function (confidentiality) {
 	var patient = new Patient(confidentiality || "No", "30", "29", "18");
+	patient.details.uid = new Date().getTime().toString(16);
 	return patient;
-}
+};
+
+exports.PatientWithDifferentCatchmentForDedup = function(confidentiality) {
+	var patient = new Patient(confidentiality || "No", "30", "33", "34");
+	patient.details.uid = new Date().getTime().toString(16);
+	return patient;
+};
 exports.PatientWithUID = function(confidentiality){
 	var patient = new Patient(confidentiality);
 	patient.details.uid = new Date().getTime().toString(16);
