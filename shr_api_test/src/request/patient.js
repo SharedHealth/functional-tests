@@ -42,7 +42,7 @@ var PatientRequest = function (user_detail, patient_detail) {
     var mergeWith = function (to_be_active_patient, to_be_inactive_patient) {
         return EntityRequest(
             {
-                uri: uri + "/patients/" + to_be_inactive_patient.hid,
+                uri: uri + "/patients/duplicates",
                 body: {
                     "action": "MERGE",
                     "patient1": {
@@ -51,11 +51,9 @@ var PatientRequest = function (user_detail, patient_detail) {
                         "merged_with": to_be_active_patient.hid
                     },
                     "patient2": {
-                        "hid": to_be_active_patient,
+                        "hid": to_be_active_patient.hid,
                         "active": true
                     }
-
-
                 },
                 headers: headers(),
                 isJSON: true

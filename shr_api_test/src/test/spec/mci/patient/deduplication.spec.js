@@ -16,6 +16,7 @@ describe("Deduplication", function () {
     var patient_2 = null;
     var patient_1 = null;
     var to_be_retained_patients = JSON.parse(fs.readFileSync(__dirname + "/../../../../data/duplicate_patients_to_retain.json", "utf8"));
+    var mergeable_patients = JSON.parse(fs.readFileSync(__dirname + "/../../../../data/duplicate_patients_for_merge.json", "utf8"));
     console.log(JSON.stringify(to_be_retained_patients));
     before(function (done) {
         request(new SSORequest(userFacility).post(), function (err, httpResponse, body) {
@@ -68,75 +69,61 @@ describe("Deduplication", function () {
 
         describe("Merge", function () {
             //This test is being skipped since merge patient api is no longer used
-            it.skip("Should mark a patient as inactive and merge with other patient", function (done) {
-                request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_1.hid), function (err, res, body) {
+            it("Should mark a patient as inactive and merge with other patient", function (done) {
+                request((patientRequestMciApprover).mergeWith(mergeable_patients["patient_2_with_same_nid"], mergeable_patients["patient_1_with_same_nid"]), function (err, res, body) {
                     console.log(body);
                     expect(res.statusCode).to.equal(202);
-                    done();
-                });
-            });
-
-            //This test is being skipped since merge patient api is no longer used
-            it.skip("Should not update inactive patient status again if merged", function (done) {
-
-
-                request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_1.hid), function (err, res, body) {
-                    console.log(body);
-                    expect(res.statusCode).to.equal(202);
-
-                    request(patientRequestMciAdmin.updateUsingPut(patient_2.hid), function (err, res, body) {
-                        console.log(body);
+                    request((patientRequestMciApprover).mergeWith(mergeable_patients["patient_2_with_same_nid"], mergeable_patients["patient_1_with_same_nid"]), function (err, res, body) {
                         expect(res.statusCode).to.equal(400);
-                        expect(body.message).to.equal("Cannot update inactive patient, already merged with " + patient_1.hid);
-
-                        done();
-
-
+                        expect(body.message).to.contain("invalid.payload. Duplicates don't exist for health IDs ");
+                        expect(body.message).to.contain(" in db. Cannot merge.");
+                        expect(body.message).to.contain(mergeable_patients["patient_2_with_same_nid"].hid);
+                        expect(body.message).to.contain(mergeable_patients["patient_1_with_same_nid"].hid);
+                        request(patientRequestMciApprover.getPatientDetailsByHid(mergeable_patients["patient_1_with_same_nid"].hid), function (err, res, body) {
+                            console.log(body);
+                            expect(JSON.parse(body).hid).to.equal(mergeable_patients["patient_1_with_same_nid"].hid);
+                            expect(JSON.parse(body).active).to.equal(false);
+                            expect(JSON.parse(body).merged_with).to.equal(mergeable_patients["patient_2_with_same_nid"].hid);
+                            //This seems to be bug
+                            expect(JSON.parse(body).provider).to.equal(null);
+                            request(patientRequestMciAdmin.updateUsingPut(mergeable_patients["patient_1_with_same_nid"].hid), function (err, res, body) {
+                                console.log(body);
+                                expect(res.statusCode).to.equal(400);
+                                expect(body.message).to.equal("Cannot update inactive patient, already merged with " + mergeable_patients["patient_2_with_same_nid"].hid);
+                                done();
+                            });
+                        });
                     });
                 });
             });
-            //This scenario should be treated as bad request and not forbidden. status check should be 400 and not 403
-            //This test is being skipped since merge patient api is no longer used
-            it.skip("Should fail if merged with same patient", function (done) {
 
-
-                request((patientRequestMciApprover).makePatientInactive(patient_2.hid, patient_2.hid), function (err, res, body) {
+            it("Should fail if merged with same patient", function (done) {
+                request((patientRequestMciApprover).mergeWith(mergeable_patients["patient_2_with_same_nid"], mergeable_patients["patient_2_with_same_nid"]), function (err, res, body) {
                     console.log(body);
-                    expect(res.statusCode).to.equal(403);
-                    expect(body.message).to.equal("Cannot merge with itself");
-
+                    expect(res.statusCode).to.equal(400);
                     done();
+                        });
+            });
 
-
+            it("Should fail on invalid healthid for merging patient", function (done) {
+                var patient_1 = {hid: mergeable_patients["patient_1_with_same_nid"].hid + 1 };
+                var patient_2 = {hid: mergeable_patients["patient_2_with_same_nid"].hid };
+                request((patientRequestMciApprover).mergeWith(patient_1, patient_2), function (err, res, body) {
+                    console.log(body);
+                    expect(body.message).to.contain("No patient found with health id:");
+                    expect(res.statusCode).to.equal(404);
+                    done();
                 });
             });
             //This test is being skipped since merge patient api is no longer used
-            it.skip("Should fail on invalid healthid for merging patient", function (done) {
-
-                var invalidHid = patient_2.hid + 1;
-
-                request((patientRequestMciApprover).makePatientInactive(patient_2.hid, invalidHid), function (err, res, body) {
+            it("Should fail on invalid healthid for mergeable patient", function (done) {
+                var patient_2 = {hid: mergeable_patients["patient_1_with_same_nid"].hid + 1 };
+                var patient_1 = {hid: mergeable_patients["patient_2_with_same_nid"].hid };
+                request((patientRequestMciApprover).mergeWith(patient_1, patient_2), function (err, res, body) {
                     console.log(body);
+                    expect(body.message).to.contain("No patient found with health id:");
                     expect(res.statusCode).to.equal(404);
-                    expect(body.message).to.equal("Merge_with patient not found with health id: " + invalidHid);
-
                     done();
-
-
-                });
-            });
-            //This test is being skipped since merge patient api is no longer used
-            it.skip("Should fail on invalid healthid for mergeable patient", function (done) {
-
-                var invalidHid = patient_2.hid + 1;
-                request((patientRequestMciApprover).makePatientInactive(invalidHid, patient_2.hid), function (err, res, body) {
-                    console.log(body);
-                    expect(res.statusCode).to.equal(404);
-                    expect(body.message).to.equal("No patient found with health id: " + invalidHid);
-
-                    done();
-
-
                 });
             });
             //This test is being skipped since merge patient api is no longer used
