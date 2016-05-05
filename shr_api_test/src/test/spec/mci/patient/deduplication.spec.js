@@ -11,7 +11,7 @@ var PatientRequest = require(path.join(__dirname,dir_depth_from_src,'/request/pa
 var fs = require("fs");
 var util = require("util");
 
-describe.only("Deduplication", function () {
+describe.skip("Deduplication", function () {
     var userFacility = new User('facility');
     var userMciAdmin = new User('mciAdmin');
     var userMciApprover = new User('mci_approver');

@@ -77,6 +77,7 @@ describe("MCI Admin User", function () {
             request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 util.log(body);
                 nid = JSON.parse(body).nid;
+
                 request(patientRequest.getPatientDetailsByNid(nid), function (err, res, body) {
                     util.log(body);
                     expect(res.statusCode).to.equal(200);
@@ -90,6 +91,7 @@ describe("MCI Admin User", function () {
             request(patientRequest.getPatientDetailsByHid(non_confidential_patient.hid), function (err, res, body) {
                 util.log(body);
                 binBrn = JSON.parse(body).bin_brn;
+                console.log("I am here");
                 request(patientRequest.getPatientDetailsByBinBrn(binBrn), function (err, res, body) {
                     util.log(body);
                     expect(res.statusCode).to.equal(200);
