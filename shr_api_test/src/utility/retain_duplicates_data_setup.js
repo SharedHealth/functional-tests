@@ -6,16 +6,16 @@ var SSORequest = require('./../../src/request/sso').SSORequest;
 var PatientRequest = require('./../../src/request/patient').PatientRequest;
 var async = require('async');
 var fs = require('fs');
-
+var util = require("util");
 exports.DuplicatePatientsToRetain = function () {
     var patient_list = {};
     var facility_user = new User("facility");
 
-    var createPatients = function () {
-        async.series([
-            function getAccessToken(done) {
+    var patientCreationMethodList = function () {
+
+        return    [ function getAccessToken(done) {
                 request(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
-                    console.log(body);
+                    util.log(body);
                     facility_user.access_token = JSON.parse(httpResponse.body).access_token;
                     done();
                 });
@@ -26,7 +26,7 @@ exports.DuplicatePatientsToRetain = function () {
                 var patient_1_with_same_nid = new Patient();
                 var patient_2_with_same_nid = null;
                 request(PatientRequest(facility_user, patient_1_with_same_nid.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_1_with_same_nid.hid = body.id;
                     patient_list["patient_1_with_same_nid"] = patient_1_with_same_nid;
                     patient_2_with_same_nid = new Patient();
@@ -44,7 +44,7 @@ exports.DuplicatePatientsToRetain = function () {
                 var patient_1_with_same_uid = new Patient();
                 var patient_2_with_same_uid = null;
                 request(PatientRequest(facility_user, patient_1_with_same_uid.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_1_with_same_uid.hid = body.id;
                     patient_list["patient_1_with_same_uid"] = patient_1_with_same_uid;
                     patient_2_with_same_uid = new Patient();
@@ -62,7 +62,7 @@ exports.DuplicatePatientsToRetain = function () {
                 var patient_1_with_same_binbrn = new Patient();
                 var patient_2_with_same_binbrn = null;
                 request(PatientRequest(facility_user, patient_1_with_same_binbrn.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_1_with_same_binbrn.hid = body.id;
                     patient_list["patient_1_with_same_binbrn"] = patient_1_with_same_binbrn;
                     patient_2_with_same_binbrn = new Patient();
@@ -80,7 +80,7 @@ exports.DuplicatePatientsToRetain = function () {
                 var patient_1_with_same_nid_and_different_catchment = new Patient();
                 var patient_2_with_same_nid_and_different_catchment = null;
                 request(PatientRequest(facility_user, patient_1_with_same_nid_and_different_catchment.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_1_with_same_nid_and_different_catchment.hid = body.id;
                     patient_list["patient_1_with_same_nid_and_different_catchment"] = patient_1_with_same_nid_and_different_catchment;
                     patient_2_with_same_nid_and_different_catchment = new PatientWithDifferentCatchment();
@@ -98,7 +98,7 @@ exports.DuplicatePatientsToRetain = function () {
                 var patient_1_with_same_uid = new Patient();
                 var patient_2_with_same_uid = null;
                 request(PatientRequest(facility_user, patient_1_with_same_uid.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_1_with_same_uid.hid = body.id;
                     patient_list["patient_1_with_same_uid"] = patient_1_with_same_uid;
                     patient_2_with_same_uid = new Patient();
@@ -116,7 +116,7 @@ exports.DuplicatePatientsToRetain = function () {
                 var patient_1_with_same_binbrn = new Patient();
                 var patient_2_with_same_binbrn = null;
                 request(PatientRequest(facility_user, patient_1_with_same_binbrn.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_1_with_same_binbrn.hid = body.id;
                     patient_list["patient_1_with_same_binbrn"] = patient_1_with_same_binbrn;
                     patient_2_with_same_binbrn = new Patient();
@@ -134,7 +134,7 @@ exports.DuplicatePatientsToRetain = function () {
                 var patient_1_with_matching_name_and_address = new Patient();
                 var patient_2_with_matching_name_and_address = null;
                 request(PatientRequest(facility_user, patient_1_with_matching_name_and_address.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_1_with_matching_name_and_address.hid = body.id;
                     patient_list["patient_1_with_matching_name_and_address"] = patient_1_with_matching_name_and_address;
                     patient_2_with_matching_name_and_address = new Patient();
@@ -150,28 +150,16 @@ exports.DuplicatePatientsToRetain = function () {
 
             },
             function writeDetailsToFile(done) {
-                console.log(patient_list);
+                util.log(patient_list);
                 var contents = fs.writeFileSync(__dirname + "/../data/duplicate_patients_to_retain.json", JSON.stringify(patient_list));
                 done();
-            },
-            function (err, results) {
-                if (err == null) {
-                    console.log("There is an error during datasetup");
-                    console.log(err);
-                }
-                else {
-                    console.log("All required patients created");
-
-                }
             }
-
-
-        ]);
+        ];
 
     };
 
     return {
-        setupData: createPatients
+        setupData: patientCreationMethodList
     }
 };
 

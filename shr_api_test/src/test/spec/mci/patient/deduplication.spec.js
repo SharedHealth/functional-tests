@@ -1,23 +1,29 @@
 var request = require('request');
-var User = require('./../../../../data/user');
-var Patient = require('../../../../entity/patient').PatientWithHouseHold;
-var Encounter = require('../../../../entity/encounter').DefaultEncounterFeed;
-var EncounterRequest = require('../../../../request/encounter').EncounterRequest;
-var SSORequest = require('../../../../request/sso').SSORequest;
-var CatchmentRequest = require('../../../../request/catchment').CatchmentRequest;
-var PatientRequest = require('../../../../request/patient').PatientRequest;
+var path = require('path');
+var dir_depth_from_src = "../../../..";
+var User = require(path.join(__dirname,dir_depth_from_src,'data/user'));
+var Patient = require(path.join(__dirname,dir_depth_from_src,'/entity/patient')).PatientWithHouseHold;
+var Encounter = require(path.join(__dirname,dir_depth_from_src,'/entity/encounter')).DefaultEncounterFeed;
+var EncounterRequest = require(path.join(__dirname,dir_depth_from_src,'/request/encounter')).EncounterRequest;
+var SSORequest = require(path.join(__dirname,dir_depth_from_src,'/request/sso')).SSORequest;
+var CatchmentRequest = require(path.join(__dirname,dir_depth_from_src,'/request/catchment')).CatchmentRequest;
+var PatientRequest = require(path.join(__dirname,dir_depth_from_src,'/request/patient')).PatientRequest;
 var fs = require("fs");
+var util = require("util");
 
-describe("Deduplication", function () {
+describe.only("Deduplication", function () {
     var userFacility = new User('facility');
     var userMciAdmin = new User('mciAdmin');
     var userMciApprover = new User('mci_approver');
     var houseHoldCode = "";
     var patient_2 = null;
     var patient_1 = null;
-    var to_be_retained_patients = JSON.parse(fs.readFileSync(__dirname + "/../../../../data/duplicate_patients_to_retain.json", "utf8"));
-    var mergeable_patients = JSON.parse(fs.readFileSync(__dirname + "/../../../../data/duplicate_patients_for_merge.json", "utf8"));
-    console.log(JSON.stringify(to_be_retained_patients));
+    var to_be_retained_patients = fs.readFileSync(__dirname + "/../../../../data/duplicate_patients_to_retain.json", "utf8");
+    to_be_retained_patients = JSON.parse(to_be_retained_patients);
+    util.log(to_be_retained_patients);
+    var mergeable_patients = fs.readFileSync(__dirname + "/../../../../data/duplicate_patients_for_merge.json", "utf8");
+    mergeable_patients = (mergeable_patients != "") ? JSON.parse(mergeable_patients) : {};
+    util.log(to_be_retained_patients);
     before(function (done) {
         request(new SSORequest(userFacility).post(), function (err, httpResponse, body) {
             userFacility.access_token = JSON.parse(httpResponse.body).access_token;

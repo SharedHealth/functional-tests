@@ -239,9 +239,9 @@ function EncounterUpdater() {
                     encounterRequestToBeUpdated = new EncounterRequest(encounter_info.health_id, facility_user, {details: cleanedUpEncounterData(JSON.parse(body).content, updation_list)});
 
                     request(encounterRequestToBeUpdated.put(encounter_info.encounter_id), function (err, res, body) {
-                        console.log("------------------------------------------------------------------------------------------------");
-                        console.log(body + "\n" + encounter_info.health_id + "  " + encounter_info.encounter_id);
-                        console.log("------------------------------------------------------------------------------------------------");
+                        util.log("------------------------------------------------------------------------------------------------");
+                        util.log(body + "\n" + encounter_info.health_id + "  " + encounter_info.encounter_id);
+                        util.log("------------------------------------------------------------------------------------------------");
                         callback();
                     });
                 }

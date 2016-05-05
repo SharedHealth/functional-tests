@@ -11,6 +11,7 @@ var User = require('./../data/user' );
 var SSORequest = require('./../request/sso').SSORequest;
 var PatientRequest = require('./../request/patient').PatientRequest;
 var CassandraClient = require('./../misc/cassandra_client').CassandraClient;
+var util = require("util");
 
 function PatientUpdater() {
     var facility_user = new User('facility');
@@ -30,11 +31,11 @@ function PatientUpdater() {
         var reg = new RegExp('[0-9]+');
         patientRequest = new PatientRequest(user);
         async.each(result,function(patient_info, callback){
-            //console.log(patientRequest.updateUsingPutWithGivenValues(patient_info.health_id, {'given_name' : patient_info.given_name}));
+            //util.log(patientRequest.updateUsingPutWithGivenValues(patient_info.health_id, {'given_name' : patient_info.given_name}));
             if(reg.test(patient_info.given_name) == true)
             {
                 request(patientRequest.updateUsingPutWithGivenValues(patient_info.health_id, {'given_name' : patient_info.given_name.split("").map(convertToCharIfNumeric).join("")}), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     callback();
                 });
 

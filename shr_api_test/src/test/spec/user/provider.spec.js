@@ -6,6 +6,7 @@ var EncounterRequest = require('../../../../src/request/encounter').EncounterReq
 var SSORequest = require('../../../../src/request/sso').SSORequest;
 var CatchmentRequest = require('../../../../src/request/catchment').CatchmentRequest;
 var PatientRequest = require('../../../../src/request/patient').PatientRequest;
+var util = require("util");
 
 describe("Provider User", function () {
 
@@ -16,7 +17,7 @@ describe("Provider User", function () {
 
     before(function (done) {
         request(new SSORequest(user).post(), function (err, httpResponse, body) {
-            console.log(body);
+            util.log(body);
             user.access_token = JSON.parse(httpResponse.body).access_token;
             done();
         });
@@ -25,11 +26,11 @@ describe("Provider User", function () {
     beforeEach(function (done) {
         non_confidential_patient = new Patient();
         request(new PatientRequest(user, non_confidential_patient.details).post(), function (err, res, body) {
-            console.log(body);
+            util.log(body);
             non_confidential_patient.hid = body.id;
             confidential_patient = new Patient("Yes");
             request(new PatientRequest(user, confidential_patient.details).post(), function (err, res, body) {
-                console.log(body);
+                util.log(body);
                 confidential_patient.hid = body.id;
                 done();
             });
@@ -51,7 +52,7 @@ describe("Provider User", function () {
             confidential_encounter_request = new EncounterRequest(non_confidential_patient.hid, user, new Encounter(non_confidential_patient.hid, "Yes"));
             non_confidential_encounter_request = new EncounterRequest(non_confidential_patient.hid, user, new Encounter(non_confidential_patient.hid));
             request(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
-                console.log(post_body);
+                util.log(post_body);
                 expect(post_res.statusCode).to.equal(200);
                 done();
             });
@@ -59,7 +60,7 @@ describe("Provider User", function () {
 
         provider_user("Should receive non confidential encounter", function (done) {
             request(non_confidential_encounter_request.get(), function (get_err, get_res, get_body) {
-                console.log(get_body);
+                util.log(get_body);
                 expect(get_res.statusCode).to.equal(200);
                 expect(JSON.parse(get_body).entries.length).to.equal(1);
                 done();
@@ -68,12 +69,12 @@ describe("Provider User", function () {
         //Failing needs fix bug BSHR-1073
         provider_user.skip("Should create and not receive confidential encounter", function (done) {
             request(confidential_encounter_request.post(), function (post_err, post_res, post_body) {
-                console.log(post_body);
+                util.log(post_body);
                 expect(post_res.statusCode).to.equal(200);
                 request(confidential_encounter_request.get(), function (get_err, get_res, get_body) {
-                    console.log("*******************");
-                    console.log(get_body);
-                    console.log("*******************");
+                    util.log("*******************");
+                    util.log(get_body);
+                    util.log("*******************");
                     expect(get_res.statusCode).to.equal(200);
                     expect(JSON.parse(get_body).entries.length).to.equal(1);
                     done();
@@ -90,10 +91,10 @@ describe("Provider User", function () {
                 confidential_encounter_request = new EncounterRequest(confidential_patient.hid, user, new Encounter(confidential_patient.hid, "Yes"));
                 non_confidential_encounter_request = new EncounterRequest(confidential_patient.hid, user, new Encounter(confidential_patient.hid));
                 request(non_confidential_encounter_request.post(), function (post_err, post_res, post_body) {
-                    console.log(post_body);
+                    util.log(post_body);
                     expect(post_res.statusCode).to.equal(200);
                     request(confidential_encounter_request.post(), function (post_err, post_res, post_body) {
-                        console.log(post_body);
+                        util.log(post_body);
                         expect(post_res.statusCode).to.equal(200);
                         done();
                     });
@@ -103,7 +104,7 @@ describe("Provider User", function () {
 
             provider_user("Should not receive any encounter for confidential patient", function (done) {
                 request(confidential_encounter_request.get(), function (get_err, get_res, res_body) {
-                    console.log(res_body);
+                    util.log(res_body);
                     expect(get_res.statusCode).to.equal(403);
                     expect(Number(JSON.parse(res_body).httpStatus)).to.equal(403);
                     // Access for patient 11302580553 data for user 18556 is denied
@@ -120,7 +121,7 @@ describe("Provider User", function () {
                 var catchment = user.catchment[0];
                 var catchment_request = new CatchmentRequest(user, catchment);
                 request(catchment_request.get(), function (err, httpResponse, body) {
-                    console.log(body);
+                    util.log(body);
                     expect(httpResponse.statusCode).to.equal(200);
                     done();
                 });
@@ -132,7 +133,7 @@ describe("Provider User", function () {
                 var district_catchment = catchment.substring(0, catchment.length - 2);
                 var catchment_request = new CatchmentRequest(user, district_catchment);
                 request(catchment_request.get(), function (err, httpResponse, body) {
-                    console.log(body);
+                    util.log(body);
                     expect(httpResponse.statusCode).to.equal(403);
                     expect(body).to.equal('{"httpStatus":"403","message":"Access is denied to user ' + user.client_id + ' for catchment ' + district_catchment + '"}');
                     done();
@@ -144,7 +145,7 @@ describe("Provider User", function () {
                 var catchment = user.catchment[0] + "01";
                 var catchment_request = new CatchmentRequest(user, catchment);
                 request(catchment_request.get(), function (err, httpResponse, body) {
-                    console.log(body);
+                    util.log(body);
                     expect(httpResponse.statusCode).to.equal(200);
                     done();
                 });

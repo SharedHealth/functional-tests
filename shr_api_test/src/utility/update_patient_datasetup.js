@@ -5,17 +5,18 @@ var SSORequest = require('./../../src/request/sso').SSORequest;
 var PatientRequest = require('./../../src/request/patient').PatientRequest;
 var async = require('async');
 var fs = require('fs');
-
+var util = require("util");
 exports.PatientUpdation = function PatientUpdation() {
     var patient_list = {};
     var facility_user = new User("facility");
 
-    var createPatients = function () {
-        async.series([
+    var patientCreationMethodList = function (completed) {
+        return [
             function getAccessToken(done) {
                 request(new SSORequest(facility_user).post(), function (err, httpResponse, body) {
-                    console.log(body);
+                    util.log(body);
                     facility_user.access_token = JSON.parse(httpResponse.body).access_token;
+                    util.log(facility_user);
                     done();
                 });
 
@@ -24,9 +25,10 @@ exports.PatientUpdation = function PatientUpdation() {
                 var patient_with_duplicate_details = new Patient();
 
                 request(PatientRequest(facility_user, patient_with_duplicate_details.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_with_duplicate_details.hid = body.id;
                     patient_list["duplicate"] = patient_with_duplicate_details;
+                    util.log(patient_with_duplicate_details);
                     done();
                 });
 
@@ -35,7 +37,7 @@ exports.PatientUpdation = function PatientUpdation() {
                 var patient_for_common_uid = new Patient();
 
                 request(PatientRequest(facility_user, patient_for_common_uid.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_for_common_uid.hid = body.id;
                     patient_list["common_uid"] = patient_for_common_uid;
 
@@ -47,7 +49,7 @@ exports.PatientUpdation = function PatientUpdation() {
                 var patient_for_common_nid = new Patient();
 
                 request(PatientRequest(facility_user, patient_for_common_nid.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_for_common_nid.hid = body.id;
                     patient_list["common_nid"] = patient_for_common_nid;
                     done();
@@ -58,7 +60,7 @@ exports.PatientUpdation = function PatientUpdation() {
                 var patient_for_common_binbrn = new Patient();
 
                 request(PatientRequest(facility_user, patient_for_common_binbrn.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_for_common_binbrn.hid = body.id;
                     patient_list["common_binbrn"] = patient_for_common_binbrn;
                     done();
@@ -69,7 +71,7 @@ exports.PatientUpdation = function PatientUpdation() {
                 var patient_for_common_uid_and_nid = new Patient();
 
                 request(PatientRequest(facility_user, patient_for_common_uid_and_nid.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_for_common_uid_and_nid.hid = body.id;
                     patient_list["common_uid_and_nid"] = patient_for_common_uid_and_nid;
                     done();
@@ -81,7 +83,7 @@ exports.PatientUpdation = function PatientUpdation() {
 
                 var patient_for_common_nid_and_binbrn = new Patient();
                 request(PatientRequest(facility_user, patient_for_common_nid_and_binbrn.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_for_common_nid_and_binbrn.hid = body.id;
                     patient_list["common_nid_and_binbrn"] = patient_for_common_nid_and_binbrn;
                     done();
@@ -92,7 +94,7 @@ exports.PatientUpdation = function PatientUpdation() {
                 var patient_for_common_uid_and_binbrn = new Patient();
 
                 request(PatientRequest(facility_user, patient_for_common_uid_and_binbrn.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_for_common_uid_and_binbrn.hid = body.id;
                     patient_list["common_uid_and_binbrn"] = patient_for_common_uid_and_binbrn;
                     done();
@@ -103,7 +105,7 @@ exports.PatientUpdation = function PatientUpdation() {
             function createPatientForCommonUIDBinBrnAndNID(done) {
                 var patient_for_common_uid_nid_and_binbrn = new Patient();
                 request(PatientRequest(facility_user, patient_for_common_uid_nid_and_binbrn.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_for_common_uid_nid_and_binbrn.hid = body.id;
                     patient_list["common_uid_nid_and_binbrn"] = patient_for_common_uid_nid_and_binbrn;
                     done();
@@ -115,7 +117,7 @@ exports.PatientUpdation = function PatientUpdation() {
                 var patient_1_for_merge = new Patient();
                 var patient_2_for_merge = null;
                 request(PatientRequest(facility_user, patient_1_for_merge.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_1_for_merge.hid = body.id;
                     patient_list["patient_1_for_merge"] = patient_1_for_merge;
                     patient_2_for_merge = new Patient();
@@ -133,7 +135,7 @@ exports.PatientUpdation = function PatientUpdation() {
                 var patient_1 = new Patient();
                 var patient_2 = null;
                 request(PatientRequest(facility_user, patient_1.details).post(), function (err, res, body) {
-                    console.log(body);
+                    util.log(body);
                     patient_1.hid = body.id;
                     patient_list["patient_1_merge_with_catchment_change"] = patient_1;
                     patient_2 = new Patient();
@@ -147,28 +149,18 @@ exports.PatientUpdation = function PatientUpdation() {
             },
 
             function updatePatientDetails(done) {
-                console.log(patient_list);
+                util.log(patient_list);
                 var contents = fs.writeFileSync(__dirname + "/../data/updatable_patient.json", JSON.stringify(patient_list));
                 done();
-            },
-            function (err, results) {
-                if (err == null) {
-                    console.log("There is an error during datasetup");
-                    console.log(err);
-                }
-                else {
-                    console.log("All required patients created");
-
-                }
             }
 
 
-        ]);
+        ];
 
     };
 
     return {
-        setupData: createPatients
+        setupData: patientCreationMethodList
     }
 };
 
