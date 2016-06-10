@@ -14,15 +14,22 @@ describe("Facility User", function () {
     var facility_user = it;
     var non_confidential_patient = null;
     var confidential_patient = null;
-    
+
+    var provider_user = new User('provider');
+
+    var catchment_user = new User();
     before(function (done) {
         request(new SSORequest(user).post(), function (err, httpResponse, body) {
             util.log(body);
             expect(httpResponse.statusCode).to.equal(200);
             user.access_token = JSON.parse(httpResponse.body).access_token;
-            done();
+            request(new SSORequest(provider_user).post(), function(err, httpResponse, body){
+                util.log(body);
+                expect(httpResponse.statusCode).to.equal(200);
+                provider_user.access_token = JSON.parse(httpResponse.body).access_token;
+                done();
+            });
         });
-
     });
 
     beforeEach(function (done) {
@@ -131,13 +138,13 @@ describe("Facility User", function () {
         });
 
         facility_user("should not return catchment details for district in case catchment_code correspondes to upazilla belongs to upazilla", function (done) {
-            var catchment = user.catchment[0];
+            var catchment = provider_user.catchment[0];
             var district_catchment = catchment.substring(0, catchment.length - 2);
-            var catchment_request = new CatchmentRequest(user, district_catchment);
+            var catchment_request = new CatchmentRequest(provider_user, district_catchment);
             request(catchment_request.get(), function (err, httpResponse, body) {
                 util.log(body);
                 expect(httpResponse.statusCode).to.equal(403);
-                expect(body).to.equal('{"httpStatus":"403","message":"Access is denied to user ' + user.client_id + ' for catchment ' + district_catchment + '"}');
+                expect(body).to.equal('{"httpStatus":"403","message":"Access is denied to user ' + provider_user.client_id + ' for catchment ' + district_catchment + '"}');
                 done();
             });
 

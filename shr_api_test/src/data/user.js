@@ -67,7 +67,7 @@ module.exports = function (user_type) {
         client_id: 18561,
         api_token: null,
         access_token: "",
-        hid: '98000121486'
+        hid: '98000180912'
 
     };
     user["QA"]["shr"] = {
