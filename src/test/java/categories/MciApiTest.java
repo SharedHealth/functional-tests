@@ -3,38 +3,48 @@ package categories;
 import ca.uhn.fhir.model.api.ExtensionDt;
 import ca.uhn.fhir.model.dstu2.composite.*;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
-import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
 import ca.uhn.fhir.model.dstu2.valueset.IdentifierTypeCodesEnum;
 import ca.uhn.fhir.model.dstu2.valueset.LinkTypeEnum;
 import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.parser.IParser;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
 import org.junit.Test;
 import utils.FhirContextHelper;
 
-import java.util.Date;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
+import static com.jayway.restassured.RestAssured.get;
 import static com.jayway.restassured.RestAssured.given;
-import static org.junit.Assert.*;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
+import static org.apache.http.HttpStatus.*;
+import static org.junit.Assert.assertEquals;
 
 public class MciApiTest implements ApiTest {
     private final IParser xmlParser = FhirContextHelper.getFhirContext().newXmlParser();
+    private final String baseUrl = "http://172.18.46.199:8085";
+    private final String patientContextPath = "/api/v2/patients/";
 
     @Before
     public void setUp() throws Exception {
-        RestAssured.baseURI = "http://172.18.46.199:8085";
+        RestAssured.baseURI = baseUrl;
     }
 
-    private Patient createPatientToPost() {
-        Patient patientToPost = new Patient();
-        patientToPost.addName(mapName("Rajia", "Shaktiman"));
-        patientToPost.setGender(AdministrativeGenderEnum.OTHER);
-        patientToPost.addAddress(mapAddress());
-
-        return patientToPost;
+    private String readFile(String fileName) {
+        try {
+            return Resources.toString(Resources.getResource(fileName), Charsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private HumanNameDt mapName(String givenName, String surName) {
@@ -67,37 +77,85 @@ public class MciApiTest implements ApiTest {
     private IdentifierDt mapHealthIdIdentifier(String healthId) {
         IdentifierDt healthIdIdentifierDt = new IdentifierDt();
         healthIdIdentifierDt.setValue(healthId);
-        String mciPatientURI = "http://172.18.46.199:8085/api/v2/patients/";
-        healthIdIdentifierDt.setSystem(String.format("%s%s", mciPatientURI, healthId));
+        healthIdIdentifierDt.setSystem(String.format("%s%s%s", baseUrl, patientContextPath, healthId));
         return healthIdIdentifierDt;
     }
 
-
     @Test
-    public void getPatientDetails() throws Exception {
-        Patient patientToPost = createPatientToPost();
-        //shoudl post patient and get HID
-        String healthId = "98000719529"; //should get it back from post
-        patientToPost.addIdentifier(mapHealthIdIdentifier(healthId));
-        patientToPost.addLink(mapPatientReferenceLink(healthId));
+    public void createAndGetPatient() throws Exception {
+        String content = readFile("fhir/patients/valid_patient_with_mandatory_fields.xml");
+        Patient expectedPatient = (Patient) xmlParser.parseResource(content);
 
-        Response response = given().header("X-Auth-Token", "zfsTkslTvUSvjo89hZmMHkGLG6PnmpoBbJaS7wJDYl")
-                .header("From", "mritunjd@thoughtworks.com")
-                .header("client_id", "18550")
-                .when().get("/api/v2/patients/" + healthId);
-        assertEquals(200, response.getStatusCode());
+        Response createResponse = given().body(content).post(patientContextPath);
+        assertEquals(SC_CREATED, createResponse.statusCode());
+        String healthId = new JsonPath(createResponse.asString()).getString("id");
+
+        expectedPatient.addIdentifier(mapHealthIdIdentifier(healthId));
+        expectedPatient.addLink(mapPatientReferenceLink(healthId));
+
+        Response response = get(patientContextPath + healthId);
+        assertEquals(SC_OK, response.getStatusCode());
 
         IBaseResource resource = xmlParser.parseResource(response.asString());
         assertTrue(resource instanceof Patient);
 
         Patient responsePatient = (Patient) resource;
         assertNotNull(responsePatient);
-        assertHealthId(patientToPost, responsePatient);
-        assertName(patientToPost, responsePatient);
-        assertGender(patientToPost, responsePatient);
-        assertAddress(patientToPost, responsePatient);
-        assertLink(patientToPost, responsePatient);
+        assertHealthId(expectedPatient, responsePatient);
+        assertName(expectedPatient, responsePatient);
+        assertGender(expectedPatient, responsePatient);
+        assertDOB(expectedPatient, responsePatient);
+        assertAddress(expectedPatient, responsePatient);
+        assertLink(expectedPatient, responsePatient);
+    }
 
+    @Test
+    public void shouldFailToCreatePatientIfItHasUnknownElements() throws Exception {
+        String content = readFile("fhir/patients/patient_with_unknown_elements.xml");
+
+        Response createResponse = given().body(content).post(patientContextPath);
+        assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
+        String message = new JsonPath(createResponse.asString()).getString("message");
+        assertTrue(message.contains("Unknown element 'newElement' found during parse"));
+    }
+
+    @Test
+    public void shouldFailToCreatePatientIfItHasUnknownAttributeForAnElement() throws Exception {
+        String content = readFile("fhir/patients/patient_with_unknown_attributes.xml");
+
+        Response createResponse = given().body(content).post(patientContextPath);
+        assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
+        String message = new JsonPath(createResponse.asString()).getString("message");
+        assertTrue(message.contains("Unknown attribute 'newAttribute' found during parse"));
+    }
+
+    @Test
+    public void shouldFailToCreatePatientIfItHasUnexpectedRepeatingElement() throws Exception {
+        String content = readFile("fhir/patients/patient_with_multiple_genders.xml");
+
+        Response createResponse = given().body(content).post(patientContextPath);
+        assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
+        String message = new JsonPath(createResponse.asString()).getString("message");
+        assertTrue(message.contains("Multiple repetitions of non-repeatable element 'gender' found during parse"));
+    }
+
+    @Test
+    public void shouldFailToCreatePatientIfItHasInvalidData() throws Exception {
+        String content = readFile("fhir/patients/patient_with_invalid_gender.xml");
+
+        Response createResponse = given().body(content).post(patientContextPath);
+        assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
+        JsonPath jsonPath = new JsonPath(createResponse.asString());
+        String message = jsonPath.getString("message");
+        assertEquals("Validation Failed", message);
+
+        String errorMessage = "The value provided is not in the value set http://hl7.org/fhir/ValueSet/administrative-gender (http://hl7.org/fhir/ValueSet/administrative-gender, and a code is required from this value set";
+        List<Map> errors = jsonPath.getList("errors", Map.class);
+        assertEquals(1, errors.size());
+        Map error = errors.get(0);
+        assertEquals("/f:Patient/f:gender", error.get("field"));
+        assertEquals("error", error.get("type"));
+        assertEquals(errorMessage, error.get("reason"));
     }
 
     private void assertLink(Patient expectedPatient, Patient actualPatient) {
@@ -119,8 +177,8 @@ public class MciApiTest implements ApiTest {
         assertEquals(expectedExtensionDt.getValue(), actualExtensionDt.getValue());
     }
 
-    private void assertDOB(Patient fhirPatient, Date dateOfBirth) {
-        assertEquals(dateOfBirth, fhirPatient.getBirthDate());
+    private void assertDOB(Patient expected, Patient actual) {
+        assertEquals(expected.getBirthDateElement(), actual.getBirthDateElement());
     }
 
     private void assertGender(Patient expected, Patient actual) {
