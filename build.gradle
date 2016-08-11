@@ -27,20 +27,10 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
 }
 
-task runFunctionalTest(type: Test){
-    useJUnit{
-        includeCategories 'categories.FunctionalTest'
-    }
-}
-
-task runApiTests(type: Test) {
+test{
     useJUnit {
-        includeCategories 'categories.ApiTest'
-    }
-}
+        excludeCategories ('categories.FunctionalTest', 'categories.ApiTest', 'categories.PerfTest')
 
-task runPerfTests(type: Test) {
-    useJUnit {
-        includeCategories 'categories.PerfTest'
+        includeCategories 'categories.MciApiTest'
     }
 }
