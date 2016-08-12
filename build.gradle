@@ -33,4 +33,12 @@ test{
 
         includeCategories 'categories.MciApiTest'
     }
+    testLogging {
+        exceptionFormat "full" // default is "short"
+        events "passed", "skipped", "failed"
+    }
+
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
 }
