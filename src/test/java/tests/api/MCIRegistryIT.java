@@ -154,7 +154,7 @@ public class MCIRegistryIT {
     }
 
     @Test
-    public void shouldFailToCreatePatientInvalidForMCIProfile() throws Exception {
+    public void shouldFailToCreatePatientHasNotRequiredDataForMCIProfile() throws Exception {
         String content = readFile("fhir/patients/invalid_patient_for_custom_profile.xml");
 
         Response createResponse = given().body(content).post(patientContextPath);
@@ -170,6 +170,22 @@ public class MCIRegistryIT {
         assertTrue(containsError(errors, "Element '/f:Patient.gender': minimum required = 1, but only found 0"));
         assertTrue(containsError(errors, "Element '/f:Patient.birthDate': minimum required = 1, but only found 0"));
         assertTrue(containsError(errors, "Element '/f:Patient.address': minimum required = 1, but only found 0"));
+    }
+
+    @Test
+    public void shouldFailToCreatePatientHasUnwantedDuplicateDataForMCIProfile() throws Exception {
+        String content = readFile("fhir/patients/patient_with_extra_name_fields.xml");
+
+        Response createResponse = given().body(content).post(patientContextPath);
+        assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
+        JsonPath jsonPath = new JsonPath(createResponse.asString());
+        String message = jsonPath.getString("message");
+        assertEquals("Validation Failed", message);
+
+        List<Map> errors = jsonPath.getList("errors", Map.class);
+
+        assertEquals(1, errors.size());
+        assertTrue(containsError(errors, "Element name @ /f:Patient: max allowed = 1, but found 2"));
     }
 
     private boolean containsError(List<Map> errors, String message) {
