@@ -33,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 public class MCIRegistryIT {
     private final IParser xmlParser = FhirContextHelper.getFhirContext().newXmlParser();
     private final String baseUrl = "http://172.18.46.199:8085";
-    private final String patientContextPath = "/api/v2/patients/";
+    private final String patientContextPath = "/api/v2/patients";
 
     @Before
     public void setUp() throws Exception {
@@ -62,7 +62,7 @@ public class MCIRegistryIT {
     private IdentifierDt mapHealthIdIdentifier(String healthId) {
         IdentifierDt healthIdIdentifierDt = new IdentifierDt();
         healthIdIdentifierDt.setValue(healthId);
-        healthIdIdentifierDt.setSystem(String.format("%s%s%s", baseUrl, patientContextPath, healthId));
+        healthIdIdentifierDt.setSystem(String.format("%s%s%s%s", baseUrl, patientContextPath, "/", healthId));
         return healthIdIdentifierDt;
     }
 
@@ -78,7 +78,7 @@ public class MCIRegistryIT {
         expectedPatient.addIdentifier(mapHealthIdIdentifier(healthId));
         expectedPatient.addLink(mapPatientReferenceLink(healthId));
 
-        Response response = get(patientContextPath + healthId);
+        Response response = get(patientContextPath + "/" + healthId);
         assertEquals(SC_OK, response.getStatusCode());
 
         IBaseResource resource = xmlParser.parseResource(response.asString());
@@ -92,6 +92,16 @@ public class MCIRegistryIT {
         assertDOB(expectedPatient, responsePatient);
         assertAddress(expectedPatient, responsePatient);
         assertLink(expectedPatient, responsePatient);
+    }
+
+    @Test
+    public void shouldCreateAPatientWithoutBirthTime() throws Exception {
+        String content = readFile("fhir/patients/valid_patient_without_birth_time.xml");
+
+        Response createResponse = given().body(content).post(patientContextPath);
+        assertEquals(SC_CREATED, createResponse.statusCode());
+        String healthId = new JsonPath(createResponse.asString()).getString("id");
+        assertNotNull(healthId);
     }
 
     @Test
@@ -142,6 +152,34 @@ public class MCIRegistryIT {
         assertEquals("error", error.get("type"));
         assertEquals(errorMessage, error.get("reason"));
     }
+
+    @Test
+    public void shouldFailToCreatePatientInvalidForMCIProfile() throws Exception {
+        String content = readFile("fhir/patients/invalid_patient_for_custom_profile.xml");
+
+        Response createResponse = given().body(content).post(patientContextPath);
+        assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
+        JsonPath jsonPath = new JsonPath(createResponse.asString());
+        String message = jsonPath.getString("message");
+        assertEquals("Validation Failed", message);
+
+        List<Map> errors = jsonPath.getList("errors", Map.class);
+
+        assertEquals(4, errors.size());
+        assertTrue(containsError(errors, "Element '/f:Patient.name': minimum required = 1, but only found 0"));
+        assertTrue(containsError(errors, "Element '/f:Patient.gender': minimum required = 1, but only found 0"));
+        assertTrue(containsError(errors, "Element '/f:Patient.birthDate': minimum required = 1, but only found 0"));
+        assertTrue(containsError(errors, "Element '/f:Patient.address': minimum required = 1, but only found 0"));
+    }
+
+    private boolean containsError(List<Map> errors, String message) {
+        for (Map error : errors) {
+            assertEquals("/f:Patient", error.get("field"));
+            if (error.get("reason").equals(message)) return true;
+        }
+        return false;
+    }
+
 
     private void assertLink(Patient expectedPatient, Patient actualPatient) {
         Patient.Link expectedLink = expectedPatient.getLinkFirstRep();
