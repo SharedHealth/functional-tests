@@ -10,6 +10,7 @@ import categories.MciApiTest;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -17,22 +18,27 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import utils.FhirContextHelper;
+import utils.IdpUserEnum;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static com.jayway.restassured.RestAssured.get;
 import static com.jayway.restassured.RestAssured.given;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
-import static org.apache.http.HttpStatus.*;
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static utils.IdentityLoginUtil.login;
 
 @Category(MciApiTest.class)
 public class MCIRegistryIT {
     private final IParser xmlParser = FhirContextHelper.getFhirContext().newXmlParser();
-    private final String baseUrl = "http://172.18.46.199:8085";
+    private final String baseUrl = "http://172.18.46.108:8085";
     private final String patientContextPath = "/api/v2/patients";
 
     @Before
@@ -40,46 +46,41 @@ public class MCIRegistryIT {
         RestAssured.baseURI = baseUrl;
     }
 
-    private String readFile(String fileName) {
-        try {
-            return Resources.toString(Resources.getResource(fileName), Charsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    private Patient.Link mapPatientReferenceLink(String healthId) {
-        Patient.Link link = new Patient.Link();
-        link.setType(LinkTypeEnum.SEE_ALSO);
-        String patientLinkUri = "http://172.18.46.199:8081/api/v1/patients/";
-        ResourceReferenceDt patientReference = new ResourceReferenceDt(String.format("%s%s", patientLinkUri, healthId));
-        link.setOther(patientReference);
-        return link;
-    }
-
-    private IdentifierDt mapHealthIdIdentifier(String healthId) {
-        IdentifierDt healthIdIdentifierDt = new IdentifierDt();
-        healthIdIdentifierDt.setValue(healthId);
-        healthIdIdentifierDt.setSystem(String.format("%s%s%s%s", baseUrl, patientContextPath, "/", healthId));
-        return healthIdIdentifierDt;
-    }
-
     @Test
     public void createAndGetPatient() throws Exception {
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum);
+
         String content = readFile("fhir/patients/valid_patient_with_mandatory_fields.xml");
         Patient expectedPatient = (Patient) xmlParser.parseResource(content);
 
-        Response createResponse = given().body(content).post(patientContextPath);
-        assertEquals(SC_CREATED, createResponse.statusCode());
+        Response createResponse = given()
+                .body(content)
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .post(patientContextPath)
+                .then()
+                .assertThat()
+                .statusCode(SC_CREATED)
+                .contentType(ContentType.JSON)
+                .body("httpStatus", equalTo(SC_CREATED))
+                .body("id", notNullValue())
+                .extract().response();
+
         String healthId = new JsonPath(createResponse.asString()).getString("id");
 
         expectedPatient.addIdentifier(mapHealthIdIdentifier(healthId));
         expectedPatient.addLink(mapPatientReferenceLink(healthId));
 
-        Response response = get(patientContextPath + "/" + healthId);
-        assertEquals(SC_OK, response.getStatusCode());
+        Response response = given()
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .get(patientContextPath + "/" + healthId)
+                .then()
+                .assertThat().contentType(ContentType.XML).statusCode(SC_OK)
+                .extract().response();
 
         IBaseResource resource = xmlParser.parseResource(response.asString());
         assertTrue(resource instanceof Patient);
@@ -188,6 +189,31 @@ public class MCIRegistryIT {
         assertTrue(containsError(errors, "Element name @ /f:Patient: max allowed = 1, but found 2"));
     }
 
+    private String readFile(String fileName) {
+        try {
+            return Resources.toString(Resources.getResource(fileName), Charsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Patient.Link mapPatientReferenceLink(String healthId) {
+        Patient.Link link = new Patient.Link();
+        link.setType(LinkTypeEnum.SEE_ALSO);
+        String patientLinkUri = "http://172.18.46.199:8081/api/v1/patients/";
+        ResourceReferenceDt patientReference = new ResourceReferenceDt(String.format("%s%s", patientLinkUri, healthId));
+        link.setOther(patientReference);
+        return link;
+    }
+
+    private IdentifierDt mapHealthIdIdentifier(String healthId) {
+        IdentifierDt healthIdIdentifierDt = new IdentifierDt();
+        healthIdIdentifierDt.setValue(healthId);
+        healthIdIdentifierDt.setSystem(String.format("%s%s%s%s", baseUrl, patientContextPath, "/", healthId));
+        return healthIdIdentifierDt;
+    }
+
     private boolean containsError(List<Map> errors, String message) {
         for (Map error : errors) {
             assertEquals("/f:Patient", error.get("field"));
@@ -239,7 +265,7 @@ public class MCIRegistryIT {
 
         BoundCodeableConceptDt<IdentifierTypeCodesEnum> type = actualIdentifier.getType();
         CodingDt codingDt = type.getCodingFirstRep();
-        assertEquals("http://172.18.46.199:8085/api/v2/vs/patient-identifiers", codingDt.getSystem());
+        assertEquals("http://172.18.46.108:8085/api/v2/vs/patient-identifiers", codingDt.getSystem());
         assertEquals("HID", codingDt.getCode());
     }
 
