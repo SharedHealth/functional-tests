@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static utils.IdentityLoginUtil.login;
+import data.PatientFactory;
 
 @Category(MciApiTest.class)
 public class MCIRegistryIT {
@@ -51,7 +52,8 @@ public class MCIRegistryIT {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
 
-        String content = readFile("fhir/patients/valid_patient_with_mandatory_fields.xml");
+        String content = PatientFactory.validPatientWithMandatoryInformation().asXML();
+        
         Patient expectedPatient = (Patient) xmlParser.parseResource(content);
 
         Response createResponse = given()
@@ -97,9 +99,16 @@ public class MCIRegistryIT {
 
     @Test
     public void shouldCreateAPatientWithoutBirthTime() throws Exception {
-        String content = readFile("fhir/patients/valid_patient_without_birth_time.xml");
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum);
+        String content = PatientFactory.validPatientWithoutBirthTime().asXML();
+//        String content = readFile("fhir/patients/valid_patient_without_birth_time.xml");
 
-        Response createResponse = given().body(content).post(patientContextPath);
+        Response createResponse = given()
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .body(content).post(patientContextPath);
         assertEquals(SC_CREATED, createResponse.statusCode());
         String healthId = new JsonPath(createResponse.asString()).getString("id");
         assertNotNull(healthId);
@@ -107,19 +116,35 @@ public class MCIRegistryIT {
 
     @Test
     public void shouldFailToCreatePatientIfItHasUnknownElements() throws Exception {
-        String content = readFile("fhir/patients/patient_with_unknown_elements.xml");
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum);
+        String content = PatientFactory.validPatientWithoutBirthTime().withUnknownElementInXML();
 
-        Response createResponse = given().body(content).post(patientContextPath);
+//        String content = readFile("fhir/patients/patient_with_unknown_elements.xml");
+
+        Response createResponse = given()
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .body(content).post(patientContextPath);
         assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
         String message = new JsonPath(createResponse.asString()).getString("message");
-        assertTrue(message.contains("Unknown element 'newElement' found during parse"));
+        assertTrue(message.contains("Unknown element 'someElement' found during parse"));
     }
 
     @Test
     public void shouldFailToCreatePatientIfItHasUnknownAttributeForAnElement() throws Exception {
-        String content = readFile("fhir/patients/patient_with_unknown_attributes.xml");
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum);
 
-        Response createResponse = given().body(content).post(patientContextPath);
+//        String content = readFile("fhir/patients/patient_with_unknown_attributes.xml");
+        String content = PatientFactory.validPatientWithoutBirthTime().withUnknowAttributeForGenderInXML();
+
+        Response createResponse = given().body(content)
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .post(patientContextPath);
         assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
         String message = new JsonPath(createResponse.asString()).getString("message");
         assertTrue(message.contains("Unknown attribute 'newAttribute' found during parse"));
@@ -127,9 +152,16 @@ public class MCIRegistryIT {
 
     @Test
     public void shouldFailToCreatePatientIfItHasUnexpectedRepeatingElement() throws Exception {
-        String content = readFile("fhir/patients/patient_with_multiple_genders.xml");
+        String content = PatientFactory.validPatientWithoutBirthTime().withMultipleGenderElementsInXML();
+//        String content = readFile("fhir/patients/patient_with_multiple_genders.xml");
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum);
 
-        Response createResponse = given().body(content).post(patientContextPath);
+        Response createResponse = given()
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .body(content).post(patientContextPath);
         assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
         String message = new JsonPath(createResponse.asString()).getString("message");
         assertTrue(message.contains("Multiple repetitions of non-repeatable element 'gender' found during parse"));
@@ -137,9 +169,18 @@ public class MCIRegistryIT {
 
     @Test
     public void shouldFailToCreatePatientIfItHasInvalidData() throws Exception {
-        String content = readFile("fhir/patients/patient_with_invalid_gender.xml");
+//        String content = readFile("fhir/patients/patient_with_invalid_gender.xml");
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum);
 
-        Response createResponse = given().body(content).post(patientContextPath);
+        String content = PatientFactory.validPatientWithoutBirthTime().withInvalidGenderInXML();
+
+        Response createResponse = given()
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .body(content)
+                .post(patientContextPath);
         assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
         JsonPath jsonPath = new JsonPath(createResponse.asString());
         String message = jsonPath.getString("message");
@@ -156,9 +197,17 @@ public class MCIRegistryIT {
 
     @Test
     public void shouldFailToCreatePatientHasNotRequiredDataForMCIProfile() throws Exception {
-        String content = readFile("fhir/patients/invalid_patient_for_custom_profile.xml");
+        String content = PatientFactory.validPatientWithoutBirthTime().withMissingRequiredDataInXML();
+//        String content = readFile("fhir/patients/invalid_patient_for_custom_profile.xml");
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum);
 
-        Response createResponse = given().body(content).post(patientContextPath);
+        Response createResponse = given()
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .body(content)
+                .post(patientContextPath);
         assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
         JsonPath jsonPath = new JsonPath(createResponse.asString());
         String message = jsonPath.getString("message");
@@ -175,9 +224,17 @@ public class MCIRegistryIT {
 
     @Test
     public void shouldFailToCreatePatientHasUnwantedDuplicateDataForMCIProfile() throws Exception {
-        String content = readFile("fhir/patients/patient_with_extra_name_fields.xml");
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum);
 
-        Response createResponse = given().body(content).post(patientContextPath);
+        String content = PatientFactory.validPatientWithoutBirthTime().withDuplicateNameDataInXML();
+//        String content = readFile("fhir/patients/patient_with_extra_name_fields.xml");
+
+        Response createResponse = given()
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .body(content).post(patientContextPath);
         assertEquals(SC_UNPROCESSABLE_ENTITY, createResponse.statusCode());
         JsonPath jsonPath = new JsonPath(createResponse.asString());
         String message = jsonPath.getString("message");

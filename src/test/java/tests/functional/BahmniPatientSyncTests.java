@@ -1,7 +1,7 @@
 package tests.functional;
 
 import categories.FunctionalTest;
-import data.PatientData;
+import data.PatientFactory;
 import domain.Patient;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -23,7 +23,7 @@ public class BahmniPatientSyncTests extends TestSetup{
 
         driver.get(facilityOneInternalURL);
 
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.defaultPatient;
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.
@@ -50,7 +50,7 @@ public class BahmniPatientSyncTests extends TestSetup{
 
         driver.get(facilityOneInternalURL);
 
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.defaultPatient;
 
         LoginPage page = PageFactoryWithWait.initialize(driver, LoginPage.class);

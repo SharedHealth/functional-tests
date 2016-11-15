@@ -1,29 +1,27 @@
 package tests.api;
 
 import categories.ApiTest;
-import categories.ShrApiTest;
 import com.jayway.restassured.RestAssured;
 import static com.jayway.restassured.RestAssured.basic;
 import static com.jayway.restassured.RestAssured.given;
 import com.jayway.restassured.response.Response;
 import data.EncounterBundleData;
 import static data.EncounterBundleData.validEncounter;
-import data.PatientData;
+import data.PatientFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.is;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.*;
 import org.junit.experimental.categories.Category;
 import repo.PatientRepo;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Ignore
 public class SHRIntegrationTests {
 
     private PatientRepo patientRepo = new PatientRepo();
@@ -36,7 +34,7 @@ public class SHRIntegrationTests {
         RestAssured.port = 8080;
         RestAssured.authentication = basic("shr", "password");
 
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         hid = patientRepo.create(dataStore.defaultPatient);
         System.out.println("Patient with hid " + hid + " is created.");
     }

@@ -27,7 +27,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
     @Category(FunctionalTest.class)
     @Test
     public void verifyDiagnosisSync() {
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.defaultPatient;
         firstDiagnosis = DiagnosisData.DiagnosisWithReferenceTermForEncounterSync;
         secondDiagnosis = DiagnosisData.DiagnosisWithOutReferenceTermForEncounterSync;
@@ -52,7 +52,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
     @Category(FunctionalTest.class)
     @Test
     public void verifyChiefComplainSync() {
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.defaultPatient;
         firstChiefComplain = ChiefComplainData.ChiefComplainWithReferenceTermForEncounterSync;
         secondChiefComplain = ChiefComplainData.ChiefComplainWithOutReferenceTermForEncounterSync;
@@ -78,7 +78,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
     @Category(FunctionalTest.class)
     @Test
     public void verifyVitalSync() {
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.defaultPatient;
         patientVitals = VitalsData.patientVitals;
 
@@ -100,7 +100,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
     @Category(FunctionalTest.class)
     @Test
     public void verifyFamilyHistorySync() {
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.defaultPatient;
         patientFamilyHistory = FamilyHistoryData.familyHistory;
 
@@ -123,7 +123,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
     @Category(FunctionalTest.class)
     @Test
     public void verifyEncounterSyncByCatchment() {
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.patientForFacilityTwoCatchment;
         firstChiefComplain = ChiefComplainData.ChiefComplainWithReferenceTermForEncounterSync;
         secondChiefComplain = ChiefComplainData.ChiefComplainWithOutReferenceTermForEncounterSync;

@@ -38,7 +38,7 @@ public class ClinicalPage extends Page {
 
     public ClinicalDashboardPage goToPatientDashboard(Patient patient) {
 
-        String xpath = "//div[text()='" + patient.getFirstName() + " " + patient.getLastName() + "']";
+        String xpath = "//div[text()='" + patient.getGiven() + " " + patient.getFamily() + "']";
         WebElement patientName = waitFindElementByXpath(xpath);
         patientName.click();
         return initialize(webDriver, ClinicalDashboardPage.class);

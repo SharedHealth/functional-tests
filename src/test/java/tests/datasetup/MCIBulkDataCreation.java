@@ -4,7 +4,7 @@ package tests.datasetup;
 import categories.ApiTest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.config.RestAssuredConfig;
-import data.PatientData;
+import data.PatientFactory;
 import domain.Patient;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,7 +12,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import utils.WebDriverProperties;
 
 import static com.jayway.restassured.RestAssured.basic;
 import static com.jayway.restassured.RestAssured.given;
@@ -63,7 +62,7 @@ public class MCIBulkDataCreation {
 
     public void verifyCreatePatientForBarisalDivision() {
 
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.patientWithAllFieldDetails;
 
         JSONObject person = createPatientDataToPost(dataStore);
@@ -79,7 +78,7 @@ public class MCIBulkDataCreation {
 
     public void verifyCreatePatientForDhakaDivision() {
 
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.patientWithAllFieldDetails;
 
         JSONObject person = createPatientDataToPost(dataStore);
@@ -94,7 +93,7 @@ public class MCIBulkDataCreation {
 
     public void verifyCreatePatientForKhulnaDivision() {
 
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.patientWithAllFieldDetails;
 
         JSONObject person = createPatientDataToPost(dataStore);
@@ -108,7 +107,7 @@ public class MCIBulkDataCreation {
 
     public void verifyCreatePatientForChittagongDivision() {
 
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.patientWithAllFieldDetails;
 
         JSONObject person = createPatientDataToPost(dataStore);
@@ -122,7 +121,7 @@ public class MCIBulkDataCreation {
 
     public void verifyCreatePatientForRangpurDivision() {
 
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.patientWithAllFieldDetails;
 
         JSONObject person = createPatientDataToPost(dataStore);
@@ -136,7 +135,7 @@ public class MCIBulkDataCreation {
 
     public void verifyCreatePatientForRajshahiDivision() {
 
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.patientWithAllFieldDetails;
 
         JSONObject person = createPatientDataToPost(dataStore);
@@ -150,7 +149,7 @@ public class MCIBulkDataCreation {
 
     public void verifyCreatePatientForSylhetDivision() {
 
-        PatientData dataStore = new PatientData();
+        PatientFactory dataStore = new PatientFactory();
         primaryPatient = dataStore.patientWithAllFieldDetails;
 
         JSONObject person = createPatientDataToPost(dataStore);
@@ -177,7 +176,7 @@ public class MCIBulkDataCreation {
         System.out.print("Patient with NID " + primaryPatient.getNid() + " Created in MCI ");
     }
 
-    private JSONObject createPatientDataToPost(PatientData dataStore) {
+    private JSONObject createPatientDataToPost(PatientFactory dataStore) {
         JSONObject person = new JSONObject();
 
         try {
@@ -186,8 +185,8 @@ public class MCIBulkDataCreation {
             person.put("nid", primaryPatient.getNid());
             person.put("bin_brn", primaryPatient.getBinBRN());
             person.put("uid", primaryPatient.getUid());
-            person.put("given_name", primaryPatient.getFirstName());
-            person.put("sur_name", primaryPatient.getLastName());
+            person.put("given_name", primaryPatient.getGiven());
+            person.put("sur_name", primaryPatient.getFamily());
             person.put("date_of_birth", "2000-03-01");
             person.put("gender", "M");
             person.put("occupation", "02");

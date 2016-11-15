@@ -29,8 +29,8 @@ public class PatientRepo {
         JSONObject present_address = new JSONObject();
         try {
             person.put("nid", patient.getNid());
-            person.put("first_name", patient.getFirstName());
-            person.put("last_name", patient.getLastName());
+            person.put("first_name", patient.getGiven());
+            person.put("last_name", patient.getFamily());
             person.put("date_of_birth", "2000-03-01");
             person.put("gender", "1");
             person.put("occupation", "02");

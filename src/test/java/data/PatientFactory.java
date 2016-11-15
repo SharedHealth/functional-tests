@@ -5,7 +5,108 @@ import domain.Patient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PatientData {
+import java.util.Date;
+
+public class PatientFactory {
+
+    private static String getEncodedName(String randomCode) {
+
+        StringBuilder codedString = new StringBuilder();
+
+        for (int i = 0; i < randomCode.length(); i++) {
+            codedString.append((char) (Integer.parseInt(randomCode.substring(i, i + 1)) + 65));
+
+        }
+
+        return codedString.toString();
+    }
+
+    private static String getName(Patient patient) {
+        return "AHI" + PatientFactory.getEncodedName(patient.nid).toString();
+    }
+
+    public static Patient validPatientWithMandatoryInformation() {
+        Patient patient = new Patient();
+
+        patient.nid = String.valueOf(new Date().getTime());
+        patient.given = PatientFactory.getName(patient);
+        patient.family = "Raichand";
+        patient.gender = "male";
+        patient.birthDate = "1976-01-12";
+        patient.birthTime = "16:50:00";
+        patient.addressCode = "201918991101";
+        patient.addressLine = "3rd " + PatientFactory.getEncodedName(patient.nid).toString() + " lane";
+        patient.countryCode = "50";
+
+        return patient;
+    }
+
+
+public static  Patient validPatientWithoutBirthTime() {
+    Patient patient = new Patient();
+    patient.nid = String.valueOf(new Date().getTime());
+    patient.given = PatientFactory.getName(patient);
+    patient.family = "Shah";
+    patient.gender = "male";
+    patient.birthDate = "1980-06-14";
+    patient.addressCode = "201918991101";
+    patient.addressLine = "6th " + PatientFactory.getEncodedName(patient.nid).toString() + " lane";
+    patient.countryCode = "50";
+
+    return patient;
+
+}
+
+/*
+
+ <Patient xmlns="http://hl7.org/fhir">
+    <name>
+        <family value="Raichand"/>
+        <given value="Nandini"/>
+    </name>
+    <gender value="female"/>
+    <newElement value="Someval"/>
+    <birthDate value="1975-01-12">
+        <extension url="http://hl7.org/fhir/StructureDefinition/patient-birthTime">
+            <valueDateTime value="1975-01-12T16:50:00+05:30"/>
+        </extension>
+    </birthDate>
+    <address>
+        <extension url="https://sharedhealth.atlassian.net/wiki/display/docs/fhir-extensions#AddressCode">
+            <valueString value="201918991101"/>
+        </extension>
+        <line value="3rd lane"/>
+        <country value="050"/>
+    </address>
+</Patient>
+
+ */
+
+public static Patient patientWithUnknownElements() {
+    return new Patient();
+}
+/*
+<Patient xmlns="http://hl7.org/fhir">
+    <name>
+        <family value="Raichand"/>
+        <given value="Yashvardhan"/>
+    </name>
+    <gender value="male"/>
+
+    <birthDate value="1976-01-12">
+
+    </birthDate>
+    <address>
+        <extension url="https://sharedhealth.atlassian.net/wiki/display/docs/fhir-extensions#AddressCode">
+            <valueString value="201918991101"/>
+        </extension>
+        <line value="3rd lane"/>
+        <country value="050"/>
+    </address>
+</Patient>
+
+
+ */
 
 
     public static Address defaultAddress = new Address.AddressBuilder()

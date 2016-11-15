@@ -88,10 +88,10 @@ public class PatientDetailsPage extends Page {
         Select patientOccupationSelectBox = new Select(patientOccupation);
 
 
-        Assert.assertEquals(primaryPatient.getFirstName(), patientFirstName.getAttribute("value"));
-        Assert.assertEquals(primaryPatient.getLastName(), patientLastName.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.getGiven(), patientFirstName.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.getFamily(), patientLastName.getAttribute("value"));
         Assert.assertEquals(primaryPatient.getGender(), patientGenderSelectBox.getFirstSelectedOption().getText());
-        Assert.assertEquals(primaryPatient.getDateOfBirth(), patientDateOfBirth.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.getBirthDate(), patientDateOfBirth.getAttribute("value"));
         Assert.assertEquals(primaryPatient.getAddress().getAddressLine1(), patientAddressLine1.getAttribute("value"));
         Assert.assertEquals(primaryPatient.getAddress().getUnion(), patientAddressUnion.getAttribute("value"));
         Assert.assertEquals(primaryPatient.getAddress().getUpazilla(), patientAddressUpaZilla.getAttribute("value"));
@@ -110,8 +110,8 @@ public class PatientDetailsPage extends Page {
     public PatientVisitInformationPage editPatientDetails(Patient primaryPatient) {
         this.waitForMillis(1000);
 
-        setText(patientFirstName, primaryPatient.getFirstName());
-        setText(patientLastName, primaryPatient.getLastName());
+        setText(patientFirstName, primaryPatient.getGiven());
+        setText(patientLastName, primaryPatient.getFamily());
         setText(patientAddressLine1, primaryPatient.getAddress().getAddressLine1());
 //        enterVisitDetails.click();
         patientNID.click();
@@ -130,9 +130,9 @@ public class PatientDetailsPage extends Page {
         Select patientOccupationSelectBox = new Select(patientOccupation);
 
 
-        setText(patientFirstName, primaryPatient.getFirstName());
-        setText(patientLastName, primaryPatient.getLastName());
-        setText(patientDateOfBirth, primaryPatient.getDateOfBirth());
+        setText(patientFirstName, primaryPatient.getGiven());
+        setText(patientLastName, primaryPatient.getFamily());
+        setText(patientDateOfBirth, primaryPatient.getBirthDate());
         setText(patientAddressLine1, primaryPatient.getAddress().getAddressLine1());
         if (primaryPatient.getAddress().getUnion().equals("")) {
             setText(patientAddressUpaZilla, primaryPatient.getAddress().getUpazilla());
