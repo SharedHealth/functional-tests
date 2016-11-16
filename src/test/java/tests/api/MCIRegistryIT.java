@@ -13,6 +13,8 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
+import config.CongifurationProperty;
+import config.EnvironmentConfiguration;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,8 +41,11 @@ import data.PatientFactory;
 @Category(MciApiTest.class)
 public class MCIRegistryIT {
     private final IParser xmlParser = FhirContextHelper.getFhirContext().newXmlParser();
-    private final String baseUrl = "http://172.18.46.108:8085";
+
+    CongifurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
+    private final String baseUrl = config.property.get("mci_registry");
     private final String patientContextPath = "/api/v2/patients";
+
 
     @Before
     public void setUp() throws Exception {
@@ -102,8 +107,6 @@ public class MCIRegistryIT {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
         String content = PatientFactory.validPatientWithoutBirthTime().asXML();
-//        String content = readFile("fhir/patients/valid_patient_without_birth_time.xml");
-
         Response createResponse = given()
                 .header("X-Auth-Token", accessToken)
                 .header("From", idpUserEnum.getEmail())
@@ -120,8 +123,6 @@ public class MCIRegistryIT {
         String accessToken = login(idpUserEnum);
         String content = PatientFactory.validPatientWithoutBirthTime().withUnknownElementInXML();
 
-//        String content = readFile("fhir/patients/patient_with_unknown_elements.xml");
-
         Response createResponse = given()
                 .header("X-Auth-Token", accessToken)
                 .header("From", idpUserEnum.getEmail())
@@ -136,8 +137,6 @@ public class MCIRegistryIT {
     public void shouldFailToCreatePatientIfItHasUnknownAttributeForAnElement() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
-
-//        String content = readFile("fhir/patients/patient_with_unknown_attributes.xml");
         String content = PatientFactory.validPatientWithoutBirthTime().withUnknowAttributeForGenderInXML();
 
         Response createResponse = given().body(content)
@@ -153,7 +152,6 @@ public class MCIRegistryIT {
     @Test
     public void shouldFailToCreatePatientIfItHasUnexpectedRepeatingElement() throws Exception {
         String content = PatientFactory.validPatientWithoutBirthTime().withMultipleGenderElementsInXML();
-//        String content = readFile("fhir/patients/patient_with_multiple_genders.xml");
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
 
@@ -169,7 +167,6 @@ public class MCIRegistryIT {
 
     @Test
     public void shouldFailToCreatePatientIfItHasInvalidData() throws Exception {
-//        String content = readFile("fhir/patients/patient_with_invalid_gender.xml");
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
 
@@ -198,7 +195,6 @@ public class MCIRegistryIT {
     @Test
     public void shouldFailToCreatePatientHasNotRequiredDataForMCIProfile() throws Exception {
         String content = PatientFactory.validPatientWithoutBirthTime().withMissingRequiredDataInXML();
-//        String content = readFile("fhir/patients/invalid_patient_for_custom_profile.xml");
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
 
@@ -228,7 +224,6 @@ public class MCIRegistryIT {
         String accessToken = login(idpUserEnum);
 
         String content = PatientFactory.validPatientWithoutBirthTime().withDuplicateNameDataInXML();
-//        String content = readFile("fhir/patients/patient_with_extra_name_fields.xml");
 
         Response createResponse = given()
                 .header("X-Auth-Token", accessToken)
@@ -319,7 +314,6 @@ public class MCIRegistryIT {
         IdentifierDt expectedIdentifier = expectedPatient.getIdentifier().get(0);
         assertEquals(expectedIdentifier.getValue(), actualIdentifier.getValue());
         assertEquals(expectedIdentifier.getSystem(), actualIdentifier.getSystem());
-
         BoundCodeableConceptDt<IdentifierTypeCodesEnum> type = actualIdentifier.getType();
         CodingDt codingDt = type.getCodingFirstRep();
         assertEquals("http://172.18.46.108:8085/api/v2/vs/patient-identifiers", codingDt.getSystem());

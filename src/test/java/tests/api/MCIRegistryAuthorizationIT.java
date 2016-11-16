@@ -5,6 +5,8 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
+import config.CongifurationProperty;
+import config.EnvironmentConfiguration;
 import domain.Patient;
 import nu.xom.ParsingException;
 import org.junit.Before;
@@ -28,7 +30,8 @@ import static utils.IdentityLoginUtil.loginFor;
 
 @Category(MciApiTest.class)
 public class MCIRegistryAuthorizationIT {
-    private final String baseUrl = "http://172.18.46.108:8085";
+    CongifurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
+    private final String baseUrl = config.property.get("mci_registry");
     private final String patientContextPath = "/api/v2/patients";
 
     @Before
@@ -40,10 +43,6 @@ public class MCIRegistryAuthorizationIT {
     public void createPatientShouldFailForInvalidFacilityAccessToken() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.FACILITY;
         Patient patient = PatientFactory.validPatientWithMandatoryInformation();
-
-
-//        String patientDetails = readFile("fhir/patients/valid_patient_with_mandatory_fields.xml");
-        System.out.println(patient.asXML());
         String patientDetails = patient.asXML();
         given().
                 body(patientDetails).
