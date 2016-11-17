@@ -57,56 +57,9 @@ public static  Patient validPatientWithoutBirthTime() {
 
 }
 
-/*
-
- <Patient xmlns="http://hl7.org/fhir">
-    <name>
-        <family value="Raichand"/>
-        <given value="Nandini"/>
-    </name>
-    <gender value="female"/>
-    <newElement value="Someval"/>
-    <birthDate value="1975-01-12">
-        <extension url="http://hl7.org/fhir/StructureDefinition/patient-birthTime">
-            <valueDateTime value="1975-01-12T16:50:00+05:30"/>
-        </extension>
-    </birthDate>
-    <address>
-        <extension url="https://sharedhealth.atlassian.net/wiki/display/docs/fhir-extensions#AddressCode">
-            <valueString value="201918991101"/>
-        </extension>
-        <line value="3rd lane"/>
-        <country value="050"/>
-    </address>
-</Patient>
-
- */
-
 public static Patient patientWithUnknownElements() {
     return new Patient();
 }
-/*
-<Patient xmlns="http://hl7.org/fhir">
-    <name>
-        <family value="Raichand"/>
-        <given value="Yashvardhan"/>
-    </name>
-    <gender value="male"/>
-
-    <birthDate value="1976-01-12">
-
-    </birthDate>
-    <address>
-        <extension url="https://sharedhealth.atlassian.net/wiki/display/docs/fhir-extensions#AddressCode">
-            <valueString value="201918991101"/>
-        </extension>
-        <line value="3rd lane"/>
-        <country value="050"/>
-    </address>
-</Patient>
-
-
- */
 
 
     public static Address defaultAddress = new Address.AddressBuilder()

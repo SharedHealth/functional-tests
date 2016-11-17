@@ -1,10 +1,18 @@
 package domain;
-import com.sun.tools.doclint.HtmlTag;
-import com.sun.xml.internal.ws.developer.MemberSubmissionEndpointReference;
 import nu.xom.*;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
+class MaritalStatus {
+    public static Map<String, String> code = new HashMap<String, String>();
+
+    public static String getMaritalStatus(String statusCode) {
+        code.put("M", "Married");
+        return code.get(statusCode);
+    }
+}
 
 public class Patient {
 
@@ -30,10 +38,11 @@ public class Patient {
     private String binBRN;
     public String countryCode;
     public String birthTime;
-
+    public String maritalStatusCode;
+    private PatientFHIRXMLData fhirxmlData ;
     public Patient()
     {
-
+        fhirxmlData = new PatientFHIRXMLData(this);
     }
     public String getAddressCode() {
         return addressCode;
@@ -42,8 +51,6 @@ public class Patient {
     public void setAddressCode(String addressCode) {
         this.addressCode = addressCode;
     }
-
-
 
     public String getAddressLine() {
         return addressLine;
@@ -127,206 +134,62 @@ public class Patient {
         this.motherNid = patientBuilder.motherNid;
         this.motherBRN = patientBuilder.motherBRN;
         this.binBRN = patientBuilder.binBRN;
-
-
     }
 
     public String withUnknowAttributeForGenderInXML() throws ParsingException, IOException {
-        String xmlns = "http://hl7.org/fhir";
-        Builder parser = new Builder();
-        Document doc = parser.build(this.asXML(), null);
-        doc.getRootElement().getFirstChildElement("gender", xmlns).addAttribute(new Attribute("newAttribute", "somevalue"));
-        return doc.toXML();
 
-
+        return fhirxmlData.withUnknownAttributeForGenderInXML();
     }
 
     public String withInvalidGenderInXML() throws ParsingException, IOException {
-        String xmlns = "http://hl7.org/fhir";
-        Builder parser = new Builder();
-        Document doc = parser.build(this.asXML(), null);
-        doc.getRootElement().getFirstChildElement("gender", xmlns).getAttribute("value").setValue("random");
-        return  doc.toXML();
-
-
-
-
+        return fhirxmlData.withInvalidGenderInXML();
 
     }
 
     public String withMultipleGenderElementsInXML() throws ParsingException, IOException {
-        String xmlns = "http://hl7.org/fhir";
-        Builder parser = new Builder();
-        Document doc = parser.build(this.asXML(), null);
-        doc.getRootElement().appendChild(doc.getRootElement().getFirstChildElement("gender", xmlns).copy());
-        return doc.toXML();
+        return fhirxmlData.withMultipleGenderElementsInXML();
     }
 
     public String withUnknownElementInXML() throws ParsingException, IOException {
-        Builder parser = new Builder();
-        Document doc = parser.build(this.asXML(), null);
-        Element root = doc.getRootElement();
-        Element someElement = new Element("someElement");
-        Attribute someElementValue = new Attribute("value", "somevalue");
-        someElement.addAttribute((someElementValue));
-        root.appendChild(someElement);
-        return doc.toXML();
-
+        return fhirxmlData.withUnknownElementInXML();
     }
 
     public String withMissingRequiredDataInXML() throws ParsingException, IOException {
-        String xmlns = "http://hl7.org/fhir";
-        Builder parser = new Builder();
-        Document doc = parser.build(this.asXML(), null);
-        Element root = doc.getRootElement();
-        root.removeChildren();
 
-        /*
-
-          <maritalStatus>
-        <coding>
-            <system value="http://hl7.org/fhir/v3/MaritalStatus"/>
-            <code value="M"/>
-            <display value="Married"/>
-        </coding>
-        <text value="Getrouwd"/>
-    </maritalStatus>
-         */
-
-        Element maritalStatus = new Element("maritalStatus", xmlns);
-        Element coding = new Element("coding", xmlns);
-        Element system = new Element("system", xmlns);
-        system.addAttribute(new Attribute("value", "http://hl7.org/fhir/v3/MaritalStatus"));
-        Element code = new Element("code", xmlns);
-        code.addAttribute(new Attribute("value", "M"));
-        Element display = new Element("display");
-        display.addAttribute(new Attribute("value", "Married"));
-        Element text = new Element("text");
-        text.addAttribute(new Attribute("value", "Getrouwd"));
-        coding.appendChild(system);
-        coding.appendChild(code);
-        coding.appendChild(display);
-        maritalStatus.appendChild(coding);
-        maritalStatus.appendChild(text);
-        root.appendChild(maritalStatus);
-
-        return doc.toXML();
+        return fhirxmlData.withMissingRequiredDataInXML();
 
     }
 
     public String withDuplicateNameDataInXML() throws ParsingException, IOException {
-        String xmlns = "http://hl7.org/fhir";
-        Builder parser = new Builder();
-        Document doc = parser.build(this.asXML(), null);
-        doc.getRootElement().appendChild(doc.getRootElement().getFirstChildElement("name", xmlns).copy());
-        return doc.toXML();
-
-
+        return fhirxmlData.withDuplicateNameDataInXML();
     }
+
     public String asXML() throws ParsingException, IOException {
 
-        /*
-
-            <Patient xmlns="http://hl7.org/fhir">
-         */
-        Element root;
-        String xmlns = "http://hl7.org/fhir";
-        root = new Element("Patient", xmlns);
-        
-
-
-        /*
-        <name>
-        <family value="Raichand"/>
-        <given value="Yashvardhan"/>
-        </name>
-        */
-
-        Element name = new Element("name", xmlns);
-        Element family = new Element("family", xmlns);
-        family.addAttribute(new Attribute("value", this.family));
-        Element given = new Element("given", xmlns);
-        given.addAttribute(new Attribute("value", this.given));
-        name.appendChild(family);
-        name.appendChild(given);
-        root.appendChild(name);
-
-
-/*         <gender value="male"/> */
-
-        Element gender = new Element("gender", xmlns);
-        gender.addAttribute(new Attribute("value", this.gender));
-        root.appendChild(gender);
-
-
-/*
-        <birthDate value="1976-01-12">
-            <extension url="http://hl7.org/fhir/StructureDefinition/patient-birthTime">
-                <valueDateTime value="1976-01-12T16:50:00+05:30"/>
-            </extension>
-        </birthDate>
- */
-
-
-/*        <birthDate value="1976-01-12">
-
-        </birthDate>*/
-
-        Element birthDate = new Element("birthDate", xmlns);
-        birthDate.addAttribute(new Attribute("value", this.birthDate));
-
-        if(this.hasBirthTime())
-        {
-            Element birthDateExtension = new Element("extension", xmlns);
-            birthDateExtension.addAttribute(new Attribute("url", "http://hl7.org/fhir/StructureDefinition/patient-birthTime"));
-            Element birthDateExtensionValue = new Element("valueDateTime", xmlns);
-            birthDateExtensionValue.addAttribute(new Attribute("value", this.birthDate + "T" + this.birthTime  + "+05:30"));
-
-            birthDateExtension.appendChild(birthDateExtensionValue);
-            birthDate.appendChild(birthDateExtension);
-
-        }
-
-        root.appendChild(birthDate);
-
-        /*
-
-            <address>
-                <extension url="https://sharedhealth.atlassian.net/wiki/display/docs/fhir-extensions#AddressCode">
-                    <valueString value="201918991101"/>
-                </extension>
-                <line value="3rd lane"/>
-                <country value="050"/>
-            </address>
-            </Patient>
-         */
-
-        Element address = new Element("address", xmlns);
-        Element addressExtension = new Element("extension", xmlns);
-        addressExtension.addAttribute(new Attribute("url", "https://sharedhealth.atlassian.net/wiki/display/docs/fhir-extensions#AddressCode"));
-        Element addressExtensionValueString = new Element("valueString", xmlns);
-        addressExtensionValueString.addAttribute(new Attribute("value", this.addressCode));
-        Element addressLine = new Element("line", xmlns);
-        addressLine.addAttribute(new Attribute("value", this.addressLine));
-        Element country = new Element("country", xmlns);
-        country.addAttribute(new Attribute("value", this.countryCode));
-        addressExtension.appendChild(addressExtensionValueString);
-        address.appendChild(addressExtension);
-        address.appendChild(addressLine);
-        address.appendChild(country);
-        root.appendChild(address);
-
-
-        Document patientDetails = new Document(root);
-        Builder parser = new Builder();
-        parser.build(patientDetails.toXML(), null);
-        return patientDetails.toXML();
+        PatientFHIRXMLComposer composer = new PatientFHIRXMLComposer(this);
+        return composer.compose();
 
     }
 
     boolean hasBirthTime() {
 
         return this.birthTime != null;
+    }
+
+    public boolean hasNameDetails() {
+        return this.family != null;
+    }
+
+    public boolean hasGenderDetails() {
+        return this.gender != null;
+    }
+
+    public boolean hasBirthDetails() {
+        return this.birthDate != null;
+    }
+
+    public boolean hasAddressDetails() {
+        return this.addressCode != null;
     }
 
 
@@ -432,136 +295,3 @@ public class Patient {
     }
 }
 
-class PatientXMLBuilder {
-    Patient patient;
-    String xmlns;
-    Element root;
-
-    public PatientXMLBuilder(Patient patient) {
-        this.patient = patient;
-        this.xmlns = "http://hl7.org/fhir";
-
-    }
-
-    private void createRootElement()
-    {
-         root = new Element("Patient", xmlns);
-
-    }
-
-    public String composeAsXML() {
-        this.compose();
-        Document document = new Document(root);
-        return document.toXML();
-
-    }
-
-    private void compose() {
-        this.createRootElement();
-
-
-    }
-
-    public String asXML() throws ParsingException, IOException {
-
-        /*
-
-            <Patient xmlns="http://hl7.org/fhir">
-         */
-
-        String xmlns = "http://hl7.org/fhir";
-
-
-
-        /*
-        <name>
-        <family value="Raichand"/>
-        <given value="Yashvardhan"/>
-        </name>
-        */
-
-        Element name = new Element("name", xmlns);
-        Element family = new Element("family", xmlns);
-        family.addAttribute(new Attribute("value", this.patient.family));
-        Element given = new Element("given", xmlns);
-        given.addAttribute(new Attribute("value", this.patient.given));
-        name.appendChild(family);
-        name.appendChild(given);
-        root.appendChild(name);
-
-
-/*         <gender value="male"/> */
-
-        Element gender = new Element("gender", xmlns);
-        gender.addAttribute(new Attribute("value", this.patient.gender));
-        root.appendChild(gender);
-
-
-/*
-        <birthDate value="1976-01-12">
-            <extension url="http://hl7.org/fhir/StructureDefinition/patient-birthTime">
-                <valueDateTime value="1976-01-12T16:50:00+05:30"/>
-            </extension>
-        </birthDate>
- */
-
-
-/*        <birthDate value="1976-01-12">
-
-        </birthDate>*/
-
-        Element birthDate = new Element("birthDate", xmlns);
-        birthDate.addAttribute(new Attribute("value", this.patient.birthDate));
-
-        if(this.patient.hasBirthTime())
-        {
-            Element birthDateExtension = new Element("extension", xmlns);
-            birthDateExtension.addAttribute(new Attribute("url", "http://hl7.org/fhir/StructureDefinition/patient-birthTime"));
-            Element birthDateExtensionValue = new Element("valueDateTime", xmlns);
-            birthDateExtensionValue.addAttribute(new Attribute("value", this.patient.birthDate + "T" + this.patient.birthTime  + "+05:30"));
-
-            birthDateExtension.appendChild(birthDateExtensionValue);
-            birthDate.appendChild(birthDateExtension);
-
-        }
-
-        root.appendChild(birthDate);
-
-        /*
-
-            <address>
-                <extension url="https://sharedhealth.atlassian.net/wiki/display/docs/fhir-extensions#AddressCode">
-                    <valueString value="201918991101"/>
-                </extension>
-                <line value="3rd lane"/>
-                <country value="050"/>
-            </address>
-            </Patient>
-         */
-
-        Element address = new Element("address", xmlns);
-        Element addressExtension = new Element("extension", xmlns);
-        addressExtension.addAttribute(new Attribute("url", "https://sharedhealth.atlassian.net/wiki/display/docs/fhir-extensions#AddressCode"));
-        Element addressExtensionValueString = new Element("valueString", xmlns);
-        addressExtensionValueString.addAttribute(new Attribute("value", this.patient.addressCode));
-        Element addressLine = new Element("line", xmlns);
-        addressLine.addAttribute(new Attribute("value", this.patient.addressLine));
-        Element country = new Element("country", xmlns);
-        country.addAttribute(new Attribute("value", this.patient.countryCode));
-        addressExtension.appendChild(addressExtensionValueString);
-        address.appendChild(addressExtension);
-        address.appendChild(addressLine);
-        address.appendChild(country);
-        root.appendChild(address);
-
-
-        Document patientDetails = new Document(root);
-        Builder parser = new Builder();
-        parser.build(patientDetails.toXML(), null);
-        return patientDetails.toXML();
-
-    }
-
-
-
-}
