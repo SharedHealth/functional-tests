@@ -8,6 +8,7 @@ import com.jayway.restassured.http.ContentType;
 import config.CongifurationProperty;
 import config.EnvironmentConfiguration;
 import domain.Patient;
+import domain.PatientFHIRXMLFactory;
 import nu.xom.ParsingException;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +44,8 @@ public class MCIRegistryAuthorizationIT {
     public void createPatientShouldFailForInvalidFacilityAccessToken() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.FACILITY;
         Patient patient = PatientFactory.validPatientWithMandatoryInformation();
-        String patientDetails = patient.asXML();
+
+        String patientDetails = new PatientFHIRXMLFactory().withValidXML(patient);
         given().
                 body(patientDetails).
                 header("X-Auth-Token", UUID.randomUUID().toString()).
@@ -60,9 +62,8 @@ public class MCIRegistryAuthorizationIT {
     public void createPatientShouldFailForInvalidFacilityEmailId() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.FACILITY;
         String accessToken = login(idpUser);
-
-        String patientDetails = PatientFactory.validPatientWithMandatoryInformation().asXML();
-
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientFHIRXMLFactory().withValidXML(patient);
         given().
                 body(patientDetails).
                 header("X-Auth-Token", accessToken).
@@ -80,8 +81,8 @@ public class MCIRegistryAuthorizationIT {
         IdpUserEnum idpUser = IdpUserEnum.FACILITY;
         String accessToken = login(idpUser);
         String invalidClientId = "1000000";
-
-        String patientDetails = PatientFactory.validPatientWithMandatoryInformation().asXML();
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientFHIRXMLFactory().withValidXML(patient);
 
         given().
                 body(patientDetails).
@@ -99,10 +100,11 @@ public class MCIRegistryAuthorizationIT {
     public void facilityShouldCreatePatient() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.FACILITY;
         String accessToken = login(idpUser);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetailsAsFHIRXML = new PatientFHIRXMLFactory().withValidXML(patient);
 
-        String content = PatientFactory.validPatientWithMandatoryInformation().asXML();
         given().
-                body(content).
+                body(patientDetailsAsFHIRXML).
                 header("X-Auth-Token", accessToken).
                 header("From", idpUser.getEmail()).
                 header("client_id", idpUser.getClientId())
@@ -259,9 +261,11 @@ public class MCIRegistryAuthorizationIT {
     public void createPatientShouldFailForInvalidDatasenseAccessToken() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.DATASENSE;
 
-        String content = PatientFactory.validPatientWithMandatoryInformation().asXML();
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetailsAsFHIRXML = new PatientFHIRXMLFactory().withValidXML(patient);
+
         given().
-                body(content).
+                body(patientDetailsAsFHIRXML).
                 header("X-Auth-Token", UUID.randomUUID().toString()).
                 header("From", idpUser.getEmail()).
                 header("client_id", idpUser.getClientId())
@@ -277,7 +281,8 @@ public class MCIRegistryAuthorizationIT {
         IdpUserEnum idpUser = IdpUserEnum.DATASENSE;
         String accessToken = login(idpUser);
 
-        String patientDetails = PatientFactory.validPatientWithMandatoryInformation().asXML();
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientFHIRXMLFactory().withValidXML(patient);
         given().
                 body(patientDetails).
                 header("X-Auth-Token", accessToken).
@@ -328,10 +333,11 @@ public class MCIRegistryAuthorizationIT {
     @Test
     public void createPatientShouldFailForInvalidMCIAdminAccessToken() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN;
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetailsAsFHIRXML = new PatientFHIRXMLFactory().withValidXML(patient);
 
-        String content = PatientFactory.validPatientWithMandatoryInformation().asXML();
         given().
-                body(content).
+                body(patientDetailsAsFHIRXML).
                 header("X-Auth-Token", UUID.randomUUID().toString()).
                 header("From", idpUser.getEmail()).
                 header("client_id", idpUser.getClientId())
@@ -346,10 +352,11 @@ public class MCIRegistryAuthorizationIT {
     public void mciAdminAndMciUserShouldNotCreatePatient() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN_WITH_MCI_USER;
         String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetailsAsFHIRXML = new PatientFHIRXMLFactory().withValidXML(patient);
 
-        String content = PatientFactory.validPatientWithMandatoryInformation().asXML();
         given().
-                body(content).
+                body(patientDetailsAsFHIRXML).
                 header("X-Auth-Token", accessToken).
                 header("From", idpUser.getEmail()).
                 header("client_id", idpUser.getClientId())
@@ -364,10 +371,11 @@ public class MCIRegistryAuthorizationIT {
     public void mciAdminUserShouldNotCreatePatient() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN;
         String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetailsAsFHIRXML = new PatientFHIRXMLFactory().withValidXML(patient);
 
-        String content = PatientFactory.validPatientWithMandatoryInformation().asXML();
         given().
-                body(content).
+                body(patientDetailsAsFHIRXML).
                 header("X-Auth-Token", accessToken).
                 header("From", idpUser.getEmail()).
                 header("client_id", idpUser.getClientId())
@@ -434,10 +442,11 @@ public class MCIRegistryAuthorizationIT {
     @Test
     public void createPatientShouldFailForInvalidMciApproverAccessToken() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.MCI_APPROVER;
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetailsAsFHIRXML = new PatientFHIRXMLFactory().withValidXML(patient);
 
-        String content = PatientFactory.validPatientWithMandatoryInformation().asXML();
         given().
-                body(content).
+                body(patientDetailsAsFHIRXML).
                 header("X-Auth-Token", UUID.randomUUID().toString()).
                 header("From", idpUser.getEmail()).
                 header("client_id", idpUser.getClientId())
@@ -453,9 +462,11 @@ public class MCIRegistryAuthorizationIT {
         IdpUserEnum idpUser = IdpUserEnum.MCI_APPROVER;
         String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM);
 
-        String content = PatientFactory.validPatientWithMandatoryInformation().asXML();
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetailsAsFHIRXML = new PatientFHIRXMLFactory().withValidXML(patient);
+
         given().
-                body(content).
+                body(patientDetailsAsFHIRXML).
                 header("X-Auth-Token", accessToken).
                 header("From", idpUser.getEmail()).
                 header("client_id", idpUser.getClientId())
@@ -504,10 +515,11 @@ public class MCIRegistryAuthorizationIT {
     @Test
     public void createPatientShouldFailForInvalidPatientAccessToken() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.PATIENT;
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetailsAsFHIRXML = new PatientFHIRXMLFactory().withValidXML(patient);
 
-        String content = PatientFactory.validPatientWithMandatoryInformation().asXML();
         given().
-                body(content).
+                body(patientDetailsAsFHIRXML).
                 header("X-Auth-Token", UUID.randomUUID().toString()).
                 header("From", idpUser.getEmail()).
                 header("client_id", idpUser.getClientId())
@@ -522,10 +534,11 @@ public class MCIRegistryAuthorizationIT {
     public void patientUserShouldNotCreatePatient() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.PATIENT;
         String accessToken = loginFor(idpUser, IdpUserEnum.PATIENT_JOURNAL);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetailsAsFHIRXML = new PatientFHIRXMLFactory().withValidXML(patient);
 
-        String content = PatientFactory.validPatientWithMandatoryInformation().asXML();
         given().
-                body(content).
+                body(patientDetailsAsFHIRXML).
                 header("X-Auth-Token", accessToken).
                 header("From", idpUser.getEmail()).
                 header("client_id", idpUser.getClientId())
@@ -599,7 +612,8 @@ public class MCIRegistryAuthorizationIT {
         IdpUserEnum idpUser = IdpUserEnum.FACILITY;
         String accessToken = login(idpUser);
         Patient patient = PatientFactory.validPatientWithMandatoryInformation();
-        String patientDetails = PatientFactory.validPatientWithMandatoryInformation().asXML();
+        String patientDetails = new PatientFHIRXMLFactory().withValidXML(patient);
+
         return given().
                 body(patientDetails).
                 header("X-Auth-Token", accessToken).

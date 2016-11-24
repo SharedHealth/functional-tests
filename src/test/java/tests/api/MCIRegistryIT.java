@@ -15,6 +15,7 @@ import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 import config.CongifurationProperty;
 import config.EnvironmentConfiguration;
+import domain.PatientFHIRXMLFactory;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +58,7 @@ public class MCIRegistryIT {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
 
-        String content = PatientFactory.validPatientWithMandatoryInformation().asXML();
+        String content = new PatientFHIRXMLFactory().withValidXML(PatientFactory.validPatientWithMandatoryInformation());
         
         Patient expectedPatient = (Patient) xmlParser.parseResource(content);
 
@@ -106,7 +107,8 @@ public class MCIRegistryIT {
     public void shouldCreateAPatientWithoutBirthTime() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
-        String content = PatientFactory.validPatientWithoutBirthTime().asXML();
+        String content = new PatientFHIRXMLFactory().withValidXML(PatientFactory.validPatientWithoutBirthTime());
+
         Response createResponse = given()
                 .header("X-Auth-Token", accessToken)
                 .header("From", idpUserEnum.getEmail())
@@ -121,7 +123,7 @@ public class MCIRegistryIT {
     public void shouldFailToCreatePatientIfItHasUnknownElements() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
-        String content = PatientFactory.validPatientWithoutBirthTime().withUnknownElementInXML();
+        String content = new PatientFHIRXMLFactory().withUnknownElementInXML(PatientFactory.validPatientWithoutBirthTime());
 
         Response createResponse = given()
                 .header("X-Auth-Token", accessToken)
@@ -137,7 +139,8 @@ public class MCIRegistryIT {
     public void shouldFailToCreatePatientIfItHasUnknownAttributeForAnElement() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
-        String content = PatientFactory.validPatientWithoutBirthTime().withUnknowAttributeForGenderInXML();
+        String content = new PatientFHIRXMLFactory().withUnknownAttributeForGenderInXML(PatientFactory.validPatientWithoutBirthTime());
+
 
         Response createResponse = given().body(content)
                 .header("X-Auth-Token", accessToken)
@@ -151,7 +154,8 @@ public class MCIRegistryIT {
 
     @Test
     public void shouldFailToCreatePatientIfItHasUnexpectedRepeatingElement() throws Exception {
-        String content = PatientFactory.validPatientWithoutBirthTime().withMultipleGenderElementsInXML();
+        String content = new PatientFHIRXMLFactory().withMultipleGenderElementsInXML(PatientFactory.validPatientWithoutBirthTime());
+
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
 
@@ -169,8 +173,8 @@ public class MCIRegistryIT {
     public void shouldFailToCreatePatientIfItHasInvalidData() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
+        String content = new PatientFHIRXMLFactory().withInvalidGenderInXML(PatientFactory.validPatientWithoutBirthTime());
 
-        String content = PatientFactory.validPatientWithoutBirthTime().withInvalidGenderInXML();
 
         Response createResponse = given()
                 .header("X-Auth-Token", accessToken)
@@ -194,7 +198,8 @@ public class MCIRegistryIT {
 
     @Test
     public void shouldFailToCreatePatientHasNotRequiredDataForMCIProfile() throws Exception {
-        String content = PatientFactory.validPatientWithoutBirthTime().withMissingRequiredDataInXML();
+        String content = new PatientFHIRXMLFactory().withMissingRequiredDataInXML(PatientFactory.validPatientWithoutBirthTime());
+
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
 
@@ -222,8 +227,8 @@ public class MCIRegistryIT {
     public void shouldFailToCreatePatientHasUnwantedDuplicateDataForMCIProfile() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum);
+        String content = new PatientFHIRXMLFactory().withDuplicateNameDataInXML(PatientFactory.validPatientWithoutBirthTime());
 
-        String content = PatientFactory.validPatientWithoutBirthTime().withDuplicateNameDataInXML();
 
         Response createResponse = given()
                 .header("X-Auth-Token", accessToken)

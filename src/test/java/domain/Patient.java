@@ -1,7 +1,5 @@
 package domain;
-import nu.xom.*;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,11 +37,7 @@ public class Patient {
     public String countryCode;
     public String birthTime;
     public String maritalStatusCode;
-    private PatientFHIRXMLData fhirxmlData ;
-    public Patient()
-    {
-        fhirxmlData = new PatientFHIRXMLData(this);
-    }
+
     public String getAddressCode() {
         return addressCode;
     }
@@ -114,6 +108,10 @@ public class Patient {
         return binBRN;
     }
 
+    public Patient()
+    {
+
+    }
 
     public Patient(PatientBuilder patientBuilder) {
         this.given = patientBuilder.firstName;
@@ -136,40 +134,7 @@ public class Patient {
         this.binBRN = patientBuilder.binBRN;
     }
 
-    public String withUnknowAttributeForGenderInXML() throws ParsingException, IOException {
 
-        return fhirxmlData.withUnknownAttributeForGenderInXML();
-    }
-
-    public String withInvalidGenderInXML() throws ParsingException, IOException {
-        return fhirxmlData.withInvalidGenderInXML();
-
-    }
-
-    public String withMultipleGenderElementsInXML() throws ParsingException, IOException {
-        return fhirxmlData.withMultipleGenderElementsInXML();
-    }
-
-    public String withUnknownElementInXML() throws ParsingException, IOException {
-        return fhirxmlData.withUnknownElementInXML();
-    }
-
-    public String withMissingRequiredDataInXML() throws ParsingException, IOException {
-
-        return fhirxmlData.withMissingRequiredDataInXML();
-
-    }
-
-    public String withDuplicateNameDataInXML() throws ParsingException, IOException {
-        return fhirxmlData.withDuplicateNameDataInXML();
-    }
-
-    public String asXML() throws ParsingException, IOException {
-
-        PatientFHIRXMLComposer composer = new PatientFHIRXMLComposer(this);
-        return composer.compose();
-
-    }
 
     boolean hasBirthTime() {
 

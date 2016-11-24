@@ -6,12 +6,15 @@ import java.io.IOException;
 
 public class PatientFHIRXMLComposer {
     private Element root;
-    public static final String xmlns = "http://hl7.org/fhir";
     private Patient patient;
+    public static final String xmlns = "http://hl7.org/fhir";
 
-    public PatientFHIRXMLComposer(Patient patient) {
-        this.root = new Element("Patient",xmlns);
+    public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    public PatientFHIRXMLComposer() {
+        this.root = new Element("Patient",xmlns);
     }
 
     private void appendNameDetails()
@@ -87,6 +90,10 @@ public class PatientFHIRXMLComposer {
         root.appendChild(maritalStatus);
     }
 
+
+
+
+
     public String compose() throws ParsingException, IOException {
 
         if (patient.hasNameDetails()) this.appendNameDetails();
@@ -101,83 +108,3 @@ public class PatientFHIRXMLComposer {
     }
 }
 
-class PatientFHIRXMLData {
-
-    private Patient patient;
-    public  String xmlns;
-
-    public PatientFHIRXMLData(Patient patient) {
-        this.patient = patient;
-        this.xmlns = PatientFHIRXMLComposer.xmlns;
-    }
-
-    public String withUnknownAttributeForGenderInXML() throws ParsingException, IOException {
-
-        Builder parser = new Builder();
-        Document doc = parser.build(patient.asXML(), null);
-        doc.getRootElement().getFirstChildElement("gender", xmlns).addAttribute(new Attribute("newAttribute", "somevalue"));
-        return doc.toXML();
-    }
-
-    public String withInvalidGenderInXML() throws ParsingException, IOException {
-        Builder parser = new Builder();
-        Document doc = parser.build(patient.asXML(), null);
-        doc.getRootElement().getFirstChildElement("gender", xmlns).getAttribute("value").setValue("random");
-        return  doc.toXML();
-    }
-
-    public String withMultipleGenderElementsInXML() throws ParsingException, IOException {
-        Builder parser = new Builder();
-        Document doc = parser.build(patient.asXML(), null);
-        doc.getRootElement().appendChild(doc.getRootElement().getFirstChildElement("gender", xmlns).copy());
-        return doc.toXML();
-    }
-
-    public String withUnknownElementInXML() throws ParsingException, IOException {
-        Builder parser = new Builder();
-        Document doc = parser.build(patient.asXML(), null);
-        Element root = doc.getRootElement();
-        Element someElement = new Element("someElement");
-        Attribute someElementValue = new Attribute("value", "somevalue");
-        someElement.addAttribute((someElementValue));
-        root.appendChild(someElement);
-        return doc.toXML();
-
-    }
-
-    public String withMissingRequiredDataInXML() throws ParsingException, IOException {
-        Builder parser = new Builder();
-        Document doc = parser.build(patient.asXML(), null);
-        Element root = doc.getRootElement();
-        root.removeChildren();
-        Element maritalStatus = new Element("maritalStatusCode", xmlns);
-        Element coding = new Element("coding", xmlns);
-        Element system = new Element("system", xmlns);
-        system.addAttribute(new Attribute("value", "http://hl7.org/fhir/v3/getMaritalStatus"));
-        Element code = new Element("code", xmlns);
-        code.addAttribute(new Attribute("value", "M"));
-        Element display = new Element("display");
-        display.addAttribute(new Attribute("value", "Married"));
-        Element text = new Element("text");
-        text.addAttribute(new Attribute("value", "Getrouwd"));
-        coding.appendChild(system);
-        coding.appendChild(code);
-        coding.appendChild(display);
-        maritalStatus.appendChild(coding);
-        maritalStatus.appendChild(text);
-        root.appendChild(maritalStatus);
-
-        return doc.toXML();
-
-    }
-
-    public String withDuplicateNameDataInXML() throws ParsingException, IOException {
-        Builder parser = new Builder();
-        Document doc = parser.build(patient.asXML(), null);
-        doc.getRootElement().appendChild(doc.getRootElement().getFirstChildElement("name", xmlns).copy());
-        return doc.toXML();
-
-
-    }
-
-}
