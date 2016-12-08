@@ -4,14 +4,15 @@ import nu.xom.*;
 
 import java.io.IOException;
 
+import static domain.PatientFHIRXMLComposer.VALUE;
+
 /**
  * Created by rajeshvaran on 11/18/16.
  */
 public class PatientFHIRXMLFactory {
 
     private PatientFHIRXMLComposer composer;
-    public  String xmlns;
-
+    public String xmlns;
 
 
     public PatientFHIRXMLFactory() {
@@ -23,22 +24,27 @@ public class PatientFHIRXMLFactory {
         Document doc = getDocument(patient);
         return doc.toXML();
     }
-    public String withUnknownAttributeForGenderInXML(Patient patient) throws ParsingException, IOException {
 
+    public String withUnknownAttributeForGenderInXML(Patient patient) throws ParsingException, IOException {
         Document doc = getDocument(patient);
-        doc.getRootElement().getFirstChildElement("gender", xmlns).addAttribute(new Attribute("newAttribute", "somevalue"));
+        Element patientElement = findPatientElement(doc);
+        Element genderElement = patientElement.getFirstChildElement("gender", xmlns);
+        genderElement.removeAttribute(genderElement.getAttribute(0));
+        genderElement.addAttribute(new Attribute("newAttribute", "somevalue"));
         return doc.toXML();
     }
 
     public String withInvalidGenderInXML(Patient patient) throws ParsingException, IOException {
         Document doc = getDocument(patient);
-        doc.getRootElement().getFirstChildElement("gender", xmlns).getAttribute("value").setValue("random");
-        return  doc.toXML();
+        findPatientElement(doc).getFirstChildElement("gender", xmlns)
+                .getAttribute("value").setValue("random");
+        return doc.toXML();
     }
 
     public String withMultipleGenderElementsInXML(Patient patient) throws ParsingException, IOException {
         Document doc = getDocument(patient);
-        doc.getRootElement().appendChild(doc.getRootElement().getFirstChildElement("gender", xmlns).copy());
+        Element patientElement = findPatientElement(doc);
+        patientElement.appendChild(patientElement.getFirstChildElement("gender", xmlns).copy());
         return doc.toXML();
     }
 
@@ -55,8 +61,8 @@ public class PatientFHIRXMLFactory {
 
     public String withMissingRequiredDataInXML(Patient patient) throws ParsingException, IOException {
         Document doc = getDocument(patient);
-        Element root = doc.getRootElement();
-        root.removeChildren();
+        Element patientElement = findPatientElement(doc);
+        patientElement.removeChildren();
         Element maritalStatus = new Element("maritalStatus", xmlns);
         Element coding = new Element("coding", xmlns);
         Element system = new Element("system", xmlns);
@@ -72,7 +78,7 @@ public class PatientFHIRXMLFactory {
         coding.appendChild(display);
         maritalStatus.appendChild(coding);
         maritalStatus.appendChild(text);
-        root.appendChild(maritalStatus);
+        patientElement.appendChild(maritalStatus);
 
         return doc.toXML();
 
@@ -80,7 +86,8 @@ public class PatientFHIRXMLFactory {
 
     public String withDuplicateNameDataInXML(Patient patient) throws ParsingException, IOException {
         Document doc = getDocument(patient);
-        doc.getRootElement().appendChild(doc.getRootElement().getFirstChildElement("name", xmlns).copy());
+        Element patientElement = findPatientElement(doc);
+        patientElement.appendChild(patientElement.getFirstChildElement("name", xmlns).copy());
         return doc.toXML();
 
 
@@ -89,7 +96,12 @@ public class PatientFHIRXMLFactory {
     private Document getDocument(Patient patient) throws ParsingException, IOException {
         this.composer.setPatient(patient);
         Builder parser = new Builder();
-        return parser.build(this.composer.compose(), null);
+        return parser.build(this.composer.composePatient(), null);
+    }
+
+    private Element findPatientElement(Document document) {
+        return document.getRootElement().getFirstChildElement("entry", xmlns)
+                .getFirstChildElement("resource", xmlns).getFirstChildElement("Patient", xmlns);
     }
 
 }
