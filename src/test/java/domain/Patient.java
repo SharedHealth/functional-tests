@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,104 +14,35 @@ class MaritalStatus {
 }
 
 public class Patient {
+    public String nid;
+    public String hid;
+    public String uid;
+    public String binBRN;
+    public String householdCode;
 
     public String given;
     public String family;
     public String gender;
+
     public String birthDate;
-    private Address address;
+    public String dobType;
+    public String birthTime;
+
+    public Address address;
     public String addressLine;
     public String addressCode;
-    public String nid;
-    private String hid;
-    private String education;
-    private String occupation;
-    private String primaryContact;
-    private String uid;
-    private String fatherUid;
-    private String fatherNid;
-    private String fatherBRN;
-    private String motherUid;
-    private String motherNid;
-    private String motherBRN;
-    private String binBRN;
     public String countryCode;
-    public String birthTime;
-    public String maritalStatusCode;
 
-    public String getAddressCode() {
-        return addressCode;
-    }
+    public String status;
+    public Date dateOfDeath;
+    public boolean confidentiality;
+    public boolean active;
 
-    public void setAddressCode(String addressCode) {
-        this.addressCode = addressCode;
-    }
+    public String education;
+    public String occupation;
+    public String phoneNumber;
 
-    public String getAddressLine() {
-        return addressLine;
-    }
-
-    public void setAddressLine(String addressLine) {
-        this.addressLine = addressLine;
-    }
-    public String getGiven() {
-        return given;
-    }
-    public String getFamily() {
-        return family;
-    }
-    public String getGender() {
-        return gender;
-    }
-    public String getBirthDate() {
-        return birthDate;
-    }
-    public Address getAddress() {
-        return address;
-    }
-    public String getNid() {
-        return nid;
-    }
-    public String getHid() {
-        return hid;
-    }
-    public String getEducation() {
-        return education;
-    }
-    public String getOccupation() {
-        return occupation;
-    }
-    public String getPrimaryContact() {
-        return primaryContact;
-    }
-    public String getUid() {
-        return uid;
-    }
-    public String getFatherUid() {
-        return fatherUid;
-    }
-    public String getFatherNid() {
-        return fatherNid;
-    }
-    public String getFatherBRN() {
-        return fatherBRN;
-    }
-    public String getMotherUid() {
-        return motherUid;
-         }
-    public String getMotherNid() {
-        return motherNid;
-    }
-    public String getMotherBRN() {
-        return motherBRN;
-    }
-    public String getBinBRN() {
-        return binBRN;
-    }
-
-    public Patient()
-    {
-
+    public Patient() {
     }
 
     public Patient(PatientBuilder patientBuilder) {
@@ -118,22 +50,15 @@ public class Patient {
         this.family = patientBuilder.lastName;
         this.gender = patientBuilder.gender;
         this.birthDate = patientBuilder.dateOfBirth;
-        this. address = patientBuilder.address;
+        this.address = patientBuilder.address;
         this.nid = patientBuilder.nid;
         this.hid = patientBuilder.hid;
         this.education = patientBuilder.education;
         this.occupation = patientBuilder.occupation;
-        this.primaryContact = patientBuilder.primaryContact;
+        this.phoneNumber = patientBuilder.primaryContact;
         this.uid = patientBuilder.uid;
-        this.fatherUid = patientBuilder.fatherUid;
-        this.fatherNid = patientBuilder.fatherNid;
-        this.fatherBRN = patientBuilder.fatherBRN;
-        this.motherUid = patientBuilder.motherUid;
-        this.motherNid = patientBuilder.motherNid;
-        this.motherBRN = patientBuilder.motherBRN;
         this.binBRN = patientBuilder.binBRN;
     }
-
 
 
     boolean hasBirthTime() {
@@ -184,70 +109,87 @@ public class Patient {
             this.firstName = firstName;
             return this;
         }
+
         public PatientBuilder lastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
+
         public PatientBuilder gender(String gender) {
             this.gender = gender;
             return this;
         }
+
         public PatientBuilder dateOfBirth(String dateOfBirth) {
             this.dateOfBirth = dateOfBirth;
             return this;
         }
+
         public PatientBuilder address(Address address) {
             this.address = address;
             return this;
         }
+
         public PatientBuilder nid(String nid) {
             this.nid = nid;
             return this;
         }
+
         public PatientBuilder hid(String hid) {
             this.hid = hid;
             return this;
         }
+
         public PatientBuilder education(String education) {
             this.education = education;
             return this;
         }
+
         public PatientBuilder occupation(String occupation) {
             this.occupation = occupation;
             return this;
         }
+
         public PatientBuilder primaryContact(String primaryContact) {
             this.primaryContact = primaryContact;
             return this;
         }
+
         public PatientBuilder uid(String uid) {
-            this.uid= uid;
+            this.uid = uid;
             return this;
         }
+
         public PatientBuilder fatherUid(String fatherUid) {
             this.fatherUid = fatherUid;
             return this;
         }
+
         public PatientBuilder fatherNid(String fatherNid) {
             this.fatherNid = fatherNid;
             return this;
         }
+
         public PatientBuilder fatherBRN(String fatherBRN) {
             this.fatherBRN = fatherBRN;
             return this;
         }
+
         public PatientBuilder motherUid(String motherUid) {
             this.motherUid = motherUid;
             return this;
         }
+
         public PatientBuilder motherNid(String motherNid) {
             this.motherNid = motherNid;
             return this;
         }
+
         public PatientBuilder motherBRN(String motherBRN) {
             this.motherBRN = motherBRN;
             return this;
         }
+
         public PatientBuilder binBRN(String binBRN) {
             this.binBRN = binBRN;
             return this;

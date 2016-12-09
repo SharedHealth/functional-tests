@@ -173,7 +173,7 @@ public class MCIBulkDataCreation {
 //                .when().get("/patients?nid={nid}")
 //                .then()
 //                .body("results.hid[0]", Matchers.notNullValue());
-        System.out.print("Patient with NID " + primaryPatient.getNid() + " Created in MCI ");
+        System.out.print("Patient with NID " + primaryPatient.nid + " Created in MCI ");
     }
 
     private JSONObject createPatientDataToPost(PatientFactory dataStore) {
@@ -182,11 +182,11 @@ public class MCIBulkDataCreation {
         try {
 
             JSONObject phone_number = new JSONObject();
-            person.put("nid", primaryPatient.getNid());
-            person.put("bin_brn", primaryPatient.getBinBRN());
-            person.put("uid", primaryPatient.getUid());
-            person.put("given_name", primaryPatient.getGiven());
-            person.put("sur_name", primaryPatient.getFamily());
+            person.put("nid", primaryPatient.nid);
+            person.put("bin_brn", primaryPatient.binBRN);
+            person.put("uid", primaryPatient.uid);
+            person.put("given_name", primaryPatient.given);
+            person.put("sur_name", primaryPatient.family);
             person.put("date_of_birth", "2000-03-01");
             person.put("gender", "M");
             person.put("occupation", "02");
@@ -194,7 +194,7 @@ public class MCIBulkDataCreation {
 
             phone_number.put("country_code", "88");
             phone_number.put("area_code", "");
-            phone_number.put("number", primaryPatient.getNid().substring(2));
+            phone_number.put("number", primaryPatient.nid.substring(2));
             phone_number.put("extension", "");
             person.put("phone_number", phone_number);
 

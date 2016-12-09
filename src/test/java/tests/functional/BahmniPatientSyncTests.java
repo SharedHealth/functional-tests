@@ -39,7 +39,7 @@ public class BahmniPatientSyncTests extends TestSetup{
         page.
                 login()
                 .goToNationalRegistry()
-                .searchPatientByNIDAndDownload(primaryPatient.getNid())
+                .searchPatientByNIDAndDownload(primaryPatient.nid)
                 .verifyPatientDetails(primaryPatient);
 
     }
@@ -68,7 +68,7 @@ public class BahmniPatientSyncTests extends TestSetup{
         page.
                 login()
                 .goToNationalRegistry()
-                .searchPatientByNIDAndDownload(primaryPatient.getNid())
+                .searchPatientByNIDAndDownload(primaryPatient.nid)
                 .editPatientDetails(primaryPatient)
                 .logout();
 
@@ -77,7 +77,7 @@ public class BahmniPatientSyncTests extends TestSetup{
         page
                 .login()
                 .goToNationalRegistry()
-                .searchPatientByNIDAndDownload(primaryPatient.getNid())
+                .searchPatientByNIDAndDownload(primaryPatient.nid)
                 .verifyPatientDetails(primaryPatient);
 
     }

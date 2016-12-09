@@ -44,7 +44,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
 
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
-        page.login().goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
+        page.login().goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.nid).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .verifyEncounterData(firstDiagnosis).verifyEncounterData(secondDiagnosis);
     }
@@ -69,12 +69,13 @@ public class BahmniEncounterSyncTests extends TestSetup {
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
 
         page.login()
-                .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
+                .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.nid).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient).goToVisitPage()
                 .verifyCheifComplainData(firstChiefComplain)
                 .verifyCheifComplainData(secondChiefComplain)
                 .verifyCheifComplainData(thirdChiefComplain);
     }
+
     @Category(FunctionalTest.class)
     @Test
     public void verifyVitalSync() {
@@ -92,7 +93,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
         driver.get(facilityTwoInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login()
-                .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
+                .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.nid).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .verifyVitals(patientVitals);
     }
@@ -114,7 +115,7 @@ public class BahmniEncounterSyncTests extends TestSetup {
         driver.get(facilityTwoInternalURL);
         page = PageFactoryWithWait.initialize(driver, LoginPage.class);
         page.login()
-                .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.getNid()).startVisit(primaryPatient)
+                .goToNationalRegistry().searchPatientByNIDAndDownload(primaryPatient.nid).startVisit(primaryPatient)
                 .goToHomePage().goToClinicalPage().goToPatientDashboard(primaryPatient)
                 .startConsultation().goToVisitPage()
                 .verifyFamilyHistoryData(patientFamilyHistory);

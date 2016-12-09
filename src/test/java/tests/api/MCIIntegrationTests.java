@@ -96,26 +96,26 @@ public class MCIIntegrationTests {
         JSONObject present_address = new JSONObject();
         JSONObject permanent_address = new JSONObject();
         try {
-            person.put("nid", primaryPatient.getNid());
-            person.put("uid", primaryPatient.getUid());
-            person.put("first_name", primaryPatient.getGiven());
+            person.put("nid", primaryPatient.nid);
+            person.put("uid", primaryPatient.uid);
+            person.put("first_name", primaryPatient.given);
             person.put("middle_name", "Ali");
-            person.put("last_name", primaryPatient.getFamily());
+            person.put("last_name", primaryPatient.family);
             person.put("full_name_bangla", " হোসেন মন্ডল");
             person.put("fathers_name_bangla", "এ বি এম আখতার হোসেন মন্ডল");
             person.put("fathers_first_name", "Akhtar");
             person.put("fathers_middle_name", "Hossaine");
             person.put("fathers_last_name", "Mondal");
-            person.put("fathers_uid", primaryPatient.getFatherUid());
-            person.put("fathers_nid", primaryPatient.getFatherNid());
-            person.put("fathers_brn", primaryPatient.getFatherBRN());
+//            person.put("fathers_uid", primaryPatient.fatherUid);
+//            person.put("fathers_nid", primaryPatient.fatherNid);
+//            person.put("fathers_brn", primaryPatient.fatherBRN);
             person.put("mothers_name_bangla", "আনোয়ারা খাতুন");
             person.put("mothers_first_name", "Anowara");
             person.put("mothers_middle_name", "Khatun");
             person.put("mothers_last_name", "antora");
-            person.put("mothers_uid", primaryPatient.getMotherUid());
-            person.put("mothers_nid", primaryPatient.getMotherNid());
-            person.put("mothers_brn", primaryPatient.getMotherBRN());
+//            person.put("mothers_uid", primaryPatient.motherUid);
+//            person.put("mothers_nid", primaryPatient.motherNid);
+//            person.put("mothers_brn", primaryPatient.motherBRN);
             person.put("place_of_birth", "Dhaka");
             person.put("marriage_id", "12345678");
             person.put("spouse_name_bangla", "আখতার");
@@ -127,12 +127,12 @@ public class MCIIntegrationTests {
             person.put("marital_status", 5);
             person.put("religion", 1);
             person.put("blood_group", 1);
-            person.put("bin_brn", primaryPatient.getBinBRN());
+            person.put("bin_brn", primaryPatient.binBRN);
             person.put("occupation", 11);
             person.put("edu_level", "01");
             person.put("nationality", "bangladeshi");
             person.put("disability", 1);
-            present_address.put("address_line", primaryPatient.getAddress().getAddressLine1());
+            present_address.put("address_line", primaryPatient.address.getAddressLine1());
             present_address.put("division_id", 10);
             present_address.put("district_id", "04");
 //            present_address.put("union_id", null);
@@ -175,21 +175,21 @@ public class MCIIntegrationTests {
                 .when().post("/patients")
                 .then().assertThat().statusCode(201);
 
-        System.out.println("Patient with NID " + primaryPatient.getNid() + " created");
+        System.out.println("Patient with NID " + primaryPatient.nid + " created");
 
 
-        given().pathParam("nid", primaryPatient.getNid())
+        given().pathParam("nid", primaryPatient.nid)
                 .when().get("/patients?nid={nid}")
                 .then()
-                .body("nid", Matchers.equalTo(primaryPatient.getNid()))
-                .body("first_name", Matchers.equalTo(primaryPatient.getGiven()))
-                .body("last_name", Matchers.equalTo(primaryPatient.getFamily()))
+                .body("nid", Matchers.equalTo(primaryPatient.nid))
+                .body("first_name", Matchers.equalTo(primaryPatient.given))
+                .body("last_name", Matchers.equalTo(primaryPatient.family))
                 .body("date_of_birth", Matchers.equalTo("1983-09-21"))
                 .body("gender", Matchers.equalTo("2"))
                 .body("occupation", Matchers.equalTo("11"))
                 .body("edu_level", Matchers.equalTo("01"))
                 .body("fathers_first_name", Matchers.equalTo("Akhtar"))
-                .body("present_address.address_line", Matchers.equalTo(primaryPatient.getAddress().getAddressLine1()))
+                .body("present_address.address_line", Matchers.equalTo(primaryPatient.address.getAddressLine1()))
                 .body("present_address.division_id", Matchers.equalTo("10"))
                 .body("present_address.district_id", Matchers.equalTo("04"))
 //                .body("present_address.upazilla_id", Matchers.equalTo("23"))
@@ -205,26 +205,26 @@ public class MCIIntegrationTests {
 //                .body("present_address.thana", Matchers.equalTo("45"))
                 .body("present_address.country", Matchers.equalTo("050"))
 
-                .body("nid", Matchers.equalTo(primaryPatient.getNid()))
-                .body("uid", Matchers.equalTo(primaryPatient.getUid()))
-                .body("first_name", Matchers.equalTo(primaryPatient.getGiven()))
+                .body("nid", Matchers.equalTo(primaryPatient.nid))
+                .body("uid", Matchers.equalTo(primaryPatient.uid))
+                .body("first_name", Matchers.equalTo(primaryPatient.given))
                 .body("middle_name", Matchers.equalTo("Ali"))
-                .body("last_name", Matchers.equalTo(primaryPatient.getFamily()))
+                .body("last_name", Matchers.equalTo(primaryPatient.family))
                 .body("full_name_bangla", Matchers.equalTo(" হোসেন মন্ডল"))
                 .body("fathers_name_bangla", Matchers.equalTo("এ বি এম আখতার হোসেন মন্ডল"))
                 .body("fathers_first_name", Matchers.equalTo("Akhtar"))
                 .body("fathers_middle_name", Matchers.equalTo("Hossaine"))
                 .body("fathers_last_name", Matchers.equalTo("Mondal"))
-                .body("fathers_uid", Matchers.equalTo(primaryPatient.getFatherUid()))
-                .body("fathers_nid", Matchers.equalTo(primaryPatient.getFatherNid()))
-                .body("fathers_brn", Matchers.equalTo(primaryPatient.getFatherBRN()))
+//                .body("fathers_uid", Matchers.equalTo(primaryPatient.fatherUid))
+//                .body("fathers_nid", Matchers.equalTo(primaryPatient.fatherNid))
+//                .body("fathers_brn", Matchers.equalTo(primaryPatient.fatherBRN))
                 .body("mothers_name_bangla", Matchers.equalTo("আনোয়ারা খাতুন"))
                 .body("mothers_first_name", Matchers.equalTo("Anowara"))
                 .body("mothers_middle_name", Matchers.equalTo("Khatun"))
                 .body("mothers_last_name", Matchers.equalTo("antora"))
-                .body("mothers_uid", Matchers.equalTo(primaryPatient.getMotherUid()))
-                .body("mothers_nid", Matchers.equalTo(primaryPatient.getMotherNid()))
-                .body("mothers_brn", Matchers.equalTo(primaryPatient.getMotherBRN()))
+//                .body("mothers_uid", Matchers.equalTo(primaryPatient.motherUid))
+//                .body("mothers_nid", Matchers.equalTo(primaryPatient.motherNid))
+//                .body("mothers_brn", Matchers.equalTo(primaryPatient.motherBRN))
                 .body("place_of_birth", Matchers.equalTo("Dhaka"))
                 .body("marriage_id", Matchers.equalTo("12345678"))
                 .body("spouse_name_bangla", Matchers.equalTo("আখতার"))
@@ -236,13 +236,13 @@ public class MCIIntegrationTests {
                 .body("marital_status", Matchers.equalTo("5"))
                 .body("religion", Matchers.equalTo("1"))
                 .body("blood_group", Matchers.equalTo("1"))
-                .body("bin_brn", Matchers.equalTo(primaryPatient.getBinBRN()))
+                .body("bin_brn", Matchers.equalTo(primaryPatient.binBRN))
                 .body("occupation", Matchers.equalTo("11"))
                 .body("edu_level", Matchers.equalTo("01"))
                 .body("nationality", Matchers.equalTo("bangladeshi"))
                 .body("disability", Matchers.equalTo("1"));
 
-        System.out.println("Patient with NID " + primaryPatient.getNid() + " verified in MCI");
+        System.out.println("Patient with NID " + primaryPatient.nid + " verified in MCI");
 
 //Commented out the permanent address verification as it MCI does not return permanent address for now
 //                .body("permanent_address.address_line", Matchers.equalTo(primaryPatient.getAddress().getAddressLine1()))
@@ -273,14 +273,14 @@ public class MCIIntegrationTests {
         JSONObject person = new JSONObject();
         JSONObject present_address = new JSONObject();
         try {
-            person.put("nid", primaryPatient.getNid());
-            person.put("given_name", primaryPatient.getGiven());
-            person.put("sur_name", primaryPatient.getFamily());
+            person.put("nid", primaryPatient.nid);
+            person.put("given_name", primaryPatient.given);
+            person.put("sur_name", primaryPatient.family);
             person.put("date_of_birth", "2000-03-01");
             person.put("gender", "M");
             person.put("occupation", "02");
             person.put("edu_level", "02");
-            present_address.put("address_line", primaryPatient.getAddress().getAddressLine1());
+            present_address.put("address_line", primaryPatient.address.getAddressLine1());
             present_address.put("division_id", "10");
             present_address.put("district_id", "09");
             present_address.put("upazilla_id", "18");
@@ -296,27 +296,27 @@ public class MCIIntegrationTests {
                 .body(person.toString())
                 .when().post("/patients")
                 .then().assertThat().statusCode(201);
-        System.out.println("Patient with NID " + primaryPatient.getNid() + " created in MCI ");
+        System.out.println("Patient with NID " + primaryPatient.nid + " created in MCI ");
 
-        given().pathParam("nid", primaryPatient.getNid())
+        given().pathParam("nid", primaryPatient.nid)
                 .when().get("/patients?nid={nid}")
                 .then()
                 .body("results.hid[0]", Matchers.notNullValue())
-                .body("results.nid[0]", Matchers.equalTo(primaryPatient.getNid()))
-                .body("results.given_name[0]", Matchers.equalTo(primaryPatient.getGiven()))
-                .body("results.sur_name[0]", Matchers.equalTo(primaryPatient.getFamily()))
+                .body("results.nid[0]", Matchers.equalTo(primaryPatient.nid))
+                .body("results.given_name[0]", Matchers.equalTo(primaryPatient.given))
+                .body("results.sur_name[0]", Matchers.equalTo(primaryPatient.family))
                 .body("results.date_of_birth[0]", Matchers.equalTo("2000-03-01"))
                 .body("results.gender[0]", Matchers.equalTo("M"))
                 .body("results.occupation[0]", Matchers.equalTo("02"))
                 .body("results.edu_level[0]", Matchers.equalTo("02"))
-                .body("results.present_address.address_line[0]", Matchers.equalTo(primaryPatient.getAddress().getAddressLine1()))
+                .body("results.present_address.address_line[0]", Matchers.equalTo(primaryPatient.address.getAddressLine1()))
                 .body("results.present_address.division_id[0]", Matchers.equalTo("10"))
                 .body("results.present_address.district_id[0]", Matchers.equalTo("09"))
                 .body("results.present_address.upazilla_id[0]", Matchers.equalTo("18"))
                 .body("results.present_address.city_corporation_id[0]", Matchers.equalTo("16"))
                 .body("results.present_address.ward_id[0]", Matchers.equalTo("01"));
 
-        System.out.println("Patient with NID " + primaryPatient.getNid() + " verified in MCI");
+        System.out.println("Patient with NID " + primaryPatient.nid + " verified in MCI");
     }
 
     @After

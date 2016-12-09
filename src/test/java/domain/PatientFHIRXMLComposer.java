@@ -94,9 +94,9 @@ public class PatientFHIRXMLComposer {
         Element system = new Element("system", xmlns);
         system.addAttribute(new Attribute(VALUE, xmlns + "/v3/getMaritalStatus"));
         Element code = new Element("code", xmlns);
-        code.addAttribute(new Attribute(VALUE, patient.maritalStatusCode));
+//        code.addAttribute(new Attribute(VALUE, patient.maritalStatusCode));
         Element display = new Element("display");
-        display.addAttribute(new Attribute(VALUE, MaritalStatus.getMaritalStatus(patient.maritalStatusCode)));
+//        display.addAttribute(new Attribute(VALUE, MaritalStatus.getMaritalStatus(patient.maritalStatusCode)));
         coding.appendChild(system);
         coding.appendChild(code);
         coding.appendChild(display);

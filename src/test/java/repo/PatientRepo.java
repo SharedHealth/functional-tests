@@ -28,15 +28,15 @@ public class PatientRepo {
         JSONObject person = new JSONObject();
         JSONObject present_address = new JSONObject();
         try {
-            person.put("nid", patient.getNid());
-            person.put("first_name", patient.getGiven());
-            person.put("last_name", patient.getFamily());
+            person.put("nid", patient.nid);
+            person.put("first_name", patient.given);
+            person.put("last_name", patient.family);
             person.put("date_of_birth", "2000-03-01");
             person.put("gender", "1");
             person.put("occupation", "02");
             person.put("edu_level", "02");
-            person.put("fathers_first_name", patient.getPrimaryContact());
-            present_address.put("address_line", patient.getAddress().getAddressLine1());
+            person.put("fathers_first_name", patient.phoneNumber);
+            present_address.put("address_line", patient.address.getAddressLine1());
             present_address.put("division_id", "10");
             present_address.put("district_id", "09");
             present_address.put("upazilla_id", "18");

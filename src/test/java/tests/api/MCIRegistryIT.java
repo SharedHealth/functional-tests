@@ -5,6 +5,7 @@ import ca.uhn.fhir.model.dstu2.composite.*;
 import ca.uhn.fhir.model.dstu2.resource.Bundle;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.dstu2.valueset.IdentifierTypeCodesEnum;
+import ca.uhn.fhir.model.primitive.BooleanDt;
 import ca.uhn.fhir.parser.IParser;
 import categories.MciApiTest;
 import com.jayway.restassured.RestAssured;
@@ -15,6 +16,8 @@ import config.ConfigurationProperty;
 import config.EnvironmentConfiguration;
 import data.PatientFactory;
 import domain.PatientFHIRXMLFactory;
+import org.apache.commons.collections.CollectionUtils;
+import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +36,9 @@ import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static utils.FhirConstant.*;
 import static utils.IdentityLoginUtil.login;
 
 @Category(MciApiTest.class)
@@ -51,7 +57,7 @@ public class MCIRegistryIT {
     }
 
     @Test
-    public void createAndGetPatient() throws Exception {
+    public void createAndGetPatientWithMandatoryFields() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
 
@@ -96,6 +102,11 @@ public class MCIRegistryIT {
         assertGender(expectedPatient, responsePatient);
         assertDOB(expectedPatient, responsePatient);
         assertAddress(expectedPatient, responsePatient);
+        assertTrue(responsePatient.getActive());
+        assertNull(responsePatient.getDeceased());
+        assertFalse(((BooleanDt) getExtensionValue(responsePatient, CONFIDENTIALITY_EXTENSION_NAME)).getValue());
+        CodeableConceptDt dobType = (CodeableConceptDt) getExtensionValue(responsePatient, DOB_TYPE_EXTENSION_NAME);
+        assertEquals("1", dobType.getCodingFirstRep().getCode());
         assertLink("/api/v1/patients/" + healthId, responsePatient);
     }
 
@@ -113,6 +124,17 @@ public class MCIRegistryIT {
         assertEquals(SC_CREATED, createResponse.statusCode());
         String healthId = new JsonPath(createResponse.asString()).getString("id");
         assertNotNull(healthId);
+    }
+
+    @Test
+    public void shouldCreateAndGetPatientWithAllFields() throws Exception {
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
+
+        String content = new PatientFHIRXMLFactory().withValidXML(PatientFactory.validPatientWithMandatoryInformation());
+
+        Patient expectedPatient = findPatientFromBundle((Bundle) xmlParser.parseResource(content));
+
     }
 
     @Test
@@ -305,5 +327,10 @@ public class MCIRegistryIT {
             }
         }
         return null;
+    }
+
+    private IBaseDatatype getExtensionValue(Patient patient, String extensionName) {
+        List<ExtensionDt> extension = patient.getUndeclaredExtensionsByUrl(getFhirExtensionUrl(extensionName));
+        return CollectionUtils.isEmpty(extension) ? null : extension.get(0).getValue();
     }
 }

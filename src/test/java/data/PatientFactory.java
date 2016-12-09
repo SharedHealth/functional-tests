@@ -2,6 +2,7 @@ package data;
 
 import domain.Address;
 import domain.Patient;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,56 +11,37 @@ import java.util.Date;
 public class PatientFactory {
 
     private static String getEncodedName(String randomCode) {
-
         StringBuilder codedString = new StringBuilder();
-
         for (int i = 0; i < randomCode.length(); i++) {
             codedString.append((char) (Integer.parseInt(randomCode.substring(i, i + 1)) + 65));
 
         }
-
         return codedString.toString();
     }
 
-    private static String getName(Patient patient) {
-        return "AHI" + PatientFactory.getEncodedName(patient.nid).toString();
-    }
-
     public static Patient validPatientWithMandatoryInformation() {
-        Patient patient = new Patient();
-
-        patient.nid = String.valueOf(new Date().getTime());
-        patient.given = PatientFactory.getName(patient);
-        patient.family = "Raichand";
-        patient.gender = "male";
-        patient.birthDate = "1976-01-12";
+        Patient patient = validPatientWithoutBirthTime();
         patient.birthTime = "16:50:00";
-        patient.addressCode = "201918991101";
-        patient.addressLine = "3rd " + PatientFactory.getEncodedName(patient.nid).toString() + " lane";
-        patient.countryCode = "50";
-
         return patient;
     }
 
+    public static Patient validPatientWithoutBirthTime() {
+        Patient patient = new Patient();
+        patient.nid = String.valueOf(new Date().getTime());
+        patient.given = "AHI" + PatientFactory.getEncodedName(patient.nid);
+        patient.family = "REV" + PatientFactory.getEncodedName(StringUtils.reverse(patient.nid));
+        patient.gender = "male";
+        patient.birthDate = "1980-06-14";
+        patient.addressCode = "201918991101";
+        patient.addressLine = "6th " + PatientFactory.getEncodedName(patient.nid) + " lane";
+        patient.countryCode = "50";
+        return patient;
+    }
 
-public static  Patient validPatientWithoutBirthTime() {
-    Patient patient = new Patient();
-    patient.nid = String.valueOf(new Date().getTime());
-    patient.given = PatientFactory.getName(patient);
-    patient.family = "Shah";
-    patient.gender = "male";
-    patient.birthDate = "1980-06-14";
-    patient.addressCode = "201918991101";
-    patient.addressLine = "6th " + PatientFactory.getEncodedName(patient.nid).toString() + " lane";
-    patient.countryCode = "50";
-
-    return patient;
-
-}
-
-public static Patient patientWithUnknownElements() {
-    return new Patient();
-}
+    public static Patient validPatientWithAllInformation() {
+        Patient patient = validPatientWithMandatoryInformation();
+        return patient;
+    }
 
 
     public static Address defaultAddress = new Address.AddressBuilder()
@@ -89,9 +71,9 @@ public static Patient patientWithUnknownElements() {
             .addressLine1("Test")
             .build();
 
-    private  String id1 = String.valueOf(System.currentTimeMillis()).substring(7);
+    private String id1 = String.valueOf(System.currentTimeMillis()).substring(7);
 
-    public  Patient defaultPatient = new Patient.PatientBuilder()
+    public Patient defaultPatient = new Patient.PatientBuilder()
             .firstName("A" + id1).lastName("ATEST")
             .gender("Male").dateOfBirth("01-03-2000")
             .address(defaultAddress)
@@ -99,7 +81,7 @@ public static Patient patientWithUnknownElements() {
             .education("5th Pass and Below")
             .occupation("Business")
             .primaryContact("Primary One").build();
-    public  Patient defaultPatientWithEditedName = new Patient.PatientBuilder()
+    public Patient defaultPatientWithEditedName = new Patient.PatientBuilder()
             .firstName("A" + id1).lastName("ATESTEdit")
             .gender("Male").dateOfBirth("01-03-2000")
             .address(defaultAddress)
@@ -108,7 +90,7 @@ public static Patient patientWithUnknownElements() {
             .occupation("Business")
             .primaryContact("Primary One").build();
 
-    public  Patient patientForFacilityTwoCatchment = new Patient.PatientBuilder()
+    public Patient patientForFacilityTwoCatchment = new Patient.PatientBuilder()
             .firstName("A" + id1).lastName("ATEST")
             .gender("Male").dateOfBirth("01-03-2000")
             .address(addressForFacilityTwo)
@@ -117,8 +99,8 @@ public static Patient patientWithUnknownElements() {
             .occupation("Business")
             .primaryContact("Primary One").build();
 
-    private  String id4 = String.valueOf(System.currentTimeMillis() + 1).substring(3);
-    public  Patient patientWithAllFieldDetails = new Patient.PatientBuilder()
+    private String id4 = String.valueOf(System.currentTimeMillis() + 1).substring(3);
+    public Patient patientWithAllFieldDetails = new Patient.PatientBuilder()
             .firstName("A" + id4).lastName("ATEST")
             .gender("Male").dateOfBirth("01-03-2000")
             .address(defaultAddress)
@@ -161,6 +143,7 @@ public static Patient patientWithUnknownElements() {
 
         return present_address;
     }
+
     public JSONObject getAddressJsonForKhulna() {
         JSONObject present_address = new JSONObject();
         try {
@@ -176,6 +159,7 @@ public static Patient patientWithUnknownElements() {
 
         return present_address;
     }
+
     public JSONObject getAddressJsonForChittagong() {
         JSONObject present_address = new JSONObject();
         try {

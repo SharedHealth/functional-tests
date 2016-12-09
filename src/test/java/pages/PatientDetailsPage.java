@@ -88,21 +88,21 @@ public class PatientDetailsPage extends Page {
         Select patientOccupationSelectBox = new Select(patientOccupation);
 
 
-        Assert.assertEquals(primaryPatient.getGiven(), patientFirstName.getAttribute("value"));
-        Assert.assertEquals(primaryPatient.getFamily(), patientLastName.getAttribute("value"));
-        Assert.assertEquals(primaryPatient.getGender(), patientGenderSelectBox.getFirstSelectedOption().getText());
-        Assert.assertEquals(primaryPatient.getBirthDate(), patientDateOfBirth.getAttribute("value"));
-        Assert.assertEquals(primaryPatient.getAddress().getAddressLine1(), patientAddressLine1.getAttribute("value"));
-        Assert.assertEquals(primaryPatient.getAddress().getUnion(), patientAddressUnion.getAttribute("value"));
-        Assert.assertEquals(primaryPatient.getAddress().getUpazilla(), patientAddressUpaZilla.getAttribute("value"));
-        Assert.assertEquals(primaryPatient.getAddress().getDistrict(), patientAddressDistrict.getAttribute("value"));
-        Assert.assertEquals(primaryPatient.getAddress().getDivision(), patientAddressDivision.getAttribute("value"));
-        Assert.assertEquals(primaryPatient.getNid(), patientNID.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.given, patientFirstName.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.family, patientLastName.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.gender, patientGenderSelectBox.getFirstSelectedOption().getText());
+        Assert.assertEquals(primaryPatient.birthDate, patientDateOfBirth.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.address.getAddressLine1(), patientAddressLine1.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.address.getUnion(), patientAddressUnion.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.address.getUpazilla(), patientAddressUpaZilla.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.address.getDistrict(), patientAddressDistrict.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.address.getDivision(), patientAddressDivision.getAttribute("value"));
+        Assert.assertEquals(primaryPatient.nid, patientNID.getAttribute("value"));
         Assert.assertNotNull(patientHID.getAttribute("value"));
 //        Assert.assertEquals(primaryPatient.getEducation(),  patientEducationSelectBox.getFirstSelectedOption().getText());
-        Assert.assertEquals(primaryPatient.getOccupation(), patientOccupationSelectBox.getFirstSelectedOption().getText());
-//        Assert.assertEquals(primaryPatient.getPrimaryContact(),  patientPrimaryContact.getAttribute("value")) ;
-        System.out.println("Patient with NID: " + primaryPatient.getNid() + " downloaded to Bahmni");
+        Assert.assertEquals(primaryPatient.occupation, patientOccupationSelectBox.getFirstSelectedOption().getText());
+//        Assert.assertEquals(primaryPatient.getPhoneNumber(),  patientPrimaryContact.getAttribute("value")) ;
+        System.out.println("Patient with NID: " + primaryPatient.nid + " downloaded to Bahmni");
 
 
     }
@@ -110,13 +110,13 @@ public class PatientDetailsPage extends Page {
     public PatientVisitInformationPage editPatientDetails(Patient primaryPatient) {
         this.waitForMillis(1000);
 
-        setText(patientFirstName, primaryPatient.getGiven());
-        setText(patientLastName, primaryPatient.getFamily());
-        setText(patientAddressLine1, primaryPatient.getAddress().getAddressLine1());
+        setText(patientFirstName, primaryPatient.given);
+        setText(patientLastName, primaryPatient.family);
+        setText(patientAddressLine1, primaryPatient.address.getAddressLine1());
 //        enterVisitDetails.click();
         patientNID.click();
         patientNID.sendKeys(Keys.RETURN);
-        System.out.println("Patient with NID: " + primaryPatient.getNid() + " updated in Bahmni");
+        System.out.println("Patient with NID: " + primaryPatient.nid + " updated in Bahmni");
         return initialize(webDriver, PatientVisitInformationPage.class);
 
 
@@ -130,33 +130,33 @@ public class PatientDetailsPage extends Page {
         Select patientOccupationSelectBox = new Select(patientOccupation);
 
 
-        setText(patientFirstName, primaryPatient.getGiven());
-        setText(patientLastName, primaryPatient.getFamily());
-        setText(patientDateOfBirth, primaryPatient.getBirthDate());
-        setText(patientAddressLine1, primaryPatient.getAddress().getAddressLine1());
-        if (primaryPatient.getAddress().getUnion().equals("")) {
-            setText(patientAddressUpaZilla, primaryPatient.getAddress().getUpazilla());
-            String addressOptions = "//a[text()='" + primaryPatient.getAddress().getUpazilla() + ", " + primaryPatient.getAddress().getDistrict() + "']";
+        setText(patientFirstName, primaryPatient.given);
+        setText(patientLastName, primaryPatient.family);
+        setText(patientDateOfBirth, primaryPatient.birthDate);
+        setText(patientAddressLine1, primaryPatient.address.getAddressLine1());
+        if (primaryPatient.address.getUnion().equals("")) {
+            setText(patientAddressUpaZilla, primaryPatient.address.getUpazilla());
+            String addressOptions = "//a[text()='" + primaryPatient.address.getUpazilla() + ", " + primaryPatient.address.getDistrict() + "']";
             waitForMillis(1000);
             WebElement addressOption = driver.findElement(By.xpath(addressOptions));
             addressOption.click();
         } else {
-            setText(patientAddressUnion, primaryPatient.getAddress().getUnion());
+            setText(patientAddressUnion, primaryPatient.address.getUnion());
             waitForMillis(1000);
-            String addressOptions = "//a[text()='" + primaryPatient.getAddress().getUnion() + ", " + primaryPatient.getAddress().getCityCorporation() + "']";
+            String addressOptions = "//a[text()='" + primaryPatient.address.getUnion() + ", " + primaryPatient.address.getCityCorporation() + "']";
             WebElement addressOption = driver.findElement(By.xpath(addressOptions));
             addressOption.click();
 
 
         }
-        setText(patientNID, primaryPatient.getNid());
-//        setText(patientPrimaryContact,primaryPatient.getPrimaryContact());
+        setText(patientNID, primaryPatient.nid);
+//        setText(patientPrimaryContact,primaryPatient.getPhoneNumber());
 
 //        patientEducationSelectBox.selectByVisibleText(primaryPatient.getEducation());
-        patientGenderSelectBox.selectByVisibleText(primaryPatient.getGender());
-        patientOccupationSelectBox.selectByVisibleText(primaryPatient.getOccupation());
+        patientGenderSelectBox.selectByVisibleText(primaryPatient.gender);
+        patientOccupationSelectBox.selectByVisibleText(primaryPatient.occupation);
         startLabVisit.click();
-        System.out.println("Patient Created with NID: " + primaryPatient.getNid());
+        System.out.println("Patient Created with NID: " + primaryPatient.nid);
         return initialize(webDriver, PatientVisitInformationPage.class);
 
 
