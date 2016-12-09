@@ -1,5 +1,7 @@
 package domain;
 
+import ca.uhn.fhir.model.primitive.BooleanDt;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,10 +35,10 @@ public class Patient {
     public String addressCode;
     public String countryCode;
 
-    public String status;
+    public Boolean isDead;
     public Date dateOfDeath;
-    public boolean confidentiality;
-    public boolean active;
+    public Boolean confidentiality;
+    public Boolean active;
 
     public String education;
     public String occupation;
@@ -60,29 +62,6 @@ public class Patient {
         this.binBRN = patientBuilder.binBRN;
     }
 
-
-    boolean hasBirthTime() {
-
-        return this.birthTime != null;
-    }
-
-    public boolean hasNameDetails() {
-        return this.family != null;
-    }
-
-    public boolean hasGenderDetails() {
-        return this.gender != null;
-    }
-
-    public boolean hasBirthDetails() {
-        return this.birthDate != null;
-    }
-
-    public boolean hasAddressDetails() {
-        return this.addressCode != null;
-    }
-
-
     public static class PatientBuilder {
 
         private String firstName;
@@ -96,12 +75,6 @@ public class Patient {
         private String occupation;
         private String primaryContact;
         private String uid;
-        private String fatherUid;
-        private String fatherNid;
-        private String fatherBRN;
-        private String motherUid;
-        private String motherNid;
-        private String motherBRN;
         private String binBRN;
 
 
@@ -157,36 +130,6 @@ public class Patient {
 
         public PatientBuilder uid(String uid) {
             this.uid = uid;
-            return this;
-        }
-
-        public PatientBuilder fatherUid(String fatherUid) {
-            this.fatherUid = fatherUid;
-            return this;
-        }
-
-        public PatientBuilder fatherNid(String fatherNid) {
-            this.fatherNid = fatherNid;
-            return this;
-        }
-
-        public PatientBuilder fatherBRN(String fatherBRN) {
-            this.fatherBRN = fatherBRN;
-            return this;
-        }
-
-        public PatientBuilder motherUid(String motherUid) {
-            this.motherUid = motherUid;
-            return this;
-        }
-
-        public PatientBuilder motherNid(String motherNid) {
-            this.motherNid = motherNid;
-            return this;
-        }
-
-        public PatientBuilder motherBRN(String motherBRN) {
-            this.motherBRN = motherBRN;
             return this;
         }
 

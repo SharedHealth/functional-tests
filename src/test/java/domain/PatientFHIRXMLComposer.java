@@ -1,23 +1,29 @@
 package domain;
 
 import nu.xom.*;
+import org.apache.commons.lang3.StringUtils;
+import utils.FhirConstant;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+import static utils.FhirConstant.*;
+
 public class PatientFHIRXMLComposer {
     public static final String VALUE = "value";
     private Element root;
     private Patient patient;
     public static final String xmlns = "http://hl7.org/fhir";
+    private String mciBaseUrl;
 
     public void setPatient(Patient patient) {
         this.patient = patient;
     }
 
-    public PatientFHIRXMLComposer() {
+    public PatientFHIRXMLComposer(String mciBaseUrl) {
+        this.mciBaseUrl = mciBaseUrl;
         this.root = new Element("Bundle", xmlns);
 
         Element id = new Element("id", xmlns);
@@ -57,7 +63,7 @@ public class PatientFHIRXMLComposer {
         Element birthDate = new Element("birthDate", xmlns);
         birthDate.addAttribute(new Attribute(VALUE, this.patient.birthDate));
 
-        if (this.patient.hasBirthTime()) {
+        if (StringUtils.isNotBlank(patient.birthTime)) {
             Element birthDateExtension = new Element("extension", xmlns);
             birthDateExtension.addAttribute(new Attribute("url", this.xmlns + "/StructureDefinition/patient-birthTime"));
             Element birthDateExtensionValue = new Element("valueDateTime", xmlns);
@@ -105,6 +111,38 @@ public class PatientFHIRXMLComposer {
     }
 
 
+    private void appendPhoneNumber(Element patientElement) {
+        Element telecom = new Element("telecom", xmlns);
+        patientElement.appendChild(telecom);
+
+        Element system = new Element("system", xmlns);
+        system.addAttribute(new Attribute(VALUE, "phone"));
+        telecom.appendChild(system);
+
+        Element valueElement = new Element(VALUE, xmlns);
+        valueElement.addAttribute(new Attribute(VALUE, patient.phoneNumber));
+        telecom.appendChild(valueElement);
+    }
+
+    private void appendActive(Element patientElement) {
+        Element active = new Element("active", xmlns);
+        active.addAttribute(new Attribute(VALUE, String.valueOf(true)));
+        patientElement.appendChild(active);
+    }
+
+    private void appendDeceased(Element patientElement) {
+        if (patient.isDead == null) return;
+        if (patient.dateOfDeath != null) {
+            Element deceasedDateTime = new Element("deceasedDateTime", xmlns);
+            deceasedDateTime.addAttribute(new Attribute(VALUE, formatDate(patient.dateOfDeath)));
+            patientElement.appendChild(deceasedDateTime);
+            return;
+        }
+        Element deceasedBoolean = new Element("deceasedBoolean", xmlns);
+        deceasedBoolean.addAttribute(new Attribute(VALUE, String.valueOf(patient.isDead)));
+        patientElement.appendChild(deceasedBoolean);
+    }
+
     public String composePatient() throws ParsingException, IOException {
         Element entry = new Element("entry", xmlns);
         this.root.appendChild(entry);
@@ -116,18 +154,89 @@ public class PatientFHIRXMLComposer {
         Element resource = new Element("resource", xmlns);
         entry.appendChild(resource);
 
-        Element patient = new Element("Patient", xmlns);
-        resource.appendChild(patient);
+        Element patientElement = new Element("Patient", xmlns);
+        resource.appendChild(patientElement);
 
-        if (this.patient.hasNameDetails()) this.appendNameDetails(patient);
-        if (this.patient.hasGenderDetails()) this.appendGenderDetails(patient);
-        if (this.patient.hasBirthDetails()) this.appendBirthDetails(patient);
-        if (this.patient.hasAddressDetails()) this.appendAddressDetails(patient);
+        if (StringUtils.isNotBlank(patient.given) && StringUtils.isNotBlank(patient.family))
+            this.appendNameDetails(patientElement);
+        if (StringUtils.isNotBlank(patient.gender)) appendGenderDetails(patientElement);
+        if (StringUtils.isNotBlank(patient.birthDate)) appendBirthDetails(patientElement);
+        if (StringUtils.isNotBlank(patient.addressCode)) appendAddressDetails(patientElement);
+        if (StringUtils.isNotBlank(patient.phoneNumber)) appendPhoneNumber(patientElement);
+        if (patient.active != null) appendActive(patientElement);
+        appendDeceased(patientElement);
+
+        if (StringUtils.isNotBlank(patient.nid)) appendIdentifier(patientElement, MCI_IDENTIFIER_NID_CODE, patient.nid);
+        if (StringUtils.isNotBlank(patient.binBRN))
+            appendIdentifier(patientElement, MCI_IDENTIFIER_BRN_CODE, patient.binBRN);
+
+        if (StringUtils.isNotBlank(patient.householdCode)) {
+            appendExtensionWithStringValue(patientElement, HOUSE_HOLD_CODE_EXTENSION_NAME, "valueString", patient.householdCode);
+        }
+        if (patient.confidentiality != null) {
+            appendExtensionWithStringValue(patientElement, CONFIDENTIALITY_EXTENSION_NAME, "valueBoolean", String.valueOf(patient.confidentiality));
+        }
+        if (StringUtils.isNotBlank(patient.education)) {
+            appendExtensionWithCodeableConcept(patientElement, EDUCATION_DETAILS_EXTENSION_NAME, patient.education, MCI_PATIENT_EDUCATION_DETAILS_VALUESET);
+        }
+        if (StringUtils.isNotBlank(patient.occupation)) {
+            appendExtensionWithCodeableConcept(patientElement, OCCUPATION_EXTENSION_NAME, patient.occupation, MCI_PATIENT_OCCUPATION_VALUESET);
+        }
+        if (StringUtils.isNotBlank(patient.dobType)) {
+            appendExtensionWithCodeableConcept(patientElement, DOB_TYPE_EXTENSION_NAME, patient.dobType, MCI_PATIENT_DOB_TYPE_VALUESET);
+        }
+
         Document patientDetails = new Document(root);
         Builder parser = new Builder();
         parser.build(patientDetails.toXML(), null);
         return patientDetails.toXML();
 
+    }
+
+    private void appendExtensionWithCodeableConcept(Element patientElement, String extensionName, String value, String valuesetName) {
+        Element extension = new Element("extension", xmlns);
+        patientElement.appendChild(extension);
+        extension.addAttribute(new Attribute("url", getFhirExtensionUrl(extensionName)));
+        Element valueElement = new Element("valueCodeableConcept", xmlns);
+        valueElement.appendChild(createCodingElement(value, valuesetName));
+        extension.appendChild(valueElement);
+    }
+
+    private void appendExtensionWithStringValue(Element patientElement, String extensionName, String valueType, String value) {
+        Element extension = new Element("extension", xmlns);
+        patientElement.appendChild(extension);
+        extension.addAttribute(new Attribute("url", getFhirExtensionUrl(extensionName)));
+
+        Element valueElement = new Element(valueType, xmlns);
+        valueElement.addAttribute(new Attribute(VALUE, value));
+        extension.appendChild(valueElement);
+    }
+
+    private void appendIdentifier(Element patientElement, String identifierCode, String identifierValue) {
+        Element identifier = new Element("identifier", xmlns);
+        patientElement.appendChild(identifier);
+        Element type = new Element("type", xmlns);
+
+        identifier.appendChild(type);
+        type.appendChild(createCodingElement(identifierCode, MCI_PATIENT_IDENTIFIERS_VALUESET));
+
+        Element identifierValueElement = new Element(VALUE, xmlns);
+        identifierValueElement.addAttribute(new Attribute(VALUE, identifierValue));
+        identifier.appendChild(identifierValueElement);
+    }
+
+    private Element createCodingElement(String code, String valuesetName) {
+        Element coding = new Element("coding", xmlns);
+
+        Element system = new Element("system", xmlns);
+        system.addAttribute(new Attribute(VALUE, FhirConstant.getMCIValuesetURI(mciBaseUrl, valuesetName)));
+        coding.appendChild(system);
+
+        Element codeElement = new Element("code", xmlns);
+        codeElement.addAttribute(new Attribute(VALUE, code));
+        coding.appendChild(codeElement);
+
+        return coding;
     }
 
     private String formatDate(Date date) {

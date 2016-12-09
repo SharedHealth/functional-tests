@@ -40,6 +40,15 @@ public class PatientFactory {
 
     public static Patient validPatientWithAllInformation() {
         Patient patient = validPatientWithMandatoryInformation();
+        patient.active = true;
+        patient.binBRN = StringUtils.substring(patient.nid + StringUtils.reverse(patient.nid), 0, 17);
+        patient.confidentiality = false;
+        patient.dobType = "3";
+        patient.education = "02";
+        patient.occupation = "03";
+        patient.householdCode = StringUtils.substring(patient.nid, 5, 12);
+        patient.phoneNumber = StringUtils.substring(patient.nid, 3, 10);
+        patient.isDead = false;
         return patient;
     }
 
@@ -108,8 +117,8 @@ public class PatientFactory {
             .occupation("Business")
             .primaryContact("Primary One")
             .binBRN("8000000" + id4).nid("800" + id4).uid("8" + id4)
-            .fatherBRN("8100000" + id4).fatherNid("810" + id4).fatherUid("8" + id4)
-            .motherBRN("8200000" + id4).motherNid("820" + id4).motherUid("8" + id4)
+//            .fatherBRN("8100000" + id4).fatherNid("810" + id4).fatherUid("8" + id4)
+//            .motherBRN("8200000" + id4).motherNid("820" + id4).motherUid("8" + id4)
             .build();
 
     public JSONObject getAddressJsonForBarisal() {

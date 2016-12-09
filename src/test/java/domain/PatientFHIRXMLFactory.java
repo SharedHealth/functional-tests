@@ -4,8 +4,6 @@ import nu.xom.*;
 
 import java.io.IOException;
 
-import static domain.PatientFHIRXMLComposer.VALUE;
-
 /**
  * Created by rajeshvaran on 11/18/16.
  */
@@ -13,11 +11,13 @@ public class PatientFHIRXMLFactory {
 
     private PatientFHIRXMLComposer composer;
     public String xmlns;
+    private String baseUrl;
 
 
-    public PatientFHIRXMLFactory() {
+    public PatientFHIRXMLFactory(String baseUrl) {
+        this.baseUrl = baseUrl;
         this.xmlns = PatientFHIRXMLComposer.xmlns;
-        this.composer = new PatientFHIRXMLComposer();
+        this.composer = new PatientFHIRXMLComposer(baseUrl);
     }
 
     public String withValidXML(Patient patient) throws ParsingException, IOException {

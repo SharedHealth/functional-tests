@@ -6,6 +6,7 @@ import ca.uhn.fhir.model.dstu2.resource.Bundle;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.dstu2.valueset.IdentifierTypeCodesEnum;
 import ca.uhn.fhir.model.primitive.BooleanDt;
+import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.parser.IParser;
 import categories.MciApiTest;
 import com.jayway.restassured.RestAssured;
@@ -35,9 +36,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static utils.FhirConstant.*;
 import static utils.IdentityLoginUtil.login;
 
@@ -61,8 +60,77 @@ public class MCIRegistryIT {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
 
-        String content = new PatientFHIRXMLFactory().withValidXML(PatientFactory.validPatientWithMandatoryInformation());
+        domain.Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String content = new PatientFHIRXMLFactory(baseUrl).withValidXML(patient);
 
+        Patient expectedPatient = findPatientFromBundle((Bundle) xmlParser.parseResource(content));
+
+        Response createResponse = given()
+                .body(content)
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .post(patientContextPath)
+                .then()
+                .assertThat()
+                .statusCode(SC_CREATED)
+                .contentType(ContentType.JSON)
+                .body("httpStatus", equalTo(SC_CREATED))
+                .body("id", notNullValue())
+                .extract().response();
+
+        String healthId = new JsonPath(createResponse.asString()).getString("id");
+        Response response = given()
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .get(patientContextPath + "/" + healthId)
+                .then()
+                .assertThat().contentType(ContentType.XML).statusCode(SC_OK)
+                .extract().response();
+
+        IBaseResource resource = xmlParser.parseResource(response.asString());
+        assertTrue(resource instanceof Bundle);
+
+        Patient responsePatient = findPatientFromBundle((Bundle) resource);
+
+        assertNotNull(responsePatient);
+        assertIdentifier(responsePatient, MCI_IDENTIFIER_HID_CODE, healthId, healthId);
+        assertName(responsePatient, patient.given, patient.family);
+        assertEquals(patient.gender, responsePatient.getGender());
+        assertDOB(expectedPatient, responsePatient);
+        assertAddress(expectedPatient, responsePatient);
+        assertTrue(responsePatient.getActive());
+        assertNull(responsePatient.getDeceased());
+        assertFalse(((BooleanDt) getExtensionValue(responsePatient, CONFIDENTIALITY_EXTENSION_NAME)).getValue());
+        CodeableConceptDt dobType = (CodeableConceptDt) getExtensionValue(responsePatient, DOB_TYPE_EXTENSION_NAME);
+        assertEquals("1", dobType.getCodingFirstRep().getCode());
+        assertLink("/api/v1/patients/" + healthId, responsePatient);
+    }
+
+    @Test
+    public void shouldCreateAPatientWithoutBirthTime() throws Exception {
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
+        String content = new PatientFHIRXMLFactory(baseUrl).withValidXML(PatientFactory.validPatientWithoutBirthTime());
+
+        Response createResponse = given()
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .body(content).post(patientContextPath);
+        assertEquals(SC_CREATED, createResponse.statusCode());
+        String healthId = new JsonPath(createResponse.asString()).getString("id");
+        assertNotNull(healthId);
+    }
+
+    @Test
+    public void shouldCreateAndGetPatientWithAllFieldsWithoutRelations() throws Exception {
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
+
+        domain.Patient patient = PatientFactory.validPatientWithAllInformation();
+        String content = new PatientFHIRXMLFactory(baseUrl).withValidXML(patient);
         Patient expectedPatient = findPatientFromBundle((Bundle) xmlParser.parseResource(content));
 
         Response createResponse = given()
@@ -93,55 +161,53 @@ public class MCIRegistryIT {
 
         IBaseResource resource = xmlParser.parseResource(response.asString());
         assertTrue(resource instanceof Bundle);
-
         Patient responsePatient = findPatientFromBundle((Bundle) resource);
 
         assertNotNull(responsePatient);
-        assertHealthId(expectedPatient, responsePatient);
-        assertName(expectedPatient, responsePatient);
-        assertGender(expectedPatient, responsePatient);
+        assertIdentifier(responsePatient, MCI_IDENTIFIER_HID_CODE, healthId, healthId);
+        assertIdentifier(responsePatient, MCI_IDENTIFIER_NID_CODE, patient.nid, healthId);
+        assertIdentifier(responsePatient, MCI_IDENTIFIER_BRN_CODE, patient.binBRN, healthId);
+
+        assertPhoneNumber(patient.phoneNumber, responsePatient);
+        StringDt houseHoldCode = (StringDt) getExtensionValue(responsePatient, HOUSE_HOLD_CODE_EXTENSION_NAME);
+        assertEquals(patient.householdCode, houseHoldCode.getValue());
+        assertFalse(((BooleanDt) getExtensionValue(responsePatient, CONFIDENTIALITY_EXTENSION_NAME)).getValue());
+
+        CodeableConceptDt dobType = (CodeableConceptDt) getExtensionValue(responsePatient, DOB_TYPE_EXTENSION_NAME);
+        CodingDt dobTypeCoding = dobType.getCodingFirstRep();
+        assertEquals(dobTypeCoding.getSystem(), getMCIValuesetURI(baseUrl, MCI_PATIENT_DOB_TYPE_VALUESET));
+        assertEquals("3", dobTypeCoding.getCode());
+
+        CodeableConceptDt education = (CodeableConceptDt) getExtensionValue(responsePatient, EDUCATION_DETAILS_EXTENSION_NAME);
+        CodingDt educationCoding = education.getCodingFirstRep();
+        assertEquals(educationCoding.getSystem(), getMCIValuesetURI(baseUrl, MCI_PATIENT_EDUCATION_DETAILS_VALUESET));
+        assertEquals("02", educationCoding.getCode());
+
+        CodeableConceptDt occupation = (CodeableConceptDt) getExtensionValue(responsePatient, OCCUPATION_EXTENSION_NAME);
+        CodingDt occupationCoding = occupation.getCodingFirstRep();
+        assertEquals(occupationCoding.getSystem(), getMCIValuesetURI(baseUrl, MCI_PATIENT_OCCUPATION_VALUESET));
+        assertEquals("03", occupationCoding.getCode());
+
+        assertName(responsePatient, patient.given, patient.family);
+        assertEquals(patient.gender, responsePatient.getGender());
         assertDOB(expectedPatient, responsePatient);
         assertAddress(expectedPatient, responsePatient);
         assertTrue(responsePatient.getActive());
-        assertNull(responsePatient.getDeceased());
-        assertFalse(((BooleanDt) getExtensionValue(responsePatient, CONFIDENTIALITY_EXTENSION_NAME)).getValue());
-        CodeableConceptDt dobType = (CodeableConceptDt) getExtensionValue(responsePatient, DOB_TYPE_EXTENSION_NAME);
-        assertEquals("1", dobType.getCodingFirstRep().getCode());
+        assertFalse(((BooleanDt) responsePatient.getDeceased()).getValue());
         assertLink("/api/v1/patients/" + healthId, responsePatient);
     }
 
-    @Test
-    public void shouldCreateAPatientWithoutBirthTime() throws Exception {
-        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
-        String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
-        String content = new PatientFHIRXMLFactory().withValidXML(PatientFactory.validPatientWithoutBirthTime());
-
-        Response createResponse = given()
-                .header("X-Auth-Token", accessToken)
-                .header("From", idpUserEnum.getEmail())
-                .header("client_id", idpUserEnum.getClientId())
-                .body(content).post(patientContextPath);
-        assertEquals(SC_CREATED, createResponse.statusCode());
-        String healthId = new JsonPath(createResponse.asString()).getString("id");
-        assertNotNull(healthId);
-    }
-
-    @Test
-    public void shouldCreateAndGetPatientWithAllFields() throws Exception {
-        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
-        String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
-
-        String content = new PatientFHIRXMLFactory().withValidXML(PatientFactory.validPatientWithMandatoryInformation());
-
-        Patient expectedPatient = findPatientFromBundle((Bundle) xmlParser.parseResource(content));
-
+    private void assertPhoneNumber(String phoneNumber, Patient responsePatient) {
+        ContactPointDt telecom = responsePatient.getTelecomFirstRep();
+        assertEquals("phone", telecom.getSystem());
+        assertEquals(phoneNumber, telecom.getValue());
     }
 
     @Test
     public void shouldFailToCreatePatientIfItHasUnknownElements() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
-        String content = new PatientFHIRXMLFactory().withUnknownElementInXML(PatientFactory.validPatientWithoutBirthTime());
+        String content = new PatientFHIRXMLFactory(baseUrl).withUnknownElementInXML(PatientFactory.validPatientWithoutBirthTime());
 
         Response createResponse = given()
                 .header("X-Auth-Token", accessToken)
@@ -157,7 +223,7 @@ public class MCIRegistryIT {
     public void shouldFailToCreatePatientIfItHasUnknownAttributeForAnElement() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
-        String content = new PatientFHIRXMLFactory().withUnknownAttributeForGenderInXML(PatientFactory.validPatientWithMandatoryInformation());
+        String content = new PatientFHIRXMLFactory(baseUrl).withUnknownAttributeForGenderInXML(PatientFactory.validPatientWithMandatoryInformation());
 
         Response createResponse = given().body(content)
                 .header("X-Auth-Token", accessToken)
@@ -171,7 +237,7 @@ public class MCIRegistryIT {
 
     @Test
     public void shouldFailToCreatePatientIfItHasUnexpectedRepeatingElement() throws Exception {
-        String content = new PatientFHIRXMLFactory().withMultipleGenderElementsInXML(PatientFactory.validPatientWithoutBirthTime());
+        String content = new PatientFHIRXMLFactory(baseUrl).withMultipleGenderElementsInXML(PatientFactory.validPatientWithoutBirthTime());
 
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
@@ -190,7 +256,7 @@ public class MCIRegistryIT {
     public void shouldFailToCreatePatientIfItHasInvalidData() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
-        String content = new PatientFHIRXMLFactory().withInvalidGenderInXML(PatientFactory.validPatientWithoutBirthTime());
+        String content = new PatientFHIRXMLFactory(baseUrl).withInvalidGenderInXML(PatientFactory.validPatientWithoutBirthTime());
 
         Response createResponse = given()
                 .header("X-Auth-Token", accessToken)
@@ -214,7 +280,7 @@ public class MCIRegistryIT {
 
     @Test
     public void shouldFailToCreatePatientHasNotRequiredDataForMCIProfile() throws Exception {
-        String content = new PatientFHIRXMLFactory().withMissingRequiredDataInXML(PatientFactory.validPatientWithoutBirthTime());
+        String content = new PatientFHIRXMLFactory(baseUrl).withMissingRequiredDataInXML(PatientFactory.validPatientWithoutBirthTime());
 
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
@@ -243,7 +309,7 @@ public class MCIRegistryIT {
     public void shouldFailToCreatePatientHasUnwantedDuplicateDataForMCIProfile() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
-        String content = new PatientFHIRXMLFactory().withDuplicateNameDataInXML(PatientFactory.validPatientWithoutBirthTime());
+        String content = new PatientFHIRXMLFactory(baseUrl).withDuplicateNameDataInXML(PatientFactory.validPatientWithoutBirthTime());
 
         Response createResponse = given()
                 .header("X-Auth-Token", accessToken)
@@ -298,26 +364,29 @@ public class MCIRegistryIT {
         assertEquals(expected.getBirthDateElement(), actual.getBirthDateElement());
     }
 
-    private void assertGender(Patient expected, Patient actual) {
-        assertEquals(expected.getGender(), actual.getGender());
-    }
-
-    private void assertName(Patient expected, Patient actual) {
+    private void assertName(Patient actual, String givenName, String familyName) {
         HumanNameDt actualName = actual.getNameFirstRep();
-        HumanNameDt expectedName = expected.getNameFirstRep();
-        assertEquals(expectedName.getGivenFirstRep(), actualName.getGivenFirstRep());
-        assertEquals(expectedName.getFamilyFirstRep(), actualName.getFamilyFirstRep());
+        assertEquals(givenName, actualName.getGivenFirstRep().getValue());
+        assertEquals(familyName, actualName.getFamilyFirstRep().getValue());
     }
 
-    private void assertHealthId(Patient expectedPatient, Patient actualPatient) {
-        IdentifierDt actualIdentifier = actualPatient.getIdentifier().get(0);
-        IdentifierDt expectedIdentifier = expectedPatient.getIdentifier().get(0);
-        assertEquals(expectedIdentifier.getValue(), actualIdentifier.getValue());
-        assertEquals(expectedIdentifier.getSystem(), actualIdentifier.getSystem());
-        BoundCodeableConceptDt<IdentifierTypeCodesEnum> type = actualIdentifier.getType();
+    private void assertIdentifier(Patient actualPatient, final String code, String identifierValue, String healthId) {
+        IdentifierDt identifierByCode = getIdentifierByCode(actualPatient.getIdentifier(), code);
+        assertEquals(identifierValue, identifierByCode.getValue());
+        assertEquals(baseUrl + "/api/v2/patients/" + healthId, identifierByCode.getSystem());
+        BoundCodeableConceptDt<IdentifierTypeCodesEnum> type = identifierByCode.getType();
         CodingDt codingDt = type.getCodingFirstRep();
         assertEquals(baseUrl + "/api/v2/vs/patient-identifiers", codingDt.getSystem());
-        assertEquals("Health Id", codingDt.getCode());
+        assertEquals(code, codingDt.getCode());
+    }
+
+    private IdentifierDt getIdentifierByCode(List<IdentifierDt> identifierDt, String code) {
+        for (IdentifierDt dt : identifierDt) {
+            if (code.equals(dt.getType().getCodingFirstRep().getCode())) {
+                return dt;
+            }
+        }
+        return null;
     }
 
     private Patient findPatientFromBundle(Bundle bundle) {
