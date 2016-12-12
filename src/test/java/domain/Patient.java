@@ -1,10 +1,9 @@
 package domain;
 
 import ca.uhn.fhir.model.primitive.BooleanDt;
+import ca.uhn.fhir.model.primitive.StringDt;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 class MaritalStatus {
     public static Map<String, String> code = new HashMap<String, String>();
@@ -36,13 +35,14 @@ public class Patient {
     public String countryCode;
 
     public Boolean isDead;
-    public Date dateOfDeath;
+    public String dateOfDeath;
     public Boolean confidentiality;
     public Boolean active;
 
     public String education;
     public String occupation;
     public String phoneNumber;
+    public List<Relation> relations = new ArrayList<>();
 
     public Patient() {
     }
@@ -62,6 +62,35 @@ public class Patient {
         this.binBRN = patientBuilder.binBRN;
     }
 
+    public static class Relation{
+        public String type;
+        public String nid;
+        public String hid;
+        public String binBrn;
+        public String uid;
+        public String given;
+        public String family;
+        public String id;
+
+        public Relation(String type, String nid, String hid, String binBrn, String uid, String given, String family, String id) {
+            this.type = type;
+            this.nid = nid;
+            this.hid = hid;
+            this.binBrn = binBrn;
+            this.uid = uid;
+            this.given = given;
+            this.family = family;
+            this.id = id;
+        }
+
+        public Relation(String type, String given, String family, String id) {
+            this.type = type;
+            this.given = given;
+            this.family = family;
+            this.id = id;
+        }
+    }
+
     public static class PatientBuilder {
 
         private String firstName;
@@ -76,7 +105,6 @@ public class Patient {
         private String primaryContact;
         private String uid;
         private String binBRN;
-
 
         public PatientBuilder firstName(String firstName) {
             this.firstName = firstName;

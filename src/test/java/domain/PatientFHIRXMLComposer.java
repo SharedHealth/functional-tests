@@ -42,32 +42,35 @@ public class PatientFHIRXMLComposer {
         root.appendChild(type);
     }
 
-    private void appendNameDetails(Element element) {
+    private void appendNameDetails(Element element, String familyName, String givenName) {
+        if (StringUtils.isBlank(familyName) && StringUtils.isBlank(givenName)) return;
         Element name = new Element("name", xmlns);
         Element family = new Element("family", xmlns);
-        family.addAttribute(new Attribute(VALUE, this.patient.family));
+        family.addAttribute(new Attribute(VALUE, familyName));
         Element given = new Element("given", xmlns);
-        given.addAttribute(new Attribute(VALUE, this.patient.given));
+        given.addAttribute(new Attribute(VALUE, givenName));
         name.appendChild(family);
         name.appendChild(given);
         element.appendChild(name);
     }
 
-    private void appendGenderDetails(Element element) {
+    private void appendGenderDetails(Element element, String genderValue) {
+        if (StringUtils.isBlank(genderValue)) return;
         Element gender = new Element("gender", xmlns);
-        gender.addAttribute(new Attribute(VALUE, this.patient.gender));
+        gender.addAttribute(new Attribute(VALUE, genderValue));
         element.appendChild(gender);
     }
 
-    private void appendBirthDetails(Element element) {
+    private void appendBirthDetails(Element element, String birthDateValue, String birthTimeValue) {
+        if (StringUtils.isBlank(birthDateValue)) return;
         Element birthDate = new Element("birthDate", xmlns);
-        birthDate.addAttribute(new Attribute(VALUE, this.patient.birthDate));
+        birthDate.addAttribute(new Attribute(VALUE, birthDateValue));
 
-        if (StringUtils.isNotBlank(patient.birthTime)) {
+        if (StringUtils.isNotBlank(birthTimeValue)) {
             Element birthDateExtension = new Element("extension", xmlns);
             birthDateExtension.addAttribute(new Attribute("url", this.xmlns + "/StructureDefinition/patient-birthTime"));
             Element birthDateExtensionValue = new Element("valueDateTime", xmlns);
-            birthDateExtensionValue.addAttribute(new Attribute(VALUE, this.patient.birthDate + "T" + this.patient.birthTime + "+05:30"));
+            birthDateExtensionValue.addAttribute(new Attribute(VALUE, birthDateValue + "T" + birthTimeValue + "+05:30"));
 
             birthDateExtension.appendChild(birthDateExtensionValue);
             birthDate.appendChild(birthDateExtension);
@@ -77,6 +80,7 @@ public class PatientFHIRXMLComposer {
     }
 
     private void appendAddressDetails(Element element) {
+        if (StringUtils.isBlank(patient.addressCode)) return;
         Element address = new Element("address", xmlns);
         Element addressExtension = new Element("extension", xmlns);
         addressExtension.addAttribute(new Attribute("url", "https://sharedhealth.atlassian.net/wiki/display/docs/fhir-extensions#AddressCode"));
@@ -111,7 +115,8 @@ public class PatientFHIRXMLComposer {
     }
 
 
-    private void appendPhoneNumber(Element patientElement) {
+    private void appendPhoneNumber(Element patientElement, String phoneNumber) {
+        if (StringUtils.isBlank(phoneNumber)) return;
         Element telecom = new Element("telecom", xmlns);
         patientElement.appendChild(telecom);
 
@@ -120,21 +125,22 @@ public class PatientFHIRXMLComposer {
         telecom.appendChild(system);
 
         Element valueElement = new Element(VALUE, xmlns);
-        valueElement.addAttribute(new Attribute(VALUE, patient.phoneNumber));
+        valueElement.addAttribute(new Attribute(VALUE, phoneNumber));
         telecom.appendChild(valueElement);
     }
 
-    private void appendActive(Element patientElement) {
+    private void appendActive(Element patientElement, Boolean activeValue) {
+        if (activeValue == null) return;
         Element active = new Element("active", xmlns);
-        active.addAttribute(new Attribute(VALUE, String.valueOf(true)));
+        active.addAttribute(new Attribute(VALUE, String.valueOf(activeValue)));
         patientElement.appendChild(active);
     }
 
     private void appendDeceased(Element patientElement) {
         if (patient.isDead == null) return;
-        if (patient.dateOfDeath != null) {
+        if (StringUtils.isNotBlank(patient.dateOfDeath)) {
             Element deceasedDateTime = new Element("deceasedDateTime", xmlns);
-            deceasedDateTime.addAttribute(new Attribute(VALUE, formatDate(patient.dateOfDeath)));
+            deceasedDateTime.addAttribute(new Attribute(VALUE, patient.dateOfDeath));
             patientElement.appendChild(deceasedDateTime);
             return;
         }
@@ -143,12 +149,68 @@ public class PatientFHIRXMLComposer {
         patientElement.appendChild(deceasedBoolean);
     }
 
+    private void appendExtensionWithStringValue(Element patientElement, String extensionName, String valueType, String value) {
+        Element extension = new Element("extension", xmlns);
+        patientElement.appendChild(extension);
+        extension.addAttribute(new Attribute("url", getFhirExtensionUrl(extensionName)));
+
+        Element valueElement = new Element(valueType, xmlns);
+        valueElement.addAttribute(new Attribute(VALUE, value));
+        extension.appendChild(valueElement);
+    }
+
+    private void appendIdentifier(Element element, String identifierCode, String identifierValue) {
+        if (StringUtils.isBlank(identifierValue)) return;
+        Element identifier = new Element("identifier", xmlns);
+        element.appendChild(identifier);
+        Element type = new Element("type", xmlns);
+
+        identifier.appendChild(type);
+        type.appendChild(createCodingElementFromValueSet(identifierCode, MCI_PATIENT_IDENTIFIERS_VALUESET));
+
+        Element identifierValueElement = new Element(VALUE, xmlns);
+        identifierValueElement.addAttribute(new Attribute(VALUE, identifierValue));
+        identifier.appendChild(identifierValueElement);
+    }
+
+    private String formatDate(Date date) {
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZ").format(date);
+    }
+
+    private void appendExtensionWithCodeableConcept(Element patientElement, String extensionName, String value, String valuesetName) {
+        Element extension = new Element("extension", xmlns);
+        patientElement.appendChild(extension);
+        extension.addAttribute(new Attribute("url", getFhirExtensionUrl(extensionName)));
+        Element valueElement = new Element("valueCodeableConcept", xmlns);
+        valueElement.appendChild(createCodingElementFromValueSet(value, valuesetName));
+        extension.appendChild(valueElement);
+    }
+
+    private Element createCodingElementFromValueSet(String code, String valuesetName) {
+        return createCodingElement(code, FhirConstant.getMCIValuesetURI(mciBaseUrl, valuesetName));
+    }
+
+    private Element createCodingElement(String code, String systemValue) {
+        Element coding = new Element("coding", xmlns);
+
+        Element system = new Element("system", xmlns);
+        system.addAttribute(new Attribute(VALUE, systemValue));
+        coding.appendChild(system);
+
+        Element codeElement = new Element("code", xmlns);
+        codeElement.addAttribute(new Attribute(VALUE, code));
+        coding.appendChild(codeElement);
+
+        return coding;
+    }
+
     public String composePatient() throws ParsingException, IOException {
         Element entry = new Element("entry", xmlns);
         this.root.appendChild(entry);
 
         Element fullUrl = new Element("fullUrl", xmlns);
-        fullUrl.addAttribute(new Attribute(VALUE, "urn:uuid" + UUID.randomUUID()));
+        String patientEntryFullUrlValue = "urn:uuid:" + UUID.randomUUID();
+        fullUrl.addAttribute(new Attribute(VALUE, patientEntryFullUrlValue));
         entry.appendChild(fullUrl);
 
         Element resource = new Element("resource", xmlns);
@@ -157,18 +219,16 @@ public class PatientFHIRXMLComposer {
         Element patientElement = new Element("Patient", xmlns);
         resource.appendChild(patientElement);
 
-        if (StringUtils.isNotBlank(patient.given) && StringUtils.isNotBlank(patient.family))
-            this.appendNameDetails(patientElement);
-        if (StringUtils.isNotBlank(patient.gender)) appendGenderDetails(patientElement);
-        if (StringUtils.isNotBlank(patient.birthDate)) appendBirthDetails(patientElement);
-        if (StringUtils.isNotBlank(patient.addressCode)) appendAddressDetails(patientElement);
-        if (StringUtils.isNotBlank(patient.phoneNumber)) appendPhoneNumber(patientElement);
-        if (patient.active != null) appendActive(patientElement);
-        appendDeceased(patientElement);
+        appendNameDetails(patientElement, this.patient.family, this.patient.given);
+        appendGenderDetails(patientElement, patient.gender);
+        appendBirthDetails(patientElement, patient.birthDate, patient.birthTime);
+        appendPhoneNumber(patientElement, patient.phoneNumber);
+        appendActive(patientElement, patient.active);
+        appendAddressDetails(patientElement);
 
-        if (StringUtils.isNotBlank(patient.nid)) appendIdentifier(patientElement, MCI_IDENTIFIER_NID_CODE, patient.nid);
-        if (StringUtils.isNotBlank(patient.binBRN))
-            appendIdentifier(patientElement, MCI_IDENTIFIER_BRN_CODE, patient.binBRN);
+        appendDeceased(patientElement);
+        appendIdentifier(patientElement, MCI_IDENTIFIER_NID_CODE, patient.nid);
+        appendIdentifier(patientElement, MCI_IDENTIFIER_BRN_CODE, patient.binBRN);
 
         if (StringUtils.isNotBlank(patient.householdCode)) {
             appendExtensionWithStringValue(patientElement, HOUSE_HOLD_CODE_EXTENSION_NAME, "valueString", patient.householdCode);
@@ -186,61 +246,44 @@ public class PatientFHIRXMLComposer {
             appendExtensionWithCodeableConcept(patientElement, DOB_TYPE_EXTENSION_NAME, patient.dobType, MCI_PATIENT_DOB_TYPE_VALUESET);
         }
 
+        for (Patient.Relation relation : patient.relations) {
+            Element relationEntry = new Element("entry", xmlns);
+            this.root.appendChild(relationEntry);
+
+            Element relationEntryFullUrl = new Element("fullUrl", xmlns);
+            relationEntryFullUrl.addAttribute(new Attribute(VALUE, "urn:uuid" + UUID.randomUUID()));
+            relationEntry.appendChild(relationEntryFullUrl);
+
+            Element relationResource = new Element("resource", xmlns);
+            relationEntry.appendChild(relationResource);
+
+            Element relatedPerson = new Element("RelatedPerson", xmlns);
+            relationResource.appendChild(relatedPerson);
+
+            appendExtensionWithStringValue(relatedPerson, RELATION_ID_EXTENSION_NAME, "valueString", relation.id);
+            appendIdentifier(relatedPerson, MCI_IDENTIFIER_NID_CODE, relation.nid);
+            appendIdentifier(relatedPerson, MCI_IDENTIFIER_BRN_CODE, relation.binBrn);
+            appendIdentifier(relatedPerson, MCI_IDENTIFIER_UID_CODE, relation.uid);
+            appendIdentifier(relatedPerson, MCI_IDENTIFIER_HID_CODE, relation.hid);
+
+            appendNameDetails(relatedPerson, relation.family, relation.given);
+
+            Element patientElementForRelation = new Element("patient", xmlns);
+            Element reference = new Element("reference", xmlns);
+            reference.addAttribute(new Attribute(VALUE, patientEntryFullUrlValue));
+            patientElementForRelation.appendChild(reference);
+            relatedPerson.appendChild(patientElementForRelation);
+
+            Element relationship = new Element("relationship", xmlns);
+            relationship.appendChild(createCodingElement(relation.type, "http://hl7.org/fhir/v3/RoleCode"));
+            relatedPerson.appendChild(relationship);
+        }
+
         Document patientDetails = new Document(root);
         Builder parser = new Builder();
         parser.build(patientDetails.toXML(), null);
         return patientDetails.toXML();
 
-    }
-
-    private void appendExtensionWithCodeableConcept(Element patientElement, String extensionName, String value, String valuesetName) {
-        Element extension = new Element("extension", xmlns);
-        patientElement.appendChild(extension);
-        extension.addAttribute(new Attribute("url", getFhirExtensionUrl(extensionName)));
-        Element valueElement = new Element("valueCodeableConcept", xmlns);
-        valueElement.appendChild(createCodingElement(value, valuesetName));
-        extension.appendChild(valueElement);
-    }
-
-    private void appendExtensionWithStringValue(Element patientElement, String extensionName, String valueType, String value) {
-        Element extension = new Element("extension", xmlns);
-        patientElement.appendChild(extension);
-        extension.addAttribute(new Attribute("url", getFhirExtensionUrl(extensionName)));
-
-        Element valueElement = new Element(valueType, xmlns);
-        valueElement.addAttribute(new Attribute(VALUE, value));
-        extension.appendChild(valueElement);
-    }
-
-    private void appendIdentifier(Element patientElement, String identifierCode, String identifierValue) {
-        Element identifier = new Element("identifier", xmlns);
-        patientElement.appendChild(identifier);
-        Element type = new Element("type", xmlns);
-
-        identifier.appendChild(type);
-        type.appendChild(createCodingElement(identifierCode, MCI_PATIENT_IDENTIFIERS_VALUESET));
-
-        Element identifierValueElement = new Element(VALUE, xmlns);
-        identifierValueElement.addAttribute(new Attribute(VALUE, identifierValue));
-        identifier.appendChild(identifierValueElement);
-    }
-
-    private Element createCodingElement(String code, String valuesetName) {
-        Element coding = new Element("coding", xmlns);
-
-        Element system = new Element("system", xmlns);
-        system.addAttribute(new Attribute(VALUE, FhirConstant.getMCIValuesetURI(mciBaseUrl, valuesetName)));
-        coding.appendChild(system);
-
-        Element codeElement = new Element("code", xmlns);
-        codeElement.addAttribute(new Attribute(VALUE, code));
-        coding.appendChild(codeElement);
-
-        return coding;
-    }
-
-    private String formatDate(Date date) {
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(date);
     }
 }
 

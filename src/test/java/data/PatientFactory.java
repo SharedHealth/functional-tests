@@ -7,6 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.UUID;
+
+import static org.apache.commons.lang3.StringUtils.reverse;
 
 public class PatientFactory {
 
@@ -29,7 +32,7 @@ public class PatientFactory {
         Patient patient = new Patient();
         patient.nid = String.valueOf(new Date().getTime());
         patient.given = "AHI" + PatientFactory.getEncodedName(patient.nid);
-        patient.family = "REV" + PatientFactory.getEncodedName(StringUtils.reverse(patient.nid));
+        patient.family = "REV" + PatientFactory.getEncodedName(reverse(patient.nid));
         patient.gender = "male";
         patient.birthDate = "1980-06-14";
         patient.addressCode = "201918991101";
@@ -41,7 +44,8 @@ public class PatientFactory {
     public static Patient validPatientWithAllInformation() {
         Patient patient = validPatientWithMandatoryInformation();
         patient.active = true;
-        patient.binBRN = StringUtils.substring(patient.nid + StringUtils.reverse(patient.nid), 0, 17);
+        patient.binBRN = StringUtils.substring(patient.nid + reverse(patient.nid), 0, 17);
+        patient.uid = StringUtils.substring(patient.nid, 0, 11);
         patient.confidentiality = false;
         patient.dobType = "3";
         patient.education = "02";
@@ -49,6 +53,13 @@ public class PatientFactory {
         patient.householdCode = StringUtils.substring(patient.nid, 5, 12);
         patient.phoneNumber = StringUtils.substring(patient.nid, 3, 10);
         patient.isDead = false;
+        patient.relations.add(new Patient.Relation("FTH", reverse(patient.nid), reverse(patient.uid), reverse(patient.binBRN), reverse(patient.uid),
+                "Father of " + patient.given, patient.family, UUID.randomUUID().toString()));
+        patient.relations.add(new Patient.Relation("MTH", "Mother of " + patient.given
+                , patient.family, UUID.randomUUID().toString()));
+        patient.relations.add(new Patient.Relation("SPS", "Spouse of " + patient.given
+                , patient.family, UUID.randomUUID().toString()));
+
         return patient;
     }
 

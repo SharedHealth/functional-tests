@@ -1,11 +1,15 @@
 package tests.api;
 
 import ca.uhn.fhir.model.api.ExtensionDt;
+import ca.uhn.fhir.model.api.IDatatype;
 import ca.uhn.fhir.model.dstu2.composite.*;
 import ca.uhn.fhir.model.dstu2.resource.Bundle;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.model.dstu2.resource.RelatedPerson;
 import ca.uhn.fhir.model.dstu2.valueset.IdentifierTypeCodesEnum;
 import ca.uhn.fhir.model.primitive.BooleanDt;
+import ca.uhn.fhir.model.primitive.DateTimeDt;
+import ca.uhn.fhir.model.primitive.InstantDt;
 import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.parser.IParser;
 import categories.MciApiTest;
@@ -18,6 +22,7 @@ import config.EnvironmentConfiguration;
 import data.PatientFactory;
 import domain.PatientFHIRXMLFactory;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
@@ -26,6 +31,9 @@ import org.junit.experimental.categories.Category;
 import utils.FhirContextHelper;
 import utils.IdpUserEnum;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +103,7 @@ public class MCIRegistryIT {
         Patient responsePatient = findPatientFromBundle((Bundle) resource);
 
         assertNotNull(responsePatient);
-        assertIdentifier(responsePatient, MCI_IDENTIFIER_HID_CODE, healthId, healthId);
+        assertIdentifier(responsePatient.getIdentifier(), MCI_IDENTIFIER_HID_CODE, healthId, healthId);
         assertName(responsePatient, patient.given, patient.family);
         assertEquals(patient.gender, responsePatient.getGender());
         assertDOB(expectedPatient, responsePatient);
@@ -125,7 +133,7 @@ public class MCIRegistryIT {
     }
 
     @Test
-    public void shouldCreateAndGetPatientWithAllFieldsWithoutRelations() throws Exception {
+    public void shouldCreateAndGetPatientWithAllFields() throws Exception {
         IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
         String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
 
@@ -161,12 +169,13 @@ public class MCIRegistryIT {
 
         IBaseResource resource = xmlParser.parseResource(response.asString());
         assertTrue(resource instanceof Bundle);
-        Patient responsePatient = findPatientFromBundle((Bundle) resource);
+        Bundle bundle = (Bundle) resource;
+        Patient responsePatient = findPatientFromBundle(bundle);
 
         assertNotNull(responsePatient);
-        assertIdentifier(responsePatient, MCI_IDENTIFIER_HID_CODE, healthId, healthId);
-        assertIdentifier(responsePatient, MCI_IDENTIFIER_NID_CODE, patient.nid, healthId);
-        assertIdentifier(responsePatient, MCI_IDENTIFIER_BRN_CODE, patient.binBRN, healthId);
+        assertIdentifier(responsePatient.getIdentifier(), MCI_IDENTIFIER_HID_CODE, healthId, healthId);
+        assertIdentifier(responsePatient.getIdentifier(), MCI_IDENTIFIER_NID_CODE, patient.nid, healthId);
+        assertIdentifier(responsePatient.getIdentifier(), MCI_IDENTIFIER_BRN_CODE, patient.binBRN, healthId);
 
         assertPhoneNumber(patient.phoneNumber, responsePatient);
         StringDt houseHoldCode = (StringDt) getExtensionValue(responsePatient, HOUSE_HOLD_CODE_EXTENSION_NAME);
@@ -195,12 +204,105 @@ public class MCIRegistryIT {
         assertTrue(responsePatient.getActive());
         assertFalse(((BooleanDt) responsePatient.getDeceased()).getValue());
         assertLink("/api/v1/patients/" + healthId, responsePatient);
+
+        List<RelatedPerson> relatedPeople = findRelationsFromBundle(bundle);
+        assertRelation(findRelationOfType(patient.relations, "MTH"), findRelatedPersonOfType(relatedPeople, "MTH"));
+        assertRelation(findRelationOfType(patient.relations, "FTH"), findRelatedPersonOfType(relatedPeople, "FTH"));
+        assertRelation(findRelationOfType(patient.relations, "SPS"), findRelatedPersonOfType(relatedPeople, "SPS"));
     }
 
-    private void assertPhoneNumber(String phoneNumber, Patient responsePatient) {
-        ContactPointDt telecom = responsePatient.getTelecomFirstRep();
-        assertEquals("phone", telecom.getSystem());
-        assertEquals(phoneNumber, telecom.getValue());
+    @Test
+    public void shouldCreateADeadPatientWithoutDeathOfDate() throws Exception {
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
+
+        domain.Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        patient.isDead = true;
+        String content = new PatientFHIRXMLFactory(baseUrl).withValidXML(patient);
+        Patient expectedPatient = findPatientFromBundle((Bundle) xmlParser.parseResource(content));
+
+        Response createResponse = given()
+                .body(content)
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .post(patientContextPath)
+                .then()
+                .assertThat()
+                .statusCode(SC_CREATED)
+                .contentType(ContentType.JSON)
+                .body("httpStatus", equalTo(SC_CREATED))
+                .body("id", notNullValue())
+                .extract().response();
+
+        String healthId = new JsonPath(createResponse.asString()).getString("id");
+
+        expectedPatient.addIdentifier(mapHealthIdIdentifier(healthId));
+        Response response = given()
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .get(patientContextPath + "/" + healthId)
+                .then()
+                .assertThat().contentType(ContentType.XML).statusCode(SC_OK)
+                .extract().response();
+
+        IBaseResource resource = xmlParser.parseResource(response.asString());
+        assertTrue(resource instanceof Bundle);
+        Bundle bundle = (Bundle) resource;
+        Patient responsePatient = findPatientFromBundle(bundle);
+
+        IDatatype deceased = responsePatient.getDeceased();
+        assertTrue(deceased instanceof BooleanDt);
+        assertTrue(((BooleanDt) deceased).getValue());
+    }
+
+    @Test
+    public void shouldCreateADeadPatientWithDeathOfDate() throws Exception {
+        IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
+
+        domain.Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        patient.isDead = true;
+        String dateOfDeath = "2016-06-14T16:50:00+05:30";
+        patient.dateOfDeath = dateOfDeath;
+        String content = new PatientFHIRXMLFactory(baseUrl).withValidXML(patient);
+        Patient expectedPatient = findPatientFromBundle((Bundle) xmlParser.parseResource(content));
+
+        Response createResponse = given()
+                .body(content)
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .post(patientContextPath)
+                .then()
+                .assertThat()
+                .statusCode(SC_CREATED)
+                .contentType(ContentType.JSON)
+                .body("httpStatus", equalTo(SC_CREATED))
+                .body("id", notNullValue())
+                .extract().response();
+
+        String healthId = new JsonPath(createResponse.asString()).getString("id");
+
+        expectedPatient.addIdentifier(mapHealthIdIdentifier(healthId));
+        Response response = given()
+                .header("X-Auth-Token", accessToken)
+                .header("From", idpUserEnum.getEmail())
+                .header("client_id", idpUserEnum.getClientId())
+                .get(patientContextPath + "/" + healthId)
+                .then()
+                .assertThat().contentType(ContentType.XML).statusCode(SC_OK)
+                .extract().response();
+
+        IBaseResource resource = xmlParser.parseResource(response.asString());
+        assertTrue(resource instanceof Bundle);
+        Bundle bundle = (Bundle) resource;
+        Patient responsePatient = findPatientFromBundle(bundle);
+
+        IDatatype deceased = responsePatient.getDeceased();
+        assertTrue(deceased instanceof DateTimeDt);
+        assertEquals(dateOfDeath, ((DateTimeDt)deceased).getValueAsString());
     }
 
     @Test
@@ -370,14 +472,18 @@ public class MCIRegistryIT {
         assertEquals(familyName, actualName.getFamilyFirstRep().getValue());
     }
 
-    private void assertIdentifier(Patient actualPatient, final String code, String identifierValue, String healthId) {
-        IdentifierDt identifierByCode = getIdentifierByCode(actualPatient.getIdentifier(), code);
+    private void assertIdentifier(List<IdentifierDt> identifiers, final String code, String identifierValue, String healthId) {
+        IdentifierDt identifierByCode = getIdentifierByCode(identifiers, code);
+        if (StringUtils.isBlank(identifierValue)) {
+            assertNull(identifierByCode);
+            return;
+        }
         assertEquals(identifierValue, identifierByCode.getValue());
-        assertEquals(baseUrl + "/api/v2/patients/" + healthId, identifierByCode.getSystem());
         BoundCodeableConceptDt<IdentifierTypeCodesEnum> type = identifierByCode.getType();
         CodingDt codingDt = type.getCodingFirstRep();
         assertEquals(baseUrl + "/api/v2/vs/patient-identifiers", codingDt.getSystem());
         assertEquals(code, codingDt.getCode());
+        assertEquals(baseUrl + "/api/v2/patients/" + healthId, identifierByCode.getSystem());
     }
 
     private IdentifierDt getIdentifierByCode(List<IdentifierDt> identifierDt, String code) {
@@ -402,4 +508,45 @@ public class MCIRegistryIT {
         List<ExtensionDt> extension = patient.getUndeclaredExtensionsByUrl(getFhirExtensionUrl(extensionName));
         return CollectionUtils.isEmpty(extension) ? null : extension.get(0).getValue();
     }
+
+    private void assertRelation(domain.Patient.Relation relation, RelatedPerson relatedPerson) {
+        assertIdentifier(relatedPerson.getIdentifier(), MCI_IDENTIFIER_NID_CODE, relation.nid, relation.hid);
+        assertIdentifier(relatedPerson.getIdentifier(), MCI_IDENTIFIER_BRN_CODE, relation.binBrn, relation.hid);
+        assertIdentifier(relatedPerson.getIdentifier(), MCI_IDENTIFIER_HID_CODE, relation.hid, relation.hid);
+        assertIdentifier(relatedPerson.getIdentifier(), MCI_IDENTIFIER_UID_CODE, relation.uid, relation.hid);
+        assertEquals(relatedPerson.getName().getGivenFirstRep().getValue(), relation.given);
+        assertEquals(relatedPerson.getName().getFamilyFirstRep().getValue(), relation.family);
+    }
+
+    private RelatedPerson findRelatedPersonOfType(List<RelatedPerson> relatedPeople, String type) {
+        for (RelatedPerson relatedPerson : relatedPeople) {
+            if (type.equals(relatedPerson.getRelationship().getCodingFirstRep().getCode())) return relatedPerson;
+        }
+        return null;
+    }
+
+    private domain.Patient.Relation findRelationOfType(List<domain.Patient.Relation> relations, String type) {
+        for (domain.Patient.Relation relation : relations) {
+            if (relation.type.equals(type)) return relation;
+        }
+        return null;
+    }
+
+    private List<RelatedPerson> findRelationsFromBundle(Bundle bundle) {
+        List<RelatedPerson> relatedPersonList = new ArrayList<>();
+        for (Bundle.Entry entry : bundle.getEntry()) {
+            if (new RelatedPerson().getResourceName().equals(entry.getResource().getResourceName())) {
+                relatedPersonList.add((RelatedPerson) entry.getResource());
+            }
+        }
+        return relatedPersonList;
+
+    }
+
+    private void assertPhoneNumber(String phoneNumber, Patient responsePatient) {
+        ContactPointDt telecom = responsePatient.getTelecomFirstRep();
+        assertEquals("phone", telecom.getSystem());
+        assertEquals(phoneNumber, telecom.getValue());
+    }
+
 }
