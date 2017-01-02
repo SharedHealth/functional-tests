@@ -52,7 +52,7 @@
 		'shr_server_port' : '8081',
 		'mci_dns_name' : 'bdshr-mci-qa.twhosted.com',
 		'sso_server_ip' : '172.18.46.56',
-		'sso_server_port' : 8080,
+		'sso_server_port' : 8084,
 		'mci_protocol' : 'https',
 		patient_uri : "http://172.18.46.56:8081/api/default/patients/",
 		facility_uri : "http://hrmtest.dghs.gov.bd/api/1.0/facilities/",

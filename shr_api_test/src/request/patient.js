@@ -241,8 +241,8 @@ var PatientRequest = function (user_detail, patient_detail) {
         getLocationDetails: getLocationDetails,
         getPatientDetailsByNameLocation: getPatientDetailsByNameLocation,
         updateUsingPutWithGivenValues: updateUsingPutWithGivenValues,
-        mergeWith : mergeWith,
-        mergeWithCatchmentChange : mergeWithCatchmentChange,
+        mergeWith: mergeWith,
+        mergeWithCatchmentChange: mergeWithCatchmentChange,
         retainBoth: retainBoth
 
     }

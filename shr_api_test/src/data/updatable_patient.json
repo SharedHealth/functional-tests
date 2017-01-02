@@ -1,1 +1,362 @@
-{"duplicate":{"details":{"nid":"1465544493838","bin_brn":"14655444938380000","given_name":"AHI BEGFFEEEJDIDI","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJDIDI Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"15539424b0e"},"hid":"98000181019"},"common_uid":{"details":{"nid":"1465544494132","bin_brn":"14655444941320000","given_name":"AHI BEGFFEEEJEBDC","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJEBDC Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"15539424c34"},"hid":"98000104565"},"common_nid":{"details":{"nid":"1465544494285","bin_brn":"14655444942850000","given_name":"AHI BEGFFEEEJECIF","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJECIF Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"15539424ccd"},"hid":"98000178643"},"common_binbrn":{"details":{"nid":"1465544494430","bin_brn":"14655444944300000","given_name":"AHI BEGFFEEEJEEDA","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJEEDA Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"15539424d5e"},"hid":"98000146608"},"common_uid_and_nid":{"details":{"nid":"1465544495586","bin_brn":"14655444955860000","given_name":"AHI BEGFFEEEJFFIG","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJFFIG Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"155394251e2"},"hid":"98000134661"},"common_nid_and_binbrn":{"details":{"nid":"1465544495731","bin_brn":"14655444957310000","given_name":"AHI BEGFFEEEJFHDB","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJFHDB Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"15539425273"},"hid":"98000147192"},"common_uid_and_binbrn":{"details":{"nid":"1465544495874","bin_brn":"14655444958740000","given_name":"AHI BEGFFEEEJFIHE","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJFIHE Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"15539425302"},"hid":"98000110141"},"common_uid_nid_and_binbrn":{"details":{"nid":"1465544496020","bin_brn":"14655444960200000","given_name":"AHI BEGFFEEEJGACA","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJGACA Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"15539425394"},"hid":"98000166382"},"patient_1_for_merge":{"details":{"nid":"1465544496162","bin_brn":"14655444961620000","given_name":"AHI BEGFFEEEJGBGC","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJGBGC Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"15539425422"},"hid":"98000123631"},"patient_2_for_merge":{"details":{"nid":"1465544496162","bin_brn":"14655444963040000","given_name":"AHI BEGFFEEEJGDAE","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJGDAE Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"155394254b0"},"hid":"98000144645"},"patient_1_merge_with_catchment_change":{"details":{"nid":"1465544496447","bin_brn":"14655444964470000","given_name":"AHI BEGFFEEEJGEEH","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJGEEH Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"1553942553f"},"hid":"98000150642"},"patient_2_merge_with_catchment_change":{"details":{"nid":"1465544496447","bin_brn":"14655444965900000","given_name":"AHI BEGFFEEEJGFJA","sur_name":"ATEST","date_of_birth":"2000-03-01","gender":"M","occupation":"05","religion":"1","phone_number":{"country_code":"88","area_code":null,"number":"01678904560","extension":null},"present_address":{"address_line":"BEGFFEEEJGFJA Street","division_id":"30","district_id":"26","upazila_id":"07"},"status":{"type":"1"},"confidential":"No","uid":"155394255ce"},"hid":"98000112600"}}
+{
+  "duplicate": {
+    "details": {
+      "nid": "1465544493838",
+      "bin_brn": "14655444938380000",
+      "given_name": "AHI BEGFFEEEJDIDI",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJDIDI Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "15539424b0e"
+    },
+    "hid": "98000181019"
+  },
+  "common_uid": {
+    "details": {
+      "nid": "1465544494132",
+      "bin_brn": "14655444941320000",
+      "given_name": "AHI BEGFFEEEJEBDC",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJEBDC Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "15539424c34"
+    },
+    "hid": "98000104565"
+  },
+  "common_nid": {
+    "details": {
+      "nid": "1465544494285",
+      "bin_brn": "14655444942850000",
+      "given_name": "AHI BEGFFEEEJECIF",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJECIF Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "15539424ccd"
+    },
+    "hid": "98000178643"
+  },
+  "common_binbrn": {
+    "details": {
+      "nid": "1465544494430",
+      "bin_brn": "14655444944300000",
+      "given_name": "AHI BEGFFEEEJEEDA",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJEEDA Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "15539424d5e"
+    },
+    "hid": "98000146608"
+  },
+  "common_uid_and_nid": {
+    "details": {
+      "nid": "1465544495586",
+      "bin_brn": "14655444955860000",
+      "given_name": "AHI BEGFFEEEJFFIG",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJFFIG Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "155394251e2"
+    },
+    "hid": "98000134661"
+  },
+  "common_nid_and_binbrn": {
+    "details": {
+      "nid": "1465544495731",
+      "bin_brn": "14655444957310000",
+      "given_name": "AHI BEGFFEEEJFHDB",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJFHDB Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "15539425273"
+    },
+    "hid": "98000147192"
+  },
+  "common_uid_and_binbrn": {
+    "details": {
+      "nid": "1465544495874",
+      "bin_brn": "14655444958740000",
+      "given_name": "AHI BEGFFEEEJFIHE",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJFIHE Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "15539425302"
+    },
+    "hid": "98000110141"
+  },
+  "common_uid_nid_and_binbrn": {
+    "details": {
+      "nid": "1465544496020",
+      "bin_brn": "14655444960200000",
+      "given_name": "AHI BEGFFEEEJGACA",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJGACA Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "15539425394"
+    },
+    "hid": "98000166382"
+  },
+  "patient_1_for_merge": {
+    "details": {
+      "nid": "1465544496162",
+      "bin_brn": "14655444961620000",
+      "given_name": "AHI BEGFFEEEJGBGC",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJGBGC Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "15539425422"
+    },
+    "hid": "98000123631"
+  },
+  "patient_2_for_merge": {
+    "details": {
+      "nid": "1465544496162",
+      "bin_brn": "14655444963040000",
+      "given_name": "AHI BEGFFEEEJGDAE",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJGDAE Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "155394254b0"
+    },
+    "hid": "98000144645"
+  },
+  "patient_1_merge_with_catchment_change": {
+    "details": {
+      "nid": "1465544496447",
+      "bin_brn": "14655444964470000",
+      "given_name": "AHI BEGFFEEEJGEEH",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJGEEH Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "1553942553f"
+    },
+    "hid": "98000150642"
+  },
+  "patient_2_merge_with_catchment_change": {
+    "details": {
+      "nid": "1465544496447",
+      "bin_brn": "14655444965900000",
+      "given_name": "AHI BEGFFEEEJGFJA",
+      "sur_name": "ATEST",
+      "date_of_birth": "2000-03-01",
+      "gender": "M",
+      "occupation": "05",
+      "religion": "1",
+      "phone_number": {
+        "country_code": "88",
+        "area_code": null,
+        "number": "01678904560",
+        "extension": null
+      },
+      "present_address": {
+        "address_line": "BEGFFEEEJGFJA Street",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "07"
+      },
+      "status": {
+        "type": "1"
+      },
+      "confidential": "No",
+      "uid": "155394255ce"
+    },
+    "hid": "98000112600"
+  }
+}

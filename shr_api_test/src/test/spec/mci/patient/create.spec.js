@@ -170,5 +170,29 @@ describe("Patient Creation And Updatation", function () {
 
         });
     });
+
+    it.only("Should create a new patient with HID Card status as registered and Update it to issued", function (done) {
+        var patient = new Patient();
+        request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
+            expect(body.http_status).to.equal(201);
+            var healthId = body.id;
+            request(new PatientRequest(facility_user).getPatientDetailsByHid(healthId), function (err, res, body) {
+                expect(res.statusCode).to.equal(200);
+                _body = JSON.parse(body)
+                expect(_body.hid).to.equal(healthId);
+                expect(_body.hid_card_status).to.equal("REGISTERED");
+                request(new PatientRequest(facility_user, patient.details).updateUsingPutWithGivenValues(healthId, {'hid_card_status': 'ISSUED'}), function (err, res, body) {
+                    expect(res.statusCode).to.equal(202);
+                    request(new PatientRequest(facility_user, patient.details).getPatientDetailsByHid(healthId), function (err, res, body) {
+                        expect(res.statusCode).to.equal(200);
+                        _body = JSON.parse(body)
+                        expect(_body.hid).to.equal(healthId);
+                        expect(_body.hid_card_status).to.equal("ISSUED");
+                        done();
+                    });
+                });
+            });
+        });
+    });
 });
 

@@ -49,6 +49,7 @@
 				 "type" : "1"
 
 			 },
+             "hid_card_status": "REGISTERED",
 			 "confidential" : confidentiality || "No"
 		 },
 		 hid : null
