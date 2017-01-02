@@ -171,7 +171,7 @@ describe("Patient Creation And Updatation", function () {
         });
     });
 
-    it.only("Should create a new patient with HID Card status as registered and Update it to issued", function (done) {
+    it("Should create a new patient with HID Card status as registered and Update it to issued", function (done) {
         var patient = new Patient();
         request(new PatientRequest(facility_user, patient.details).post(), function (err, res, body) {
             expect(body.http_status).to.equal(201);
