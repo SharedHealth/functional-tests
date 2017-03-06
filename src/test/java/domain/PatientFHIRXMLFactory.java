@@ -11,11 +11,9 @@ public class PatientFHIRXMLFactory {
 
     private PatientFHIRXMLComposer composer;
     public String xmlns;
-    private String baseUrl;
 
 
     public PatientFHIRXMLFactory(String baseUrl) {
-        this.baseUrl = baseUrl;
         this.xmlns = PatientFHIRXMLComposer.xmlns;
         this.composer = new PatientFHIRXMLComposer(baseUrl);
     }
