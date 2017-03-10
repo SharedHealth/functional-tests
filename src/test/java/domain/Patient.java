@@ -34,6 +34,10 @@ public class Patient {
     public String addressCode;
     public String countryCode;
 
+    public String division_id;
+    public String district_id;
+    public String upazila_id;
+
     public Boolean isDead;
     public String dateOfDeath;
     public Boolean confidentiality;

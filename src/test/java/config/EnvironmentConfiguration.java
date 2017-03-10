@@ -18,7 +18,7 @@ public class EnvironmentConfiguration {
         ConfigurationProperty devEnvironment = new ConfigurationProperty();
         devEnvironment.property.put("mci_registry", "https://mci-dev.twhosted.com");
         devEnvironment.property.put("mci_registry_patient_context_path", "/api/v2/patients");
-        devEnvironment.property.put("idp_server_base_url", "http://hie-idp-dev.twhosted.com");
+        devEnvironment.property.put("idp_server_base_url", "https://hie-idp-dev.twhosted.com");
 
         ConfigurationProperty localEnvironment = new ConfigurationProperty();
         localEnvironment.property.put("mci_registry", "http://127.0.0.1:8085");

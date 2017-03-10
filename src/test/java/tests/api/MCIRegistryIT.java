@@ -9,7 +9,6 @@ import ca.uhn.fhir.model.dstu2.resource.RelatedPerson;
 import ca.uhn.fhir.model.dstu2.valueset.IdentifierTypeCodesEnum;
 import ca.uhn.fhir.model.primitive.BooleanDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
-import ca.uhn.fhir.model.primitive.InstantDt;
 import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.parser.IParser;
 import categories.MciApiTest;
@@ -31,9 +30,7 @@ import org.junit.experimental.categories.Category;
 import utils.FhirContextHelper;
 import utils.IdpUserEnum;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -548,5 +545,4 @@ public class MCIRegistryIT {
         assertEquals("phone", telecom.getSystem());
         assertEquals(phoneNumber, telecom.getValue());
     }
-
 }
