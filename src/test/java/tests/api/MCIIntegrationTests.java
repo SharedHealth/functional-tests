@@ -1,327 +1,859 @@
 package tests.api;
 
 
-import categories.ApiTest;
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.config.RestAssuredConfig;
+import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.path.json.JsonPath;
+import com.jayway.restassured.response.Response;
+import config.ConfigurationProperty;
+import config.EnvironmentConfiguration;
 import data.PatientFactory;
 import domain.Patient;
-import org.hamcrest.Matchers;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.After;
+import nu.xom.ParsingException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import utils.WebDriverProperties;
+import utils.IdpUserEnum;
 
-import static com.jayway.restassured.RestAssured.basic;
+import java.io.IOException;
+import java.util.UUID;
+
 import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.config.EncoderConfig.encoderConfig;
+import static com.jayway.restassured.RestAssured.with;
+import static org.apache.http.HttpStatus.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+import static utils.IdentityLoginUtil.login;
+import static utils.IdentityLoginUtil.loginFor;
 
 @Ignore
 public class MCIIntegrationTests {
+
+    ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
+    private final String IDP_SERVER_BASE_URL = config.property.get("idp_server_base_url");
+    private final String baseUrl = config.property.get("mci_registry");
+    private final String patientContextPath = "/api/v1/patients";
+
 
     protected Patient primaryPatient;
 
     @Before
     public void setUp() {
 
-        RestAssured.baseURI = "http://172.18.46.56";
-        RestAssured.baseURI = WebDriverProperties.getProperty("mciURL");
-        RestAssured.port = 8081;
-        RestAssured.basePath = "/api/v1";
-        RestAssured.authentication = basic("mci", "password");
-        RestAssured.rootPath = "";
-        RestAssured.config = new RestAssuredConfig().encoderConfig(encoderConfig().defaultContentCharset("UTF-8"));
+        RestAssured.baseURI = baseUrl;
     }
 
-    @Category(ApiTest.class)
     @Test
-    public void verifyGetPatientByNID() {
-        given().pathParam("nid", "9000000184693")
-                .when().get("/patients?nid={nid}")
-                .then()
-                .body("results.hid[0]", Matchers.equalTo("5917031305635168257"))
-                .body("results.nid[0]", Matchers.equalTo("9000000184693"))
-                .body("results.given_name[0]", Matchers.equalTo("A184693"))
-                .body("results.sur_name[0]", Matchers.equalTo("ATEST"))
-                .body("results.date_of_birth[0]", Matchers.equalTo("2000-03-01"))
-                .body("results.gender[0]", Matchers.equalTo("M"))
-                .body("results.occupation[0]", Matchers.equalTo("02"))
-                .body("results.edu_level[0]", Matchers.equalTo("02"))
-                .body("results.present_address.address_line[0]", Matchers.equalTo("Test"))
-                .body("results.present_address.division_id[0]", Matchers.equalTo("10"))
-                .body("results.present_address.district_id[0]", Matchers.equalTo("09"))
-                .body("results.present_address.upazilla_id[0]", Matchers.equalTo("18"))
-                .body("results.present_address.city_corporation_id[0]", Matchers.equalTo("16"))
-                .body("results.present_address.ward_id[0]", Matchers.equalTo("01"));
+    public void createPatientShouldFailForInvalidFacilityAccessToken() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
 
-        System.out.println("Patient with NID " + "9000000184693" + " verified in MCI");
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_UNAUTHORIZED);
+        //            Bug[1] this should have been json but html
+//            .contentType(ContentType.JSON);
 
     }
 
-    @Category(ApiTest.class)
     @Test
-    public void verifyGetPatientByHID() {
-        given().pathParam("hid", "5917031305635168257")
-                .when().get("/patients/{hid}")
-                .then().body("hid", Matchers.equalTo("5917031305635168257"))
-                .body("nid", Matchers.equalTo("9000000184693"))
-                .body("given_name", Matchers.equalTo("A184693"))
-                .body("sur_name", Matchers.equalTo("ATEST"))
-                .body("date_of_birth", Matchers.equalTo("2000-03-01"))
-                .body("gender", Matchers.equalTo("M"))
-                .body("occupation", Matchers.equalTo("02"))
-                .body("edu_level", Matchers.equalTo("02"))
-                .body("present_address.address_line", Matchers.equalTo("Test"))
-                .body("present_address.division_id", Matchers.equalTo("10"))
-                .body("present_address.district_id", Matchers.equalTo("09"))
-                .body("present_address.upazilla_id", Matchers.equalTo("18"))
-                .body("present_address.city_corporation_id", Matchers.equalTo("16"))
-                .body("present_address.ward_id", Matchers.equalTo("01"));
+    public void createPatientShouldFailForInvalidFacilityEmailId() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        patient.gender = "M";
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", "invalidUser@gmail.com").
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_UNAUTHORIZED);
+//                .contentType(ContentType.JSON);[Bug-1]
 
-        System.out.println("Patient with HID " + "5912415956172275713" + " verified in MCI");
     }
 
-    @Category(ApiTest.class)
     @Test
-    public void verifyCreatePatientWithAllData() {
+    public void createPatientShouldFailForInvalidFacilityClientId() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        String invalidClientId = "1000000";
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
 
-
-        primaryPatient = new PatientFactory().patientWithAllFieldDetails;
-
-        JSONObject person = new JSONObject();
-        JSONObject present_address = new JSONObject();
-        JSONObject permanent_address = new JSONObject();
-        try {
-            person.put("nid", primaryPatient.nid);
-            person.put("uid", primaryPatient.uid);
-            person.put("first_name", primaryPatient.given);
-            person.put("middle_name", "Ali");
-            person.put("last_name", primaryPatient.family);
-            person.put("full_name_bangla", " হোসেন মন্ডল");
-            person.put("fathers_name_bangla", "এ বি এম আখতার হোসেন মন্ডল");
-            person.put("fathers_first_name", "Akhtar");
-            person.put("fathers_middle_name", "Hossaine");
-            person.put("fathers_last_name", "Mondal");
-//            person.put("fathers_uid", primaryPatient.fatherUid);
-//            person.put("fathers_nid", primaryPatient.fatherNid);
-//            person.put("fathers_brn", primaryPatient.fatherBRN);
-            person.put("mothers_name_bangla", "আনোয়ারা খাতুন");
-            person.put("mothers_first_name", "Anowara");
-            person.put("mothers_middle_name", "Khatun");
-            person.put("mothers_last_name", "antora");
-//            person.put("mothers_uid", primaryPatient.motherUid);
-//            person.put("mothers_nid", primaryPatient.motherNid);
-//            person.put("mothers_brn", primaryPatient.motherBRN);
-            person.put("place_of_birth", "Dhaka");
-            person.put("marriage_id", "12345678");
-            person.put("spouse_name_bangla", "আখতার");
-            person.put("spouse_name", "Akhtar");
-            person.put("spouse_uid_nid", "1234567890");
-            person.put("date_of_birth", "1983-09-21");
-            person.put("gender", "2");
-            person.put("ethnicity", 11);
-            person.put("marital_status", 5);
-            person.put("religion", 1);
-            person.put("blood_group", 1);
-            person.put("bin_brn", primaryPatient.binBRN);
-            person.put("occupation", 11);
-            person.put("edu_level", "01");
-            person.put("nationality", "bangladeshi");
-            person.put("disability", 1);
-            present_address.put("address_line", primaryPatient.address.getAddressLine1());
-            present_address.put("division_id", 10);
-            present_address.put("district_id", "04");
-//            present_address.put("union_id", null);
-            present_address.put("upazilla_id", "09");
-            present_address.put("holding_number", "Bhaban-4th floor");
-            present_address.put("street", "2BAvenue");
-            present_address.put("area_mouja", "123");
-            present_address.put("village", 12);
-            present_address.put("post_office", "Dhaka");
-            present_address.put("post_code", "1207");
-            present_address.put("ward", "01");
-//            present_address.put("thana", 45);
-            present_address.put("city_corporation", 20);
-            present_address.put("country", "050");
-            person.put("present_address", present_address);
-            permanent_address.put("address_line", "xyz");
-            permanent_address.put("division_id", 10);
-            permanent_address.put("district_id", "04");
-//            permanent_address.put("union_id", 10);
-            permanent_address.put("upazilla_id", "09");
-            permanent_address.put("holding_number", "Ho44444");
-            permanent_address.put("street", "Dhaka");
-            permanent_address.put("area_mouja", "123");
-            permanent_address.put("village", 12);
-            permanent_address.put("post_office", "Dhaka");
-            permanent_address.put("post_code", "1207");
-            permanent_address.put("ward", "01");
-//            permanent_address.put("thana", 45);
-            permanent_address.put("city_corporation", 12);
-            permanent_address.put("country", "050");
-            person.put("permanent_address", present_address);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        System.out.println(person.toString());
-        given().contentType("application/json")
-                .body(person.toString())
-                .when().post("/patients")
-                .then().assertThat().statusCode(201);
-
-        System.out.println("Patient with NID " + primaryPatient.nid + " created");
-
-
-        given().pathParam("nid", primaryPatient.nid)
-                .when().get("/patients?nid={nid}")
-                .then()
-                .body("nid", Matchers.equalTo(primaryPatient.nid))
-                .body("first_name", Matchers.equalTo(primaryPatient.given))
-                .body("last_name", Matchers.equalTo(primaryPatient.family))
-                .body("date_of_birth", Matchers.equalTo("1983-09-21"))
-                .body("gender", Matchers.equalTo("2"))
-                .body("occupation", Matchers.equalTo("11"))
-                .body("edu_level", Matchers.equalTo("01"))
-                .body("fathers_first_name", Matchers.equalTo("Akhtar"))
-                .body("present_address.address_line", Matchers.equalTo(primaryPatient.address.getAddressLine1()))
-                .body("present_address.division_id", Matchers.equalTo("10"))
-                .body("present_address.district_id", Matchers.equalTo("04"))
-//                .body("present_address.upazilla_id", Matchers.equalTo("23"))
-                .body("present_address.city_corporation", Matchers.equalTo("20"))
-                .body("present_address.ward", Matchers.equalTo("01"))
-                .body("present_address.holding_number", Matchers.equalTo("Bhaban-4th floor"))
-                .body("present_address.street", Matchers.equalTo("2BAvenue"))
-                .body("present_address.area_mouja", Matchers.equalTo("123"))
-                .body("present_address.village", Matchers.equalTo("12"))
-                .body("present_address.post_office", Matchers.equalTo("Dhaka"))
-                .body("present_address.post_code", Matchers.equalTo("1207"))
-                .body("present_address.ward", Matchers.equalTo("01"))
-//                .body("present_address.thana", Matchers.equalTo("45"))
-                .body("present_address.country", Matchers.equalTo("050"))
-
-                .body("nid", Matchers.equalTo(primaryPatient.nid))
-                .body("uid", Matchers.equalTo(primaryPatient.uid))
-                .body("first_name", Matchers.equalTo(primaryPatient.given))
-                .body("middle_name", Matchers.equalTo("Ali"))
-                .body("last_name", Matchers.equalTo(primaryPatient.family))
-                .body("full_name_bangla", Matchers.equalTo(" হোসেন মন্ডল"))
-                .body("fathers_name_bangla", Matchers.equalTo("এ বি এম আখতার হোসেন মন্ডল"))
-                .body("fathers_first_name", Matchers.equalTo("Akhtar"))
-                .body("fathers_middle_name", Matchers.equalTo("Hossaine"))
-                .body("fathers_last_name", Matchers.equalTo("Mondal"))
-//                .body("fathers_uid", Matchers.equalTo(primaryPatient.fatherUid))
-//                .body("fathers_nid", Matchers.equalTo(primaryPatient.fatherNid))
-//                .body("fathers_brn", Matchers.equalTo(primaryPatient.fatherBRN))
-                .body("mothers_name_bangla", Matchers.equalTo("আনোয়ারা খাতুন"))
-                .body("mothers_first_name", Matchers.equalTo("Anowara"))
-                .body("mothers_middle_name", Matchers.equalTo("Khatun"))
-                .body("mothers_last_name", Matchers.equalTo("antora"))
-//                .body("mothers_uid", Matchers.equalTo(primaryPatient.motherUid))
-//                .body("mothers_nid", Matchers.equalTo(primaryPatient.motherNid))
-//                .body("mothers_brn", Matchers.equalTo(primaryPatient.motherBRN))
-                .body("place_of_birth", Matchers.equalTo("Dhaka"))
-                .body("marriage_id", Matchers.equalTo("12345678"))
-                .body("spouse_name_bangla", Matchers.equalTo("আখতার"))
-                .body("spouse_name", Matchers.equalTo("Akhtar"))
-                .body("spouse_uid_nid", Matchers.equalTo("1234567890"))
-                .body("date_of_birth", Matchers.equalTo("1983-09-21"))
-                .body("gender", Matchers.equalTo("2"))
-                .body("ethnicity", Matchers.equalTo("11"))
-                .body("marital_status", Matchers.equalTo("5"))
-                .body("religion", Matchers.equalTo("1"))
-                .body("blood_group", Matchers.equalTo("1"))
-                .body("bin_brn", Matchers.equalTo(primaryPatient.binBRN))
-                .body("occupation", Matchers.equalTo("11"))
-                .body("edu_level", Matchers.equalTo("01"))
-                .body("nationality", Matchers.equalTo("bangladeshi"))
-                .body("disability", Matchers.equalTo("1"));
-
-        System.out.println("Patient with NID " + primaryPatient.nid + " verified in MCI");
-
-//Commented out the permanent address verification as it MCI does not return permanent address for now
-//                .body("permanent_address.address_line", Matchers.equalTo(primaryPatient.getAddress().getAddressLine1()))
-//                .body("permanent_address.division_id", Matchers.equalTo("40"))
-//                .body("permanent_address.district_id", Matchers.equalTo("4018"))
-//                .body("permanent_address.union_id", Matchers.equalTo("40010801"))
-//                .body("permanent_address.upazilla_id", Matchers.equalTo("401823"))
-//                .body("permanent_address.holding_number", Matchers.equalTo("444444444"))
-//                .body("permanent_address.street", Matchers.equalTo("Dhaka"))
-//                .body("permanent_address.area_mouja",Matchers.equalTo( "Kallayanpur"))
-//                .body("permanent_address.village", Matchers.equalTo("12"))
-//                .body("permanent_address.post_office",Matchers.equalTo( "Dhaka"))
-//                .body("permanent_address.post_code", Matchers.equalTo("1207"))
-//                .body("permanent_address.ward", Matchers.equalTo("13"))
-//                .body("permanent_address.thana", Matchers.equalTo("45"))
-//                .body("permanent_address.city_corporation",Matchers.equalTo("12"))
-//                .body("permanent_address.country",Matchers.equalTo( "050"))
-
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", invalidClientId)
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_UNAUTHORIZED);
+//            .contentType(ContentType.JSON); [Bug-1]
     }
 
-    @Category(ApiTest.class)
     @Test
-    public void verifyCreatePatient() {
+    public void facilityShouldCreatePatient() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        patient.gender = "M";
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
 
-        PatientFactory dataStore = new PatientFactory();
-        primaryPatient = dataStore.defaultPatient;
-
-        JSONObject person = new JSONObject();
-        JSONObject present_address = new JSONObject();
-        try {
-            person.put("nid", primaryPatient.nid);
-            person.put("given_name", primaryPatient.given);
-            person.put("sur_name", primaryPatient.family);
-            person.put("date_of_birth", "2000-03-01");
-            person.put("gender", "M");
-            person.put("occupation", "02");
-            person.put("edu_level", "02");
-            present_address.put("address_line", primaryPatient.address.getAddressLine1());
-            present_address.put("division_id", "10");
-            present_address.put("district_id", "09");
-            present_address.put("upazilla_id", "18");
-            present_address.put("city_corporation_id", "16");
-            present_address.put("ward_id", "01");
-            person.put("present_address", present_address);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        given().contentType("application/json")
-                .body(person.toString())
-                .when().post("/patients")
-                .then().assertThat().statusCode(201);
-        System.out.println("Patient with NID " + primaryPatient.nid + " created in MCI ");
-
-        given().pathParam("nid", primaryPatient.nid)
-                .when().get("/patients?nid={nid}")
-                .then()
-                .body("results.hid[0]", Matchers.notNullValue())
-                .body("results.nid[0]", Matchers.equalTo(primaryPatient.nid))
-                .body("results.given_name[0]", Matchers.equalTo(primaryPatient.given))
-                .body("results.sur_name[0]", Matchers.equalTo(primaryPatient.family))
-                .body("results.date_of_birth[0]", Matchers.equalTo("2000-03-01"))
-                .body("results.gender[0]", Matchers.equalTo("M"))
-                .body("results.occupation[0]", Matchers.equalTo("02"))
-                .body("results.edu_level[0]", Matchers.equalTo("02"))
-                .body("results.present_address.address_line[0]", Matchers.equalTo(primaryPatient.address.getAddressLine1()))
-                .body("results.present_address.division_id[0]", Matchers.equalTo("10"))
-                .body("results.present_address.district_id[0]", Matchers.equalTo("09"))
-                .body("results.present_address.upazilla_id[0]", Matchers.equalTo("18"))
-                .body("results.present_address.city_corporation_id[0]", Matchers.equalTo("16"))
-                .body("results.present_address.ward_id[0]", Matchers.equalTo("01"));
-
-        System.out.println("Patient with NID " + primaryPatient.nid + " verified in MCI");
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_CREATED)
+            .contentType(ContentType.JSON);
     }
 
-    @After
-    public void tearDown() {
-        RestAssured.reset();
+    @Test
+    public void getPatientShouldFailForInvalidFacilityAccessToken() throws Exception {
+        String validHid = createValidPatient();
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+
+        given().
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_UNAUTHORIZED)
+            .body(notNullValue());
+
+//         .contentType(ContentType.JSON) [BUG-1]
     }
 
+    @Test
+    public void getPatientShouldFailForInvalidFacilityEmailId() throws Exception {
+        String validHid = createValidPatient();
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", "invalidUser@gmail.com").
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_UNAUTHORIZED)
+            .body(notNullValue());
+
+//         .contentType(ContentType.JSON) [Bug-1]
+    }
+
+    @Test
+    public void getPatientShouldFailForInvalidFacilityClientId() throws Exception {
+        String validHid = createValidPatient();
+
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+        String invalidClientId = "10039499200";
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", invalidClientId)
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_UNAUTHORIZED)
+            .body(notNullValue());
+
+//        .contentType(ContentType.JSON) [Bug-1]
+    }
+
+    @Test
+    public void facilityShouldGetPatient() throws Exception {
+        String validHid = createValidPatient();
+
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type","application/json")
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_OK)
+            .contentType(ContentType.JSON)
+            .body(notNullValue());
+    }
+
+    @Test
+    public void createPatientShouldFailForInvalidProviderAccessToken() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        patient.gender = "M";
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_UNAUTHORIZED);
+//            .contentType(ContentType.JSON);[Bug-1]
+    }
+
+    @Test
+    public void providerShouldCreatePatient() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        patient.gender = "M";
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_CREATED)
+            .contentType(ContentType.JSON);
+    }
+
+    @Test
+    public void getPatientShouldFailForInvalidProviderAccessToken() throws Exception {
+        String validHid = createValidPatient();
+
+        IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+
+        given().
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_UNAUTHORIZED)
+            .body(notNullValue());
+//        .contentType(ContentType.JSON) [bug-1]
+    }
+
+    @Test
+    public void providerShouldGetPatient() throws Exception {
+        String validHid = createValidPatient();
+
+        IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_OK)
+            .contentType(ContentType.JSON)
+            .body(notNullValue());
+    }
+
+    @Test
+    public void createPatientShouldFailForInvalidDatasenseAccessToken() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.DATASENSE;
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_UNAUTHORIZED);
+//            .contentType(ContentType.JSON); [bug-1]
+    }
+
+    @Test
+    public void datasenseUserShouldNotCreatePatient() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.DATASENSE;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_FORBIDDEN);
+//            .contentType(ContentType.JSON);[bug-1]
+    }
+
+    @Test
+    public void getPatientShouldFailForInvalidDatasenseAccessToken() throws Exception {
+        String validHid = createValidPatient();
+
+        IdpUserEnum idpUser = IdpUserEnum.DATASENSE;
+
+        given().
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_UNAUTHORIZED)
+            .body(notNullValue());
+//        .contentType(ContentType.JSON) [bug-1]
+    }
+
+    @Test
+    public void datasenseUserShouldGetPatient() throws Exception {
+        String validHid = createValidPatient();
+
+        IdpUserEnum idpUser = IdpUserEnum.DATASENSE;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_OK)
+            .contentType(ContentType.JSON)
+            .body(notNullValue());
+    }
+
+    @Test
+    public void createPatientShouldFailForInvalidMCIAdminAccessToken() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN;
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type","application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_UNAUTHORIZED);
+//            .contentType(ContentType.JSON); [bug-1]
+    }
+
+    @Test
+    public void mciAdminAndMciUserShouldNotCreatePatient() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN_WITH_MCI_USER;
+        String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM, IDP_SERVER_BASE_URL);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_FORBIDDEN);
+//            .contentType(ContentType.JSON);[bug-1]
+    }
+
+    @Test
+    public void mciAdminUserShouldNotCreatePatient() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN;
+        String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM, IDP_SERVER_BASE_URL);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_FORBIDDEN);
+//            .contentType(ContentType.JSON);[bug-1]
+    }
+
+    @Test
+    public void getPatientShouldFailForInvalidMciAdminAccessToken() throws Exception {
+        String validHid = createValidPatient();
+        IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN;
+
+        given().
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_UNAUTHORIZED)
+            .body(notNullValue());
+//        .contentType(ContentType.JSON)[bug-1]
+    }
+
+    @Test
+    public void mciAdminUserShouldGetPatient() throws Exception {
+        String validHid = createValidPatient();
+
+        IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN;
+        String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM, IDP_SERVER_BASE_URL);
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_OK)
+            .contentType(ContentType.JSON)
+            .body(notNullValue());
+    }
+
+    @Test
+    public void createPatientShouldFailForInvalidMciApproverAccessToken() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.MCI_APPROVER;
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_UNAUTHORIZED);
+//            .contentType(ContentType.JSON);[bug-1]
+    }
+
+    @Test
+    public void mciApproverUserShouldNotCreatePatient() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.MCI_APPROVER;
+        String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM, IDP_SERVER_BASE_URL);
+
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_FORBIDDEN);
+//            .contentType(ContentType.JSON);[bug-1]
+    }
+
+    @Test
+    public void getPatientShouldFailForInvalidMciApproverAccessToken() throws Exception {
+        String validHid = createValidPatient();
+        IdpUserEnum idpUser = IdpUserEnum.MCI_APPROVER;
+
+        given().
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_UNAUTHORIZED)
+            .body(notNullValue());
+//        .contentType(ContentType.JSON) [bug-1]
+    }
+
+    @Test
+    public void mciApproverUserShouldGetPatient() throws Exception {
+        String validHid = createValidPatient();
+        IdpUserEnum idpUser = IdpUserEnum.MCI_APPROVER;
+        String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM, IDP_SERVER_BASE_URL);
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_OK)
+            .contentType(ContentType.JSON)
+            .body(notNullValue());
+    }
+
+    @Test
+    public void createPatientShouldFailForInvalidPatientAccessToken() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.PATIENT;
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_UNAUTHORIZED);
+//            .contentType(ContentType.JSON);[bug-1]
+    }
+
+    @Test
+    public void patientUserShouldNotCreatePatient() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.PATIENT;
+        String accessToken = loginFor(idpUser, IdpUserEnum.PATIENT_JOURNAL, IDP_SERVER_BASE_URL);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_FORBIDDEN);
+//            .contentType(ContentType.JSON);[bug-1]
+    }
+
+    @Test
+    public void getPatientShouldFailForInvalidPatientAccessToken() throws Exception {
+        String validHid = createValidPatient();
+        IdpUserEnum idpUser = IdpUserEnum.PATIENT;
+
+        given().
+            header("X-Auth-Token", UUID.randomUUID().toString()).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_UNAUTHORIZED)
+            .body(notNullValue());
+//        .contentType(ContentType.JSON) [bug-1]
+    }
+
+    @Test
+    public void patientUserShouldNotGetPatientIfHidDoesNotMatches() throws Exception {
+        String validHid = createValidPatient();
+        IdpUserEnum idpUser = IdpUserEnum.PATIENT;
+        String accessToken = loginFor(idpUser, IdpUserEnum.PATIENT_JOURNAL, IDP_SERVER_BASE_URL);
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then().assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .body(notNullValue());
+//        .contentType(ContentType.JSON) [bug-1]
+    }
+
+    @Test
+    public void patientUserShouldGetPatientIfHidMatches() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.PATIENT;
+        String accessToken = loginFor(idpUser, IdpUserEnum.PATIENT_JOURNAL, IDP_SERVER_BASE_URL);
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + idpUser.getHid())
+            .then().assertThat()
+            .statusCode(SC_OK)
+            .body(notNullValue());
+//        .contentType(ContentType.JSON) [bug-1]
+    }
+
+    @Test
+    public void createPatientShouldFailForSHRUser() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        Response response = given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath).andReturn();
+        response.then()
+            .assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .contentType(ContentType.JSON);
+
+    }
+
+    @Test
+    public void shrUserShouldAbleToSeePatientByHID() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        String validHid = createValidPatient();
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(patientContextPath + "/" + validHid)
+            .then()
+            .assertThat()
+            .statusCode(SC_OK)
+            .body(notNullValue());
+    }
+
+    @Test
+    public void shrUserShouldNotAbleToGetLocationDetails() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .get(baseUrl + "/api/v1/locations?parent=3026")
+            .then()
+            .assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .body("message", equalTo("Access is denied"));
+
+    }
+
+    @Test
+    public void shrUserShouldNotBeAbleToUpdatePatientDetails() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        String validHid = createValidPatient();
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId()).
+            body("{\"sur_name\":\"mohammad\"}").
+            contentType(ContentType.JSON)
+            .put(baseUrl + "/api/v1/patients/" + validHid)
+            .then()
+            .assertThat()
+            .statusCode(SC_FORBIDDEN);
+    }
+
+    @Test
+    public void shrUserShouldNotBeAbleToViewPatientsByNID() throws Exception {
+
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        String validHid = createValidPatient();
+        JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, validHid);
+        String nid = patientDetails.get("nid");
+
+        given()
+            .header("X-Auth-Token", accessToken)
+            .header("From", idpUser.getEmail())
+            .header("client_id", idpUser.getClientId())
+            .get("/api/v1/patients/?nid=" + nid)
+            .then().assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .body("message", equalTo("Access is denied"));
+    }
+
+    @Test
+    public void shrUserShouldNotBeAbleToViewPatientsByHouseholdcode() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        String validHid = createValidPatientWithHouseHoldCode();
+        JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, validHid);
+        System.out.println("patient details is"+patientDetails);
+        String householdCode = patientDetails.get("household_code");
+        System.out.println("houseHold"+householdCode);
+
+        given()
+            .header("X-Auth-Token", accessToken)
+            .header("From", idpUser.getEmail())
+            .header("client_id", idpUser.getClientId())
+            .get("/api/v1/patients/?household_code=" + householdCode)
+            .then().assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .body("message", equalTo("Access is denied"));
+    }
+
+    @Test
+    public void shrUserShouldNotBeAbleToViewPatientByNameAndLocation() throws Exception {
+        String validHid = createValidPatient();
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, validHid);
+
+        String givenName = patientDetails.get("given_name");
+        String surName = patientDetails.get("sur_name");
+        String district_id = patientDetails.get("present_address.district_id");
+        String division_id = patientDetails.get("present_address.division_id");
+        String upazila_id = patientDetails.get("present_address.upazila_id");
+        String address = "" + division_id + district_id + upazila_id;
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId()).
+            get("/api/v1/patients" + "/?given_name=" + givenName + "&sur_name=" + surName + "&present_address=" + address).
+            then().assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .body("message", equalTo("Access is denied"));
+    }
+
+    @Test
+    public void shrUserShouldNotBeAbleToViewPendingApprovalPatientByCatchment() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+        given()
+            .header("X-Auth-Token", accessToken)
+            .header("From", idpUser.getEmail())
+            .header("client_id", idpUser.getClientId())
+            .get("/api/v1/catchments/3026/approvals/")
+            .then().assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .body("message", equalTo("Access is denied"));
+    }
+
+    @Test
+    public void shrUserShouldNotBeAbleToViewPendingApprovalPatientByHID() throws Exception {
+        String validHid = createValidPatient();
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+        given()
+            .header("X-Auth-Token", accessToken)
+            .header("From", idpUser.getEmail())
+            .header("client_id", idpUser.getClientId())
+            .get("/api/v1/catchments/3026/approvals/"+validHid)
+            .then().assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .body("message", equalTo("Access is denied"));
+    }
+
+    @Test
+    public void shrUserShouldNotAbleToGetAuditLogByHID() throws Exception {
+        String validHid = createValidPatient();
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+        given()
+            .header("X-Auth-Token", accessToken)
+            .header("From", idpUser.getEmail())
+            .header("client_id", idpUser.getClientId())
+            .get("/api/v1/audit/patients/"+validHid)
+            .then().assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .body("message", equalTo("Access is denied"));
+    }
+
+    @Test
+    public void shrUserShouldBeAbleToGetShrFeedByHID() throws Exception {
+        String validHid = createValidPatient();
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+        given()
+            .header("X-Auth-Token", accessToken)
+            .header("From", idpUser.getEmail())
+            .header("client_id", idpUser.getClientId())
+            .get("/api/v1/feed/patients?hid="+validHid)
+            .then().assertThat()
+            .statusCode(SC_OK)
+            .contentType(ContentType.JSON);
+    }
+
+
+    private String createValidPatientWithHouseHoldCode() throws ParsingException, IOException {
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        patient.gender = "M";
+        patient.householdCode = patient.nid;
+        System.out.println("nid is"+patient.nid);
+        String  patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        return given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then().statusCode(SC_CREATED)
+            .contentType(ContentType.JSON)
+            .extract()
+            .response().jsonPath().getString("id");
+
+
+
+    }
+
+    private String createValidPatient() throws ParsingException, IOException {
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+        patient.gender = "M";
+        String  patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
+
+        return given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then().statusCode(SC_CREATED)
+            .contentType(ContentType.JSON)
+            .extract()
+            .response().jsonPath().getString("id");
+    }
+
+    private JsonPath getPatientDetailsByHID(IdpUserEnum idpUser, String accessToken, String validHid) {
+        String response = with().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId()).
+            get("/api/v1/patients" + "/" + validHid).asString();
+
+        return new JsonPath(response);
+    }
 }

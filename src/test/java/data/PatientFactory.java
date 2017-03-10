@@ -33,7 +33,7 @@ public class PatientFactory {
         patient.nid = String.valueOf(new Date().getTime());
         patient.given = "AHI" + PatientFactory.getEncodedName(patient.nid);
         patient.family = "REV" + PatientFactory.getEncodedName(reverse(patient.nid));
-        patient.gender = "M";
+        patient.gender = "male";
         patient.birthDate = "1980-06-14";
         patient.division_id = "30";
         patient.district_id = "26";

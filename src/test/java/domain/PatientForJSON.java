@@ -7,6 +7,7 @@ public class PatientForJSON {
   public String date_of_birth;
   public String nid;
   public PresentAddress present_address;
+  public String household_code;
 
   public PatientForJSON() {
     this.present_address = new PresentAddress();

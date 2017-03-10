@@ -33,7 +33,7 @@ public class MCIRegistryAuthorizationIT {
   ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
   private final String IDP_SERVER_BASE_URL = config.property.get("idp_server_base_url");
   private final String baseUrl = config.property.get("mci_registry");
-  private final String patientContextPath = "/api/v1/patients";
+  private final String patientContextPath = "/api/v2/patients";
 
   @Before
   public void setUp() throws Exception {
@@ -349,25 +349,6 @@ public class MCIRegistryAuthorizationIT {
   }
 
   @Test
-  public void mciAdminAndMciUserShouldNotCreatePatient() throws Exception {
-    IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN_WITH_MCI_USER;
-    String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM, IDP_SERVER_BASE_URL);
-    Patient patient = PatientFactory.validPatientWithMandatoryInformation();
-    String patientDetailsAsFHIRXML = new PatientFHIRXMLFactory(baseUrl).withValidXML(patient);
-
-    given().
-        body(patientDetailsAsFHIRXML).
-        header("X-Auth-Token", accessToken).
-        header("From", idpUser.getEmail()).
-        header("client_id", idpUser.getClientId())
-        .post(patientContextPath)
-        .then()
-        .assertThat()
-        .statusCode(SC_FORBIDDEN)
-        .contentType(ContentType.JSON);
-  }
-
-  @Test
   public void mciAdminUserShouldNotCreatePatient() throws Exception {
     IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN;
     String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM, IDP_SERVER_BASE_URL);
@@ -400,24 +381,6 @@ public class MCIRegistryAuthorizationIT {
         .then().assertThat()
         .statusCode(SC_UNAUTHORIZED)
         .contentType(ContentType.JSON)
-        .body(notNullValue());
-  }
-
-  @Test
-  public void mciAdminAndMciUserUserShouldGetPatient() throws Exception {
-    String validHid = createValidPatient();
-
-    IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN_WITH_MCI_USER;
-    String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM, IDP_SERVER_BASE_URL);
-
-    given().
-        header("X-Auth-Token", accessToken).
-        header("From", idpUser.getEmail()).
-        header("client_id", idpUser.getClientId())
-        .get(patientContextPath + "/" + validHid)
-        .then().assertThat()
-        .statusCode(SC_OK)
-        .contentType(ContentType.XML)
         .body(notNullValue());
   }
 
@@ -676,7 +639,6 @@ public class MCIRegistryAuthorizationIT {
 
     IdpUserEnum idpUser = IdpUserEnum.SHR;
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
-//    JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, "98000100944");
     String validHid = createValidPatient();
     JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, validHid);
     String nid = patientDetails.get("nid");
@@ -695,9 +657,9 @@ public class MCIRegistryAuthorizationIT {
   public void shrUserShouldNotBeAbleToViewPatientsByHouseholdcode() throws Exception {
     IdpUserEnum idpUser = IdpUserEnum.SHR;
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
-    JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, "98000100944");
+    String validHid = createValidPatient();
+    JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken,validHid);
     String householdCode = patientDetails.get("household_code");
-
     given()
         .header("X-Auth-Token", accessToken)
         .header("From", idpUser.getEmail())
@@ -799,15 +761,14 @@ public class MCIRegistryAuthorizationIT {
     IdpUserEnum idpUser = IdpUserEnum.FACILITY;
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
     Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+    String patientDetails = new PatientFHIRXMLFactory(baseUrl).withValidXML(patient);
+    System.out.println(patientDetails);
 
-//    String patientDetails = new PatientFHIRXMLFactory(baseUrl).withValidXML(patient);
-    String  patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
     return given().
         body(patientDetails).
         header("X-Auth-Token", accessToken).
         header("From", idpUser.getEmail()).
         header("client_id", idpUser.getClientId())
-        .header("Content-Type", "application/json")
           .post(patientContextPath)
         .then().statusCode(SC_CREATED)
         .contentType(ContentType.JSON)
