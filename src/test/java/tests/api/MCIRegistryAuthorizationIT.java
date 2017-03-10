@@ -654,23 +654,6 @@ public class MCIRegistryAuthorizationIT {
   }
 
   @Test
-  public void shrUserShouldNotBeAbleToViewPatientsByHouseholdcode() throws Exception {
-    IdpUserEnum idpUser = IdpUserEnum.SHR;
-    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
-    String validHid = createValidPatient();
-    JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken,validHid);
-    String householdCode = patientDetails.get("household_code");
-    given()
-        .header("X-Auth-Token", accessToken)
-        .header("From", idpUser.getEmail())
-        .header("client_id", idpUser.getClientId())
-        .get("/api/v1/patients/?household_code=" + householdCode)
-        .then().assertThat()
-        .statusCode(SC_FORBIDDEN)
-        .body("message", equalTo("Access is denied"));
-  }
-
-  @Test
   public void shrUserShouldNotBeAbleToViewPatientByNameAndLocation() throws Exception {
     String validHid = createValidPatient();
     IdpUserEnum idpUser = IdpUserEnum.SHR;

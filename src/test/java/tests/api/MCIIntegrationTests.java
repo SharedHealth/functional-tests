@@ -368,26 +368,6 @@ public class MCIIntegrationTests {
     }
 
     @Test
-    public void mciAdminAndMciUserShouldNotCreatePatient() throws Exception {
-        IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN_WITH_MCI_USER;
-        String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM, IDP_SERVER_BASE_URL);
-        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
-        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
-
-        given().
-            body(patientDetails).
-            header("X-Auth-Token", accessToken).
-            header("From", idpUser.getEmail()).
-            header("client_id", idpUser.getClientId())
-            .header("Content-Type", "application/json")
-            .post(patientContextPath)
-            .then()
-            .assertThat()
-            .statusCode(SC_FORBIDDEN);
-//            .contentType(ContentType.JSON);[bug-1]
-    }
-
-    @Test
     public void mciAdminUserShouldNotCreatePatient() throws Exception {
         IdpUserEnum idpUser = IdpUserEnum.MCI_ADMIN;
         String accessToken = loginFor(idpUser, IdpUserEnum.MCI_SYSTEM, IDP_SERVER_BASE_URL);
@@ -699,6 +679,7 @@ public class MCIIntegrationTests {
         IdpUserEnum idpUser = IdpUserEnum.SHR;
         String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
         String validHid = createValidPatientWithHouseHoldCode();
+        System.out.println(validHid);
         JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, validHid);
         System.out.println("patient details is"+patientDetails);
         String householdCode = patientDetails.get("household_code");
