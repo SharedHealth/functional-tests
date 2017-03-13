@@ -636,20 +636,20 @@ public class MCIRegistryAuthorizationIT {
 
   @Test
   public void shrUserShouldNotBeAbleToViewPatientsByNID() throws Exception {
-
     IdpUserEnum idpUser = IdpUserEnum.SHR;
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
     String validHid = createValidPatient();
     JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, validHid);
     String nid = patientDetails.get("nid");
+
     given()
         .header("X-Auth-Token", accessToken)
         .header("From", idpUser.getEmail())
         .header("client_id", idpUser.getClientId())
-        .get("/api/v1/patients/?nid=" + nid)
+        .get(patientContextPath+"?nid=" + nid)
         .then().assertThat()
         .statusCode(SC_FORBIDDEN)
-        .body("message", equalTo("Access is denied"));
+        .body("message", equalTo("Access to user mritunjd@thoughtworks.com is denied"));
   }
 
   @Test
