@@ -642,7 +642,6 @@ public class MCIRegistryAuthorizationIT {
     String validHid = createValidPatient();
     JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, validHid);
     String nid = patientDetails.get("nid");
-    System.out.println("nid"+nid);
     given()
         .header("X-Auth-Token", accessToken)
         .header("From", idpUser.getEmail())
@@ -745,8 +744,6 @@ public class MCIRegistryAuthorizationIT {
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
     Patient patient = PatientFactory.validPatientWithMandatoryInformation();
     String patientDetails = new PatientFHIRXMLFactory(baseUrl).withValidXML(patient);
-    System.out.println(patientDetails);
-
     return given().
         body(patientDetails).
         header("X-Auth-Token", accessToken).

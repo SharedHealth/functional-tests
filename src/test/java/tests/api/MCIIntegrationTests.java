@@ -240,7 +240,6 @@ public class MCIIntegrationTests {
     @Test
     public void getPatientShouldFailForInvalidProviderAccessToken() throws Exception {
         String validHid = createValidPatient();
-
         IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
 
         given().
@@ -679,12 +678,8 @@ public class MCIIntegrationTests {
         IdpUserEnum idpUser = IdpUserEnum.SHR;
         String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
         String validHid = createValidPatientWithHouseHoldCode();
-        System.out.println(validHid);
         JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, validHid);
-        System.out.println("patient details is"+patientDetails);
         String householdCode = patientDetails.get("household_code");
-        System.out.println("houseHold"+householdCode);
-
         given()
             .header("X-Auth-Token", accessToken)
             .header("From", idpUser.getEmail())
@@ -782,6 +777,81 @@ public class MCIIntegrationTests {
             .contentType(ContentType.JSON);
     }
 
+    @Test
+    public void shrUserShouldNotBeAbleToAcceptPendingApprovalForPatient() throws Exception {
+        String validHid = createValidPatient();
+
+        IdpUserEnum facilityUser = IdpUserEnum.FACILITY;
+        String facilityAccessToken = login(facilityUser, IDP_SERVER_BASE_URL);
+        given().
+            header("X-Auth-Token", facilityAccessToken).
+            header("From", facilityUser.getEmail()).
+            header("client_id", facilityUser.getClientId()).
+            body("{\"sur_name\":\"mohammad\"}").
+            contentType(ContentType.JSON)
+            .put(patientContextPath + "/" +  validHid)
+            .then().assertThat().statusCode(SC_ACCEPTED);
+
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId()).
+            header("Content-Type", "application/json").
+            body("{\"sur_name\":\"mohammad\"}")
+            .put(baseUrl+"/api/v1/catchments/3026/approvals/"+validHid)
+            .then().assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .body("message", equalTo("Access is denied"));
+    }
+
+    @Test
+    public void shrUserShouldNotBeAbleToRejectPendingApprovalForPatient() throws Exception {
+        String validHid = createValidPatient();
+
+        IdpUserEnum facilityUser = IdpUserEnum.FACILITY;
+        String facilityAccessToken = login(facilityUser, IDP_SERVER_BASE_URL);
+        given().
+            header("X-Auth-Token", facilityAccessToken).
+            header("From", facilityUser.getEmail()).
+            header("client_id", facilityUser.getClientId()).
+            body("{\"sur_name\":\"mohammad\"}").
+            contentType(ContentType.JSON)
+            .put(patientContextPath + "/" +  validHid)
+            .then().assertThat().statusCode(SC_ACCEPTED);
+
+        IdpUserEnum idpUser = IdpUserEnum.SHR;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId()).
+            header("Content-Type", "application/json").
+            body("{\"sur_name\":\"mohammad\"}")
+            .delete(baseUrl+"/api/v1/catchments/3026/approvals/"+validHid)
+            .then().assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .body("message", equalTo("Access is denied"));
+    }
+
+    @Test
+    public void shrUserShouldNotBeAbleToViewPatientByBinBrn() throws Exception {
+        IdpUserEnum shrUser = IdpUserEnum.SHR;
+        String accessToken = login(shrUser, IDP_SERVER_BASE_URL);
+        String validHid = createValidPatient();
+        JsonPath patientDetails = getPatientDetailsByHID(shrUser, accessToken, validHid);
+        String bin_brn = patientDetails.get("bin_brn");
+
+        given().
+            header("X-Auth-Token", accessToken).
+            header("From", shrUser.getEmail()).
+            header("client_id", shrUser.getClientId()).
+            get(patientContextPath+"/?bin_brn="+bin_brn)
+            .then().assertThat()
+            .statusCode(SC_FORBIDDEN)
+            .body("message",equalTo("Access is denied"));
+    }
 
     private String createValidPatientWithHouseHoldCode() throws ParsingException, IOException {
         IdpUserEnum idpUser = IdpUserEnum.FACILITY;
@@ -789,7 +859,6 @@ public class MCIIntegrationTests {
         Patient patient = PatientFactory.validPatientWithMandatoryInformation();
         patient.gender = "M";
         patient.householdCode = patient.nid;
-        System.out.println("nid is"+patient.nid);
         String  patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
 
         return given().
@@ -804,8 +873,6 @@ public class MCIIntegrationTests {
             .extract()
             .response().jsonPath().getString("id");
 
-
-
     }
 
     private String createValidPatient() throws ParsingException, IOException {
@@ -813,6 +880,7 @@ public class MCIIntegrationTests {
         String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
         Patient patient = PatientFactory.validPatientWithMandatoryInformation();
         patient.gender = "M";
+        patient.binBRN = "14893974754477445";
         String  patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
 
         return given().

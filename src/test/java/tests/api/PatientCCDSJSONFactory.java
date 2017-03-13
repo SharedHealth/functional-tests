@@ -22,7 +22,7 @@ public class PatientCCDSJSONFactory {
     jsonPatient.present_address.upazila_id = patient.upazila_id;
     jsonPatient.present_address.country_code = '0'+patient.countryCode;
     jsonPatient.household_code = patient.householdCode;
-
+    jsonPatient.bin_brn = patient.binBRN;
 
     Gson gson = new Gson();
     return gson.toJson(jsonPatient);
