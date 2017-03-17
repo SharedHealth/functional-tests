@@ -1,263 +1,379 @@
 package domain;
 
+import config.ConfigurationProperty;
+import config.EnvironmentConfiguration;
 import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Element;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.UUID;
+
 import static domain.PatientFHIRXMLComposer.xmlns;
 
 public class Entry {
-    
-}
 
-class Resource {
+    public String fullUrl;
+    public Resource resource;
 
-    public Element createEntry(String url,String componentType){
+
+    public Entry(String fullUrl, Resource resource) {
+        this.fullUrl = fullUrl;
+        this.resource = resource;
+    }
+
+    public Element create() {
         Element entry = new Element("entry");
 
         Element fullUrl = new Element("fullUrl");
-        fullUrl.addAttribute(new Attribute("value",url));
-        Element resource = new Element("resource");
-        Element component = new Element(componentType, xmlns);
-
-        //identifier
-        Element identifier = new Element("identifier", xmlns);
-        Element identifierValue = createSingleNode("value", url);
-        identifier.appendChild(identifierValue);
-
-        component.appendChild(identifier);
-        resource.appendChild(component);
+        fullUrl.addAttribute(new Attribute("value", resource.fullUrl()));
+        Element res = resource.create();
         entry.appendChild(fullUrl);
-        entry.appendChild(resource);
+        entry.appendChild(res);
         return entry;
     }
-
-    public Element createPatient(){
-        Element patient = new Element("patient", xmlns);
-        Element reference = createSingleNode("reference", "http://mci-dev.twhosted.com/api/default/patients/98000106461");
-        Element display = createSingleNode("display", "98000106461");
-        patient.appendChild(reference);
-        patient.appendChild(display);
-        return patient;
-    }
-
-    public Element createEncounter(){
-        Element encounter = new Element("encounter",xmlns);
-        Element reference = createSingleNode("reference", "urn:uuid:f5f1e736-a8ac-41d3-b839-644f575002ed");
-        encounter.appendChild(reference);
-        return encounter;
-    }
-
-    public Element createSingleNode(String name, String value){
-        Element element = new Element(name,xmlns);
-        element.addAttribute(new Attribute("value",value));
-        return element;
-    }
 }
 
-class Composition extends Resource {
-    public String compose(){
-        //date
-        Element date = createSingleNode("date", "2017-03-14T11:35:42.000+05:30");
 
-        //type
-        Element type = new Element("type",xmlns);
-        Element coding = new Element("coding",xmlns);
-        Element system = createSingleNode("system", xmlns + "/vs/doc-typecodes");
-        Element code = createSingleNode("code", "51899-3");
-        Element display = createSingleNode("display", "Details Document");
-        coding.appendChild(system);
-        coding.appendChild(code);
-        coding.appendChild(display);
-        type.appendChild(coding);
+    class SectionValues {
+        String displayValue;
+        String referenceValue;
 
-        //title
-        Element title = createSingleNode("title", "Patient Clinical Encounter");
-
-        //status
-        Element status = createSingleNode("status", "final");
-
-        //confidentiality
-        Element confidentiality = createSingleNode("confidentiality", "N");
-
-        //subject
-        Element subject = new Element("subject",xmlns);
-        Element reference = createSingleNode("reference", "http://mci-dev.twhosted.com/api/default/patients/98000106461");
-        Element referenceDisplay = createSingleNode("display", "98000106461");
-        subject.appendChild(reference);
-        subject.appendChild(referenceDisplay);
-
-        //author
-        Element author = new Element("author",xmlns);
-        Element authorReference = createSingleNode("reference", "http://172.21.2.184:8084/api/1.0/facilities/10019842.json");
-        author.appendChild(authorReference);
-
-        //encounter
-        Element encounter = createEncounter();
-
-        //section
-        String encounterEntry = "urn:uuid:f5f1e736-a8ac-41d3-b839-644f575002ed";
-        String encounterDisplay = "Encounter";
-        Element encounterSection = createSection(encounterEntry, encounterDisplay);
-
-        String complaintEntry = "urn:uuid:fcf4d046-b709-433c-b381-44136c45ab7b";
-        String complaintDisplay = "Complaint";
-        Element complaintSection = createSection(complaintEntry, complaintDisplay);
-
-        String fullUrl = "urn:uuid:49b38010-e850-4ac7-9c39-488f1a0a11a9";
-        Element entry = createEntry(fullUrl,"Composition");
-
-        Document document = new Document(entry);
-        Element composition = document.getRootElement().getFirstChildElement("resource").getFirstChildElement("Composition",xmlns);
-        composition.appendChild(date);
-        composition.appendChild(type);
-        composition.appendChild(title);
-        composition.appendChild(status);
-        composition.appendChild(confidentiality);
-        composition.appendChild(subject);
-        composition.appendChild(author);
-        composition.appendChild(encounter);
-        composition.appendChild(encounterSection);
-        composition.appendChild(complaintSection);
-
-        return document.toXML();
+        public SectionValues(String referenceValue, String displayValue) {
+            this.displayValue = displayValue;
+            this.referenceValue = referenceValue;
+        }
     }
 
-    private Element createSection(String entryValue, String displayValue) {
-        Element section = new Element("section",xmlns);
-        Element entry = new Element("entry",xmlns);
-        Element reference = createSingleNode("reference", entryValue);
-        Element display = createSingleNode("display", displayValue);
-        entry.appendChild(reference);
-        entry.appendChild(display);
-        section.appendChild(entry);
-        return section;
-    }
-}
+    class Resource {
 
-class Encounter extends Resource{
-    public String compose()
-    {
-        //status
-        Element status = createSingleNode("status", "finished");
+        public String identifier;
+        public String name;
 
-        //class
-        Element classField = createSingleNode("class", "field");
+        public Resource(String name) {
+            this.name = name;
+            this.identifier = UUID.randomUUID().toString();
+        }
 
-        //type
-        Element type = new Element("type", xmlns);
-        Element text = createSingleNode("text", "Consultation");
-        type.appendChild(text);
 
-        //patient
-        Element patient = createPatient();
+        public Element createEncounter(String uuid) {
+            Element encounter = new Element("encounter", xmlns);
+            Element reference = createSingleNode("reference", "urn:uuid:" + uuid);
+            encounter.appendChild(reference);
+            return encounter;
+        }
 
-        //participant
-        Element participant = new Element("participant", xmlns);
-        Element individual = new Element("individual", xmlns);
-        Element individualReference = createSingleNode("reference", "http://172.21.2.184:8084/api/1.0/providers/27.json");
-        individual.appendChild(individualReference);
-        participant.appendChild(individual);
+        public Element createSingleNode(String name, String value) {
+            Element element = new Element(name, xmlns);
+            element.addAttribute(new Attribute("value", value));
+            return element;
+        }
 
-        //period
-        Element period = new Element("period", xmlns);
-        Element start = createSingleNode("start", "2017-03-14T11:31:57.000+05:30");
-        period.appendChild(start);
+        public String fullUrl() {
+            return "urn:uuid:" + this.identifier;
+        }
 
-        //serviceProvider
-        Element serviceProvider = new Element("serviceProvider", xmlns);
-        Element serviceProviderRef = createSingleNode("reference", "http://172.21.2.184:8084/api/1.0/facilities/10019842.json");
-        serviceProvider.appendChild(serviceProviderRef);
+        public Element create() {
+            Element resource = new Element("resource");
+            Element component = new Element(this.name, xmlns);
+            resource.appendChild(component);
 
-        Element entry = createEntry("urn:uuid:f5f1e736-a8ac-41d3-b839-644f575002ed","Encounter");
-        Document document = new Document(entry);
-        Element encounter = document.getRootElement().getFirstChildElement("resource").getFirstChildElement("Encounter",xmlns);
-
-        encounter.appendChild(status);
-        encounter.appendChild(classField);
-        encounter.appendChild(type);
-        encounter.appendChild(patient);
-        encounter.appendChild(participant);
-        encounter.appendChild(period);
-        encounter.appendChild(serviceProvider);
-
-        return document.toXML();
+            //identifier
+            Element identifier = new Element("identifier", xmlns);
+            Element identifierValue = createSingleNode("value", fullUrl());
+            identifier.appendChild(identifierValue);
+            component.appendChild(identifier);
+            return resource;
+        }
     }
 
-}
+    class Composition extends Resource {
+        private String validHid;
+        private final String facilityId;
 
-class Condition extends Resource{
-    public String compose(){
+        ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
+        private final String baseUrl = config.property.get("mci_registry");
+        private String encounterId;
+        private String complaintId;
 
-        //patient
-        Element patient = createPatient();
+        public Composition(String name, String validHid, String facilityId, String encounterId, String complaintId) {
+            super(name);
+            this.encounterId = encounterId;
+            this.complaintId = complaintId;
+            this.name = name;
+            this.validHid = validHid;
+            this.facilityId = facilityId;
+        }
 
-        //encounter
-        Element encounter = createEncounter();
+        public Element create() {
+            Element superParent = super.create();
+            Element parent = superParent.getFirstChildElement(this.name, xmlns);
 
-        //asserter
-        Element asserter = new Element("asserter",xmlns);
-        Element asserterReference = createSingleNode("reference", "http://172.21.2.184:8084/api/1.0/providers/27.json");
-        asserter.appendChild(asserterReference);
+            //  Might modify date later
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.'000+05:30'");
+            Date today = new Date();
+            String format = simpleDateFormat.format(today);
 
-        //code
-        Element code = createCode();
+            //date
+            Element date = createSingleNode("date", format);
+            parent.appendChild(date);
 
-        //category
-        Element category = createCategory();
+            //type
+            Element type = createType();
+            parent.appendChild(type);
 
-        //clinicalStatus
-        Element clinicalStatus = createSingleNode("clinicalStatus", "active");
+            //title
+            Element title = createSingleNode("title", "Patient Clinical Encounter");
+            parent.appendChild(title);
 
-        //verificationStatus
-        Element verificationStatus = createSingleNode("verificationStatus","provisional");
+            //status
+            Element status = createSingleNode("status", "final");
+            parent.appendChild(status);
 
-        //onsetPeriod
-        Element onsetPeriod = new Element("onsetPeriod", xmlns);
-        Element start = createSingleNode("start", "2017-03-11T11:35:42.000+05:30");
-        Element end = createSingleNode("end", "2017-03-11T11:35:42.000+05:30");
-        onsetPeriod.appendChild(start);
-        onsetPeriod.appendChild(end);
+            //confidentiality
+            Element confidentiality = createSingleNode("confidentiality", "N");
+            parent.appendChild(confidentiality);
 
-        Element entry = createEntry("urn:uuid:fcf4d046-b709-433c-b381-44136c45ab7b","Condition");
-        Document document = new Document(entry);
-        Element condition = document.getRootElement().getFirstChildElement("resource").getFirstChildElement("Condition",xmlns);
+            //subject
+            Element subject = createSubject();
+            parent.appendChild(subject);
 
-        condition.appendChild(patient);
-        condition.appendChild(encounter);
-        condition.appendChild(asserter);
-        condition.appendChild(code);
-        condition.appendChild(category);
-        condition.appendChild(clinicalStatus);
-        condition.appendChild(verificationStatus);
-        condition.appendChild(onsetPeriod);
+            //author
+            Element author = new Element("author", xmlns);
+            Element authorReference = createSingleNode("reference", "http://172.21.2.184:8084/api/1.0/facilities/" + facilityId + ".json");
+            author.appendChild(authorReference);
+            parent.appendChild(author);
 
-        return document.toXML();
+            //encounter
+            Element encounter = createEncounter(encounterId);
+            parent.appendChild(encounter);
+
+            //section
+            SectionValues encounterSection = new SectionValues(encounterId, "Encounter");
+            SectionValues complaintSection = new SectionValues(complaintId, "Complaint");
+            ArrayList<SectionValues> sectionValues = new ArrayList<>();
+            sectionValues.add(encounterSection);
+            sectionValues.add(complaintSection);
+            createSections(sectionValues, parent);
+            return superParent;
+
+        }
+
+        public Element createType() {
+            Element type = new Element("type", xmlns);
+            Element coding = new Element("coding", xmlns);
+            Element system = createSingleNode("system", xmlns + "/vs/doc-typecodes");
+            Element code = createSingleNode("code", "51899-3");
+            Element display = createSingleNode("display", "Details Document");
+            coding.appendChild(system);
+            coding.appendChild(code);
+            coding.appendChild(display);
+            type.appendChild(coding);
+            return type;
+        }
+
+        public Element createSubject() {
+            Element subject = new Element("subject", xmlns);
+            Element reference = createSingleNode("reference", baseUrl + "/api/default/patients/" + validHid);
+            Element referenceDisplay = createSingleNode("display", validHid);
+            subject.appendChild(reference);
+            subject.appendChild(referenceDisplay);
+            return subject;
+        }
+
+        private Element createSections(ArrayList<SectionValues> sections, Element parent) {
+            for (SectionValues sectionElement : sections) {
+                Element section = new Element("section", xmlns);
+                Element entry = new Element("entry", xmlns);
+                section.appendChild(entry);
+                Element reference = createSingleNode("reference", sectionElement.referenceValue);
+                Element display = createSingleNode("display", sectionElement.displayValue);
+                entry.appendChild(reference);
+                entry.appendChild(display);
+                parent.appendChild(section);
+            }
+
+            return parent;
+        }
     }
 
-    private Element createCategory() {
-        Element category = new Element("category",xmlns);
-        Element coding = new Element("coding",xmlns);
+    class Encounter extends Resource {
+        private String validHid;
+        private final String facilityId;
 
-        Element system = createSingleNode("system","http://hl7.org/fhir/condition-category");
-        Element codeElement = createSingleNode("code","complaint");
-        coding.appendChild(system);
-        coding.appendChild(codeElement);
-        category.appendChild(coding);
-        return category;
+        ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
+        private final String baseUrl = config.property.get("mci_registry");
+
+        public Encounter(String name, String validHid, String facilityId) {
+            super(name);
+            this.name = name;
+            this.validHid = validHid;
+            this.facilityId = facilityId;
+        }
+
+        public Element createPatient() {
+            Element patient = new Element("patient", xmlns);
+            Element reference = createSingleNode("reference", baseUrl+"/api/default/patients/" + validHid);
+            Element display = createSingleNode("display", validHid);
+            patient.appendChild(reference);
+            patient.appendChild(display);
+            return patient;
+        }
+
+        public Element create() {
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.'000+05:30'");
+            Date today = new Date();
+            String format = simpleDateFormat.format(today);
+
+            Element superParent = super.create();
+            Element parent = superParent.getFirstChildElement("Encounter", xmlns);
+
+            //status
+            Element status = createSingleNode("status", "finished");
+            parent.appendChild(status);
+
+            //class
+            Element classField = createSingleNode("class", "field");
+            parent.appendChild(classField);
+
+            //type
+            Element type = new Element("type", xmlns);
+            Element text = createSingleNode("text", "Consultation");
+            type.appendChild(text);
+            parent.appendChild(type);
+
+            //patient
+            Element patient = createPatient();
+            parent.appendChild(patient);
+
+            //participant
+            Element participant = new Element("participant", xmlns);
+            Element individual = new Element("individual", xmlns);
+            Element individualReference = createSingleNode("reference", "http://172.21.2.184:8084/api/1.0/providers/27.json");
+            individual.appendChild(individualReference);
+            participant.appendChild(individual);
+            parent.appendChild(participant);
+
+            //period
+            Element period = new Element("period", xmlns);
+            Element start = createSingleNode("start", format);
+            period.appendChild(start);
+            parent.appendChild(period);
+
+            //serviceProvider
+            Element serviceProvider = new Element("serviceProvider", xmlns);
+            Element serviceProviderRef = createSingleNode("reference", "http://172.21.2.184:8084/api/1.0/facilities/" + facilityId + ".json");
+            serviceProvider.appendChild(serviceProviderRef);
+            parent.appendChild(serviceProvider);
+
+            return superParent;
+        }
+
     }
 
-    private Element createCode() {
-        Element code = new Element("code",xmlns);
-        Element coding = new Element("coding",xmlns);
+    class Condition extends Resource {
 
-        Element system = createSingleNode("system","http://tr-dev.twhosted.com/openmrs/ws/rest/v1/tr/concepts/d587c115-82f3-11e5-b875-0050568225ca");
-        Element codeElement = createSingleNode("code","d587c115-82f3-11e5-b875-0050568225ca");
-        Element displayElement = createSingleNode("display","Fever");
-        coding.appendChild(system);
-        coding.appendChild(codeElement);
-        coding.appendChild(displayElement);
-        code.appendChild(coding);
-        return code;
+        private String validHid;
+        ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
+        private final String baseUrl = config.property.get("mci_registry");
+        private String codeId;
+        private String encounterId;
+
+
+        public Condition(String name, String validHid, String codeId, String encounterId) {
+            super(name);
+            this.codeId = codeId;
+            this.encounterId = encounterId;
+            this.name = name;
+            this.validHid = validHid;
+        }
+
+
+        public Element createPatient() {
+            Element patient = new Element("patient", xmlns);
+            Element reference = createSingleNode("reference", baseUrl+"/api/default/patients/"+validHid);
+            Element display = createSingleNode("display", validHid);
+            patient.appendChild(reference);
+            patient.appendChild(display);
+            return patient;
+        }
+
+        public Element create() {
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.'000+05:30'");
+            Date today = new Date();
+            String formatedDate = simpleDateFormat.format(today);
+
+            Element superParent = super.create();
+            Element parent = superParent.getFirstChildElement(this.name, xmlns);
+
+            //patient
+            Element patient = createPatient();
+            parent.appendChild(patient);
+
+            //encounter
+            Element encounter = createEncounter(encounterId);
+            parent.appendChild(encounter);
+
+            //asserter
+            Element asserter = new Element("asserter", xmlns);
+            Element asserterReference = createSingleNode("reference", "http://172.21.2.184:8084/api/1.0/providers/27.json");
+            asserter.appendChild(asserterReference);
+            parent.appendChild(asserter);
+
+            //code
+            Element code = createCode();
+            parent.appendChild(code);
+
+            //category
+            Element category = createCategory();
+            parent.appendChild(category);
+
+            //clinicalStatus
+            Element clinicalStatus = createSingleNode("clinicalStatus", "active");
+            parent.appendChild(clinicalStatus);
+
+            //verificationStatus
+            Element verificationStatus = createSingleNode("verificationStatus", "provisional");
+            parent.appendChild(verificationStatus);
+
+            //onsetPeriod
+            Element onsetPeriod = new Element("onsetPeriod", xmlns);
+            Element start = createSingleNode("start", formatedDate);
+            Element end = createSingleNode("end", formatedDate);
+            onsetPeriod.appendChild(start);
+            onsetPeriod.appendChild(end);
+            parent.appendChild(onsetPeriod);
+
+            return superParent;
+        }
+
+        private Element createCategory() {
+            Element category = new Element("category", xmlns);
+            Element coding = new Element("coding", xmlns);
+
+            Element system = createSingleNode("system", xmlns+"/condition-category");
+            Element codeElement = createSingleNode("code", "complaint");
+            coding.appendChild(system);
+            coding.appendChild(codeElement);
+            category.appendChild(coding);
+            return category;
+        }
+
+        private Element createCode() {
+            Element code = new Element("code", xmlns);
+            Element coding = new Element("coding", xmlns);
+
+            Element system = createSingleNode("system", "http://tr-dev.twhosted.com/openmrs/ws/rest/v1/tr/concepts/"+codeId);
+            Element codeElement = createSingleNode("code", codeId);
+            Element displayElement = createSingleNode("display", "Fever");
+            coding.appendChild(system);
+            coding.appendChild(codeElement);
+            coding.appendChild(displayElement);
+            code.appendChild(coding);
+            return code;
+        }
     }
-}

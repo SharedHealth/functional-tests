@@ -1,11 +1,63 @@
 package domain;
 
+//import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
+//import ca.uhn.fhir.model.primitive.InstantDt;
 import nu.xom.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.UUID;
+
+class MetaInfo {
+    String lastUpdated;
+
+//    public MetaInfo() {
+//        this.lastUpdated = new InstantDt(new Date(), TemporalPrecisionEnum.MILLI).toString();
+//    }
+}
+
+class Bundle {
+    String id;
+    MetaInfo metaInfo;
+    String type;
+    ArrayList <Entry> entry;
+
+    public Bundle() {
+        this.id = UUID.randomUUID().toString();
+        this.metaInfo = new MetaInfo();
+        this.type = "collection";
+        this.entry = entry;
+    }
+
+    public void createBundle(){
+//        Entry entry = new Entry();
+//        Composition composition = new Composition("Composition");
+//        String compose = composition.compose();
+//        System.out.println("hello"+compose);
+    }
+
+    public static void main(String[] args) {
+        String encounterId = UUID.randomUUID().toString();
+        String codeId = UUID.randomUUID().toString();
+        String complaintId = UUID.randomUUID().toString();
+        Composition composition = new Composition("Composition", "98000106461", "10019842", encounterId,complaintId);
+//        Condition composition = new Condition("Condition","98000106461",codeId,uuid);
+        Entry entry = new Entry(encounterId, composition);
+        Element element1 = entry.create();
+        Document document = new Document(element1);
+        System.out.println("document"+document.toXML());
+
+    }
+
+}
+
+
+ class BundleFactory {
+
+}
 
 /**
- * Created by rajeshvaran on 11/18/16.
+ * dated by rajeshvaran on 11/18/16.
  */
 public class PatientFHIRXMLFactory {
 
