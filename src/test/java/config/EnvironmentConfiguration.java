@@ -20,6 +20,11 @@ public class EnvironmentConfiguration {
         devEnvironment.property.put("mci_registry_patient_context_path", "/api/v2/patients");
         devEnvironment.property.put("idp_server_base_url", "https://hie-idp-dev.twhosted.com");
         devEnvironment.property.put("shr_registry","https://shr-dev.twhosted.com");
+        devEnvironment.property.put("hrm_server", "http://172.21.2.184:8084/api/1.0");
+        devEnvironment.property.put("facility_id","10019842");
+        devEnvironment.property.put("code_id", "51899-3");
+        devEnvironment.property.put("tr_server","http://tr-dev.twhosted.com");
+        devEnvironment.property.put("provider_id", "27");
 
         ConfigurationProperty localEnvironment = new ConfigurationProperty();
         localEnvironment.property.put("mci_registry", "http://127.0.0.1:8085");
