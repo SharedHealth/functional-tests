@@ -1,15 +1,34 @@
 package tests.api;
 
 import ca.uhn.fhir.model.dstu2.resource.Bundle;
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.path.json.JsonPath;
+import com.jayway.restassured.response.Response;
 import config.ConfigurationProperty;
 import config.EnvironmentConfiguration;
+import data.PatientFactory;
+import domain.BundleFactory;
+import domain.Patient;
+import domain.PatientFHIRXMLFactory;
+import nu.xom.ParsingException;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 import utils.IdpUserEnum;
 
-import java.util.Random;
-import java.util.UUID;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.RestAssured.preemptive;
+import static com.jayway.restassured.RestAssured.with;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -19,7 +38,14 @@ public class ProviderUserTests {
 
   ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
   private final String IDP_SERVER_BASE_URL = config.property.get("idp_server_base_url");
-  private final String baseUrl = config.property.get("shr_registry");
+  private final String shrBaseUrl = config.property.get("shr_registry");
+  private final String mciBaseUrl = config.property.get("mci_registry");
+  private final String patientContextPath = "/api/v1/patients";
+
+  @Before
+  public void setUp() throws Exception {
+    RestAssured.baseURI = mciBaseUrl;
+  }
 
   @Test
   public void providerUserShouldGetCatchmentFeedForHisCatchmentAreaCode() throws Exception {
@@ -30,7 +56,7 @@ public class ProviderUserTests {
     given().header("X-Auth-Token", accessToken).
         header("From", provider.getEmail()).
         header("client_id", provider.getClientId()).
-        get(baseUrl+"/v1/catchments/"+catchments+"/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
+        get(shrBaseUrl+"/v1/catchments/"+catchments+"/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
         .then().assertThat()
         .statusCode(SC_OK);
   }
@@ -44,7 +70,7 @@ public class ProviderUserTests {
     given().header("X-Auth-Token", accessToken).
         header("From", provider.getEmail()).
         header("client_id", provider.getClientId()).
-        get(baseUrl+"/v1/catchments/"+catchments+"/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
+        get(shrBaseUrl+"/v1/catchments/"+catchments+"/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
         .then().assertThat()
         .statusCode(SC_FORBIDDEN)
         .body("message", equalTo("Access is denied to user " + provider.getClientId() + " for catchment " + catchments));
@@ -60,9 +86,58 @@ public class ProviderUserTests {
     given().header("X-Auth-Token", accessToken).
         header("From", provider.getEmail()).
         header("client_id", provider.getClientId()).
-        get(baseUrl+"/v1/catchments/"+catchments+"/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
+        get(shrBaseUrl+"/v1/catchments/"+catchments+"/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
         .then().assertThat()
         .statusCode(SC_OK);
 
+  }
+
+  @Test
+  public void providerUserShouldReceiveNonConfidentialEncounter() throws Exception {
+    IdpUserEnum provider = IdpUserEnum.PROVIDER;
+    String accessToken = login(provider, IDP_SERVER_BASE_URL);
+    String validHid = createValidPatient();
+
+    String bundle = BundleFactory.BundleWithConditionEncounterForFever(validHid);
+
+       given().header("X-Auth-Token", accessToken).
+        header("From", provider.getEmail()).
+        header("client_id", provider.getClientId()).
+        header("Content-Type", "application/xml; charset=utf-8")
+        .body(bundle)
+        .post(shrBaseUrl + "/patients/" + validHid + "/encounters")
+        .then().assertThat().statusCode(SC_OK);
+
+    String response = given().header("X-Auth-Token", accessToken).
+        header("From", provider.getEmail()).
+        header("client_id", provider.getClientId())
+        .get(shrBaseUrl + "/patients/" + validHid + "/encounters")
+        .then().statusCode(SC_OK)
+        .contentType(ContentType.JSON)
+        .extract().response().asString();
+
+    JSONObject jsonObject = new JSONObject(response);
+    JSONArray entries = new JSONArray(jsonObject.get("entries").toString());
+    assertTrue(entries.length()>0);
+  }
+
+  private String createValidPatient() throws ParsingException, IOException {
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+    Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+    patient.gender = "M";
+    String  patientDetails = new PatientCCDSJSONFactory(mciBaseUrl).withValidJSON(patient);
+
+    return given().
+        body(patientDetails).
+        header("X-Auth-Token", accessToken).
+        header("From", idpUser.getEmail()).
+        header("client_id", idpUser.getClientId())
+        .header("Content-Type", "application/json")
+        .post(patientContextPath)
+        .then().statusCode(SC_CREATED)
+        .contentType(ContentType.JSON)
+        .extract()
+        .response().jsonPath().getString("id");
   }
 }

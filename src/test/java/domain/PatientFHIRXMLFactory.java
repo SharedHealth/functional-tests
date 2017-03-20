@@ -1,7 +1,4 @@
 package domain;
-
-//import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
-//import ca.uhn.fhir.model.primitive.InstantDt;
 import nu.xom.*;
 
 import java.io.IOException;
