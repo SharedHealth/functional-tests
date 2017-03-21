@@ -19,9 +19,15 @@ public class Composition extends Resource {
         public String encounterId;
         public String complaintId;
         public Date date;
+        private String confidentiality;
+
+        public void setConfidentiality(String confidentiality) {
+            this.confidentiality = confidentiality;
+        }
 
         public Composition() {
             super("Composition");
+          this.confidentiality = "N";
 
         }
 
@@ -49,8 +55,8 @@ public class Composition extends Resource {
             Element status = createSingleNode("status", "final");
             parent.appendChild(status);
 
-            //confidentiality
-            Element confidentiality = createSingleNode("confidentiality", "N");
+            //confidential
+            Element confidentiality = createSingleNode("confidential", this.confidentiality);
             parent.appendChild(confidentiality);
 
             //subject

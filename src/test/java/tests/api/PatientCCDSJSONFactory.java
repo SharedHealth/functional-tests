@@ -1,7 +1,6 @@
 package tests.api;
 
 import com.google.gson.Gson;
-import data.PatientFactory;
 import domain.Patient;
 import domain.PatientForJSON;
 
@@ -23,6 +22,7 @@ public class PatientCCDSJSONFactory {
     jsonPatient.present_address.country_code = '0'+patient.countryCode;
     jsonPatient.household_code = patient.householdCode;
     jsonPatient.bin_brn = patient.binBRN;
+    jsonPatient.confidential = (patient.confidentiality != null && patient.confidentiality == true) ? "Yes" : "No";
 
     Gson gson = new Gson();
     return gson.toJson(jsonPatient);

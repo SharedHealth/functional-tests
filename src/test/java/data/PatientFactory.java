@@ -28,6 +28,13 @@ public class PatientFactory {
         return patient;
     }
 
+    public static Patient validConfidentialPatientWithMandatoryInformation() {
+        Patient patient = validPatientWithoutBirthTime();
+        patient.birthTime = "16:50:00";
+        patient.confidentiality = true;
+        return patient;
+
+    }
     public static Patient validPatientWithoutBirthTime() {
         Patient patient = new Patient();
         patient.nid = String.valueOf(new Date().getTime());

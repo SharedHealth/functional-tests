@@ -9,8 +9,12 @@ public class PatientForJSON {
   public PresentAddress present_address;
   public String household_code;
   public String bin_brn;
+  public String confidential;
 
   public PatientForJSON() {
     this.present_address = new PresentAddress();
   }
+
+
+
 }
