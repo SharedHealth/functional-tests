@@ -1,18 +1,13 @@
 package tests.api;
 
-import ca.uhn.fhir.model.dstu2.resource.Bundle;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.path.json.JsonPath;
-import com.jayway.restassured.response.Response;
 import config.ConfigurationProperty;
 import config.EnvironmentConfiguration;
 import data.PatientFactory;
 import domain.BundleFactory;
 import domain.Patient;
-import domain.PatientFHIRXMLFactory;
 import nu.xom.ParsingException;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -20,18 +15,11 @@ import org.junit.Test;
 import utils.IdpUserEnum;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.RestAssured.preemptive;
-import static com.jayway.restassured.RestAssured.with;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.HttpStatus.SC_FORBIDDEN;
-import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertTrue;
 import static utils.IdentityLoginUtil.login;
 
 public class ProviderUserTests {
@@ -112,7 +100,7 @@ public class ProviderUserTests {
         header("From", provider.getEmail()).
         header("client_id", provider.getClientId())
         .get(shrBaseUrl + "/patients/" + validHid + "/encounters")
-        .then().statusCode(SC_OK)
+        .then().assertThat().statusCode(SC_OK)
         .contentType(ContentType.JSON)
         .extract().response().asString();
 
