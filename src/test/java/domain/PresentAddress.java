@@ -6,4 +6,5 @@ public class PresentAddress {
     public String district_id;
     public String upazila_id;
     public String country_code;
+    public String city_corporation_id;
 }

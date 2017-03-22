@@ -47,6 +47,7 @@ public class Patient {
     public String occupation;
     public String phoneNumber;
     public List<Relation> relations = new ArrayList<>();
+    public String city_corporation_id;
 
     public Patient() {
     }
