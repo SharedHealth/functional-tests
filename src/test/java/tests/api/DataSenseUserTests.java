@@ -23,8 +23,8 @@ import static org.junit.Assert.assertTrue;
 import static utils.IdentityLoginUtil.login;
 
 public class DataSenseUserTests {
-  ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
 
+  ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
   private final String IDP_SERVER_BASE_URL = config.property.get("idp_server_base_url");
   private final String shrBaseUrl = config.property.get("shr_registry");
   private final String mciBaseUrl = config.property.get("mci_registry");

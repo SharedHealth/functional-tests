@@ -6,6 +6,7 @@ import static java.util.Arrays.asList;
 
 public enum IdpUserEnum {
     FACILITY("dmishra@thoughtworks.com", "thoughtworks", "18549", "1c2a599423203f639dcdd8574ac5391dd67d21316ea30ee364c8a8787fb79dd3", asList("302607"), null),
+    TESTFACILITY("facility@test.com","thoughtworks","18563","697a61a6527565d1c98d7b9837ae1f25a6da9884d3fa7f75f66c93e4740e89bf",asList("302607"), null),
     PROVIDER("monikar@thoughtworks.com", "thoughtworks", "18556", "af6d37106aa4d5fbda63c9c29b264dc4e3de6e35362fcc997659a18a58ce42ac", asList("302607"), null),
     DATASENSE("rappasam@thoughtworks.com", "thoughtworks", "18552", "b7aa1f4001ac4b922dabd6a02a0dabc44cf5af74a0d1b68003ce7ccdb897a1d2", asList("3026"), null),
     MCI_ADMIN("ashutoks@thoughtworks.com", "thoughtworks", "18557", null, asList("3026"), null),
