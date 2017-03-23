@@ -292,27 +292,6 @@ public class MCIIntegrationTests {
     }
 
     @Test
-    public void datasenseUserShouldNotCreatePatient() throws Exception {
-        IdpUserEnum idpUser = IdpUserEnum.DATASENSE;
-        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
-
-        Patient patient = PatientFactory.validPatientWithMandatoryInformation();
-        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidJSON(patient);
-
-        given().
-            body(patientDetails).
-            header("X-Auth-Token", accessToken).
-            header("From", idpUser.getEmail()).
-            header("client_id", idpUser.getClientId())
-            .header("Content-Type", "application/json")
-            .post(patientContextPath)
-            .then()
-            .assertThat()
-            .statusCode(SC_FORBIDDEN);
-//            .contentType(ContentType.JSON);[bug-1]
-    }
-
-    @Test
     public void getPatientShouldFailForInvalidDatasenseAccessToken() throws Exception {
         String validHid = createValidPatient();
 
@@ -648,7 +627,7 @@ public class MCIIntegrationTests {
             header("client_id", idpUser.getClientId()).
             body("{\"sur_name\":\"mohammad\"}").
             contentType(ContentType.JSON)
-            .put(baseUrl + "/api/v1/patients/" + validHid)
+            .put( patientContextPath+"/" + validHid)
             .then()
             .assertThat()
             .statusCode(SC_FORBIDDEN);
@@ -667,7 +646,7 @@ public class MCIIntegrationTests {
             .header("X-Auth-Token", accessToken)
             .header("From", idpUser.getEmail())
             .header("client_id", idpUser.getClientId())
-            .get("/api/v1/patients/?nid=" + nid)
+            .get(patientContextPath+"/?nid=" + nid)
             .then().assertThat()
             .statusCode(SC_FORBIDDEN)
             .body("message", equalTo("Access is denied"));
