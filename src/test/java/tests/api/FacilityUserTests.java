@@ -9,7 +9,6 @@ import data.PatientFactory;
 import domain.BundleFactory;
 import domain.Patient;
 import nu.xom.ParsingException;
-import org.hamcrest.Matchers;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
