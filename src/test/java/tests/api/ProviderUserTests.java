@@ -2,6 +2,7 @@ package tests.api;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.path.json.JsonPath;
 import config.ConfigurationProperty;
 import config.EnvironmentConfiguration;
 import data.PatientFactory;
@@ -18,7 +19,9 @@ import utils.IdpUserEnum;
 import java.io.IOException;
 
 import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.RestAssured.with;
 import static org.apache.http.HttpStatus.*;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -132,6 +135,268 @@ public class ProviderUserTests {
 
   }
 
+  @Test
+  public void providerUserShouldBeAbleToViewPatientByHid() throws Exception {
+    IdpUserEnum idpUserEnum = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
+    String hid = createValidPatient();
+
+    given().header("X-Auth-Token", accessToken).
+        header("From", idpUserEnum.getEmail()).
+        header("client_id", idpUserEnum.getClientId())
+        .get(patientContextPath+"/"+hid)
+        .then().assertThat().statusCode(SC_OK)
+        .contentType(ContentType.JSON)
+        .body(notNullValue());
+  }
+
+  @Test
+  public void providerUserShouldBeAbleToCreatePatient() throws Exception {
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+    Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+    patient.gender = "M";
+    String  patientDetails = new PatientCCDSJSONFactory(mciBaseUrl).withValidJSON(patient);
+
+    given().
+        body(patientDetails)
+        .header("X-Auth-Token", accessToken).
+        header("From", idpUser.getEmail()).
+        header("client_id", idpUser.getClientId())
+        .header("Content-Type", "application/json")
+        .post(patientContextPath)
+        .then()
+        .assertThat()
+        .statusCode(SC_CREATED);
+  }
+
+  @Test
+  public void providerUserShouldBeAbleToViewPatientByNid() throws Exception {
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+    String hid = createValidPatient();
+    JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, hid);
+    String nid = patientDetails.get("nid");
+
+    given()
+        .header("X-Auth-Token", accessToken)
+        .header("From", idpUser.getEmail())
+        .header("client_id", idpUser.getClientId())
+        .get(patientContextPath+"/?nid=" + nid)
+        .then().assertThat()
+        .statusCode(SC_OK)
+        .contentType(ContentType.JSON)
+        .body(notNullValue());
+  }
+
+  @Test
+  public void providerUserShouldBeAbleToViewPatientByBinBrn() throws Exception {
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+    Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+    patient.binBRN = "14893974754477445";
+    String hid = createPatient(patient);
+    JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, hid);
+    String binBrn = patientDetails.get("bin_brn");
+
+    given()
+        .header("X-Auth-Token", accessToken)
+        .header("From", idpUser.getEmail())
+        .header("client_id", idpUser.getClientId())
+        .get(patientContextPath+"/?bin_brn=" +binBrn)
+        .then().assertThat()
+        .statusCode(SC_OK)
+        .contentType(ContentType.JSON)
+        .body(notNullValue());
+  }
+
+  @Test
+  public void providerUserShouldBeAbleToViewPatientsByHouseHoldCode() throws Exception {
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+    Patient patient = PatientFactory.validPatientWithMandatoryInformation();
+    patient.householdCode = patient.nid;
+    String hid = createPatient(patient);
+    JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, hid);
+    String householdCode = patientDetails.get("household_code");
+
+    given()
+        .header("X-Auth-Token", accessToken)
+        .header("From", idpUser.getEmail())
+        .header("client_id", idpUser.getClientId())
+        .get(patientContextPath+"/?household_code=" + householdCode)
+        .then().assertThat()
+        .statusCode(SC_OK)
+        .contentType(ContentType.JSON)
+        .body(notNullValue());
+  }
+
+  @Test
+  public void providerUserShouldBeAbleToViewPatientByNameAndLocation() throws Exception {
+    String hid = createValidPatient();
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+    JsonPath patientDetails = getPatientDetailsByHID(idpUser, accessToken, hid);
+
+    String givenName = patientDetails.get("given_name");
+    String surName = patientDetails.get("sur_name");
+    String district_id = patientDetails.get("present_address.district_id");
+    String division_id = patientDetails.get("present_address.division_id");
+    String upazila_id = patientDetails.get("present_address.upazila_id");
+    String address = "" + division_id + district_id + upazila_id;
+
+    given().
+        header("X-Auth-Token", accessToken).
+        header("From", idpUser.getEmail()).
+        header("client_id", idpUser.getClientId()).
+        get(patientContextPath + "/?given_name=" + givenName + "&sur_name=" + surName + "&present_address=" + address).
+        then().assertThat()
+        .statusCode(SC_OK)
+        .contentType(ContentType.JSON)
+        .body(notNullValue());
+  }
+
+  @Test
+  public void providerUserShouldBeAbleToDownloadPatientsByCatchment() throws Exception {
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+    String hid = createValidPatient();
+    String bundle = BundleFactory.BundleWithConditionEncounterForFever(hid);
+
+    createEncounterForPatient(idpUser, accessToken, hid, bundle);
+
+    String response = given().
+        header("X-Auth-Token", accessToken).
+        header("From", idpUser.getEmail()).
+        header("client_id", idpUser.getClientId()).
+        get("/api/v1/catchments/302607/patients")
+        .then().statusCode(SC_OK)
+        .extract().response().asString();
+
+    JSONObject jsonObject = new JSONObject(response);
+    JSONArray entries = new JSONArray(jsonObject.get("entries").toString());
+    assertTrue(entries.length()>0);
+  }
+
+  @Test
+  public void providerUserShouldBeAbleToUpdateThePatient() throws Exception {
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+    String hid = createValidPatient();
+
+    given().
+        header("X-Auth-Token", accessToken).
+        header("From", idpUser.getEmail()).
+        header("client_id", idpUser.getClientId()).
+        body("{\"gender\":\"F\"}").
+        contentType(ContentType.JSON)
+        .put(patientContextPath +"/"+ hid)
+        .then().assertThat()
+        .statusCode(SC_ACCEPTED);
+  }
+
+  @Test
+  public void providerUserShouldNotBeAbleToViewPendingApprovalPatientByHID() throws Exception {
+    String hid = createValidPatient();
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+    given()
+        .header("X-Auth-Token", accessToken)
+        .header("From", idpUser.getEmail())
+        .header("client_id", idpUser.getClientId())
+        .get("/api/v1/catchments/3026/approvals/"+hid)
+        .then().assertThat()
+        .statusCode(SC_FORBIDDEN)
+        .body("message", equalTo("Access is denied"));
+  }
+
+  @Test
+  public void providerUserShouldNotBeAbleToAcceptPendingApprovalForPatient() throws Exception {
+    String hid = createValidPatient();
+    updatePatient(hid);
+
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+    given().
+        header("X-Auth-Token", accessToken).
+        header("From", idpUser.getEmail()).
+        header("client_id", idpUser.getClientId()).
+        header("Content-Type", "application/json").
+        body("{\"sur_name\":\"mohammad\"}")
+        .put(mciBaseUrl+"/api/v1/catchments/3026/approvals/"+hid)
+        .then().assertThat()
+        .statusCode(SC_FORBIDDEN)
+        .body("message", equalTo("Access is denied"));
+  }
+
+  @Test
+  public void providerUserShouldNotBeAbleToRejectPendingApprovalForPatient() throws Exception {
+    String hid = createValidPatient();
+    updatePatient(hid);
+
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+    given().
+        header("X-Auth-Token", accessToken).
+        header("From", idpUser.getEmail()).
+        header("client_id", idpUser.getClientId()).
+        header("Content-Type", "application/json").
+        body("{\"sur_name\":\"mohammad\"}")
+        .delete(mciBaseUrl+"/api/v1/catchments/3026/approvals/"+hid)
+        .then().assertThat()
+        .statusCode(SC_FORBIDDEN)
+        .body("message", equalTo("Access is denied"));
+  }
+
+  @Test
+  public void providerShouldNotBeAbleToGetAuditLogByHID() throws Exception {
+    String hid = createValidPatient();
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+    given()
+        .header("X-Auth-Token", accessToken)
+        .header("From", idpUser.getEmail())
+        .header("client_id", idpUser.getClientId())
+        .get("/api/v1/audit/patients/"+hid)
+        .then().assertThat()
+        .statusCode(SC_FORBIDDEN)
+        .body("message", equalTo("Access is denied"));
+  }
+
+  @Test
+  public void providerUserShouldNotBeAbleToGetShrFeedByHID() throws Exception {
+    String hid = createValidPatient();
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+    given()
+        .header("X-Auth-Token", accessToken)
+        .header("From", idpUser.getEmail())
+        .header("client_id", idpUser.getClientId())
+        .get("/api/v1/feed/patients?hid=" + hid)
+        .then().assertThat()
+        .statusCode(SC_FORBIDDEN)
+        .body("message", equalTo("Access is denied"));
+  }
+
+  @Test
+  public void providerUserShouldNotBeAbleToGetLocationDetails() throws Exception {
+    IdpUserEnum idpUser = IdpUserEnum.PROVIDER;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+
+    given().
+        header("X-Auth-Token", accessToken).
+        header("From", idpUser.getEmail()).
+        header("client_id", idpUser.getClientId())
+        .get(mciBaseUrl + "/api/v1/locations?parent=3026")
+        .then()
+        .assertThat()
+        .statusCode(SC_FORBIDDEN)
+        .body("message",equalTo("Access is denied"));
+  }
 
 
   private String createConfidentialPatient() throws ParsingException, IOException {
@@ -149,6 +414,7 @@ public class ProviderUserTests {
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
     patient.gender = "M";
     String  patientDetails = new PatientCCDSJSONFactory(mciBaseUrl).withValidJSON(patient);
+
     return given().
         body(patientDetails).
         header("X-Auth-Token", accessToken).
@@ -181,5 +447,33 @@ public class ProviderUserTests {
         .contentType(ContentType.JSON)
         .extract().response().asString();
   }
+
+  private JsonPath getPatientDetailsByHID(IdpUserEnum idpUser, String accessToken, String hid) {
+    String response = with().
+        header("X-Auth-Token", accessToken).
+        header("From", idpUser.getEmail()).
+        header("client_id", idpUser.getClientId()).
+        get(patientContextPath+ "/" + hid)
+        .then()
+        .statusCode(SC_OK)
+        .extract()
+        .response().asString();
+
+    return new JsonPath(response);
+  }
+
+  private void updatePatient(String hid) {
+    IdpUserEnum facilityUser = IdpUserEnum.FACILITY;
+    String facilityAccessToken = login(facilityUser, IDP_SERVER_BASE_URL);
+    given().
+        header("X-Auth-Token", facilityAccessToken).
+        header("From", facilityUser.getEmail()).
+        header("client_id", facilityUser.getClientId()).
+        body("{\"sur_name\":\"mohammad\"}").
+        contentType(ContentType.JSON)
+        .put(patientContextPath + "/" +  hid)
+        .then().assertThat().statusCode(SC_ACCEPTED);
+  }
+
 
 }
