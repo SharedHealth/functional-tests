@@ -9,7 +9,6 @@ import data.PatientFactory;
 import domain.BundleFactory;
 import domain.Patient;
 import nu.xom.ParsingException;
-import org.hamcrest.Matchers;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -133,13 +132,13 @@ public class FacilityUserTests {
 
   @Test
   public void facilityUserShouldBeAbleToViewPatientByHid() throws Exception {
-    IdpUserEnum idpUserEnum = IdpUserEnum.FACILITY;
-    String accessToken = login(idpUserEnum, IDP_SERVER_BASE_URL);
+    IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+    String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
     String hid = createValidPatient();
 
     given().header("X-Auth-Token", accessToken).
-        header("From", idpUserEnum.getEmail()).
-        header("client_id", idpUserEnum.getClientId())
+        header("From", idpUser.getEmail()).
+        header("client_id", idpUser.getClientId())
         .get(patientContextPath+"/"+hid)
         .then().assertThat().statusCode(SC_OK)
         .contentType(ContentType.JSON)
