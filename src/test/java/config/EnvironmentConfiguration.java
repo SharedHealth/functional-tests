@@ -17,6 +17,7 @@ public class EnvironmentConfiguration {
 
         ConfigurationProperty devEnvironment = new ConfigurationProperty();
         devEnvironment.property.put("mci_registry", "https://mci-dev.twhosted.com");
+        devEnvironment.property.put("mci_registry_without_scheme", "mci-dev.twhosted.com");
         devEnvironment.property.put("mci_registry_patient_context_path", "/api/v2/patients");
         devEnvironment.property.put("idp_server_base_url", "https://hie-idp-dev.twhosted.com");
         devEnvironment.property.put("shr_registry","https://shr-dev.twhosted.com");
