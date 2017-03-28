@@ -26,7 +26,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import static utils.IdentityLoginUtil.login;
 import static utils.IdentityLoginUtil.loginFor;
 
-@Ignore
 public class MCIIntegrationTests {
 
     ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
