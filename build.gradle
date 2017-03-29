@@ -32,9 +32,9 @@ task wrapper(type: Wrapper) {
 
 test{
     useJUnit {
-        excludeCategories ('categories.FunctionalTest', 'categories.ApiTest', 'categories.PerfTest')
+        excludeCategories ('categories.FunctionalTest', 'categories.MciApiTest', 'categories.PerfTest')
 
-        includeCategories 'categories.MciApiTest'
+        includeCategories 'categories.ApiTest'
     }
     testLogging {
         exceptionFormat "full" // default is "short"
