@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -36,6 +37,7 @@ public class MCIBulkDataCreation {
 
 
     @Category(ApiTest.class)
+    @Ignore
     @Test
     public void createMultiplePatient() {
 

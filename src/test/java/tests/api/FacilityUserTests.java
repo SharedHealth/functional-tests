@@ -1,5 +1,6 @@
 package tests.api;
 
+import categories.ApiTest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
@@ -14,6 +15,7 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import utils.IdpUserEnum;
 
 import java.io.IOException;
@@ -27,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static utils.IdentityLoginUtil.login;
 
+@Category(ApiTest.class)
 public class FacilityUserTests {
 
   ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();

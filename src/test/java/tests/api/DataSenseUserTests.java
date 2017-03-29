@@ -1,5 +1,6 @@
 package tests.api;
 
+import categories.ApiTest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
@@ -14,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import utils.IdpUserEnum;
 
 import java.io.IOException;
@@ -25,8 +27,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertTrue;
 import static utils.IdentityLoginUtil.login;
-import static utils.IdentityLoginUtil.loginFor;
 
+@Category(ApiTest.class)
 public class DataSenseUserTests {
 
   ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();

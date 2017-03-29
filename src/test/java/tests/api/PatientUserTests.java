@@ -1,5 +1,6 @@
 package tests.api;
 
+import categories.ApiTest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
@@ -14,23 +15,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import utils.IdpUserEnum;
 
 import java.io.IOException;
 
 import static com.jayway.restassured.RestAssured.given;
-
 import static com.jayway.restassured.RestAssured.with;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.HttpStatus.SC_FORBIDDEN;
-import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static utils.IdentityLoginUtil.login;
 import static utils.IdentityLoginUtil.loginFor;
 
+@Category(ApiTest.class)
 public class PatientUserTests {
   ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
   private final String IDP_SERVER_BASE_URL = config.property.get("idp_server_base_url");

@@ -1,5 +1,6 @@
 package tests.api;
 
+import categories.ApiTest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
@@ -10,6 +11,7 @@ import domain.Patient;
 import nu.xom.ParsingException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import utils.IdpUserEnum;
 
 import java.io.IOException;
@@ -22,6 +24,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static utils.IdentityLoginUtil.login;
 import static utils.IdentityLoginUtil.loginFor;
 
+@Category(ApiTest.class)
 public class MCIAdminUserTests {
 
     ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();

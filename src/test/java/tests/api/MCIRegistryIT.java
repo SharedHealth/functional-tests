@@ -11,7 +11,7 @@ import ca.uhn.fhir.model.primitive.BooleanDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
 import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.parser.IParser;
-import categories.MciApiTest;
+import categories.ApiTest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
@@ -25,7 +25,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseDatatype;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import utils.FhirContextHelper;
@@ -46,7 +45,7 @@ import static org.junit.Assert.*;
 import static utils.FhirConstant.*;
 import static utils.IdentityLoginUtil.login;
 
-@Category(MciApiTest.class)
+@Category(ApiTest.class)
 public class MCIRegistryIT {
     private final IParser xmlParser = FhirContextHelper.getFhirContext().newXmlParser();
     ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();

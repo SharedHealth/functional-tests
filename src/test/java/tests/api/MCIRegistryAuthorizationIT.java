@@ -1,6 +1,6 @@
 package tests.api;
 
-import categories.MciApiTest;
+import categories.ApiTest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
@@ -28,7 +28,7 @@ import static utils.IdentityLoginUtil.login;
 import static utils.IdentityLoginUtil.loginFor;
 
 
-@Category(MciApiTest.class)
+@Category(ApiTest.class)
 public class MCIRegistryAuthorizationIT {
   ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
   private final String IDP_SERVER_BASE_URL = config.property.get("idp_server_base_url");
