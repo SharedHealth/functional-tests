@@ -10,6 +10,7 @@ import config.ConfigurationProperty;
 import config.EnvironmentConfiguration;
 import data.PatientFactory;
 import domain.Patient;
+import domain.PatientCCDSJSONFactory;
 import nu.xom.ParsingException;
 import org.junit.Before;
 import org.junit.Test;

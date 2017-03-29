@@ -9,6 +9,7 @@ import config.EnvironmentConfiguration;
 import data.PatientFactory;
 import domain.BundleFactory;
 import domain.Patient;
+import domain.PatientCCDSJSONFactory;
 import nu.xom.ParsingException;
 import org.hamcrest.Matchers;
 import org.json.JSONArray;

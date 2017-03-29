@@ -1,4 +1,4 @@
-package tests.api;
+package domain;
 
 import com.google.gson.Gson;
 import domain.Patient;
