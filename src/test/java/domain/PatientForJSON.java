@@ -10,6 +10,7 @@ public class PatientForJSON {
   public String household_code;
   public String bin_brn;
   public String confidential;
+  public String uid;
 
   public PatientForJSON() {
     this.present_address = new PresentAddress();
