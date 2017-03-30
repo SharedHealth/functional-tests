@@ -1,0 +1,169 @@
+{
+  "common_binbrn": {
+    "hid": 98000115066,
+    "detail": {
+      "given_name": "AHIBEJAIHIIFIHIH",
+      "sur_name": "REVHIHIFIIHIAJEB",
+      "gender": "M",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "nid": "1490878858787",
+      "present_address": {
+        "address_line": "6th BEJAIHIIFIHIH lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "country_code": "050",
+        "city_corporation_id": "20"
+      },
+      "bin_brn": "14908788587870000",
+      "confidential": "No"
+    }
+  },
+  "common_uid_and_nid": {
+    "hid": 98000114705,
+    "detail": {
+      "given_name": "AHIBEJAIHIIGCJAI",
+      "sur_name": "REVIAJCGIIHIAJEB",
+      "gender": "M",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "nid": "1490878862908",
+      "present_address": {
+        "address_line": "6th BEJAIHIIGCJAI lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "country_code": "050",
+        "city_corporation_id": "20"
+      },
+      "household_code": "7886290",
+      "bin_brn": "14908788629080000",
+      "confidential": "No",
+      "uid": "14908788629"
+    }
+  },
+  "common_uid_and_binbrn": {
+    "hid": 98000114705,
+    "detail": {
+      "given_name": "AHIBEJAIHIIGCJAI",
+      "sur_name": "REVIAJCGIIHIAJEB",
+      "gender": "M",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "nid": "1490878862908",
+      "present_address": {
+        "address_line": "6th BEJAIHIIGCJAI lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "country_code": "050",
+        "city_corporation_id": "20"
+      },
+      "household_code": "7886290",
+      "bin_brn": "14908788629080000",
+      "confidential": "No",
+      "uid": "14908788629"
+    }
+  },
+  "common_uid": {
+    "hid": 98000114705,
+    "detail": {
+      "given_name": "AHIBEJAIHIIGCJAI",
+      "sur_name": "REVIAJCGIIHIAJEB",
+      "gender": "M",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "nid": "1490878862908",
+      "present_address": {
+        "address_line": "6th BEJAIHIIGCJAI lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "country_code": "050",
+        "city_corporation_id": "20"
+      },
+      "household_code": "7886290",
+      "bin_brn": "14908788629080000",
+      "confidential": "No",
+      "uid": "14908788629"
+    }
+  },
+  "common_nid_and_binbrn": {
+    "hid": 98000115066,
+    "detail": {
+      "given_name": "AHIBEJAIHIIFIHIH",
+      "sur_name": "REVHIHIFIIHIAJEB",
+      "gender": "M",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "nid": "1490878858787",
+      "present_address": {
+        "address_line": "6th BEJAIHIIFIHIH lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "country_code": "050",
+        "city_corporation_id": "20"
+      },
+      "bin_brn": "14908788587870000",
+      "confidential": "No"
+    }
+  },
+  "common_nid": {
+    "hid": 98000118060,
+    "detail": {
+      "given_name": "AHIBEJAIHIIGFABJ",
+      "sur_name": "REVJBAFGIIHIAJEB",
+      "gender": "M",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "nid": "1490878865019",
+      "present_address": {
+        "address_line": "6th BEJAIHIIGFABJ lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "country_code": "050",
+        "city_corporation_id": "20"
+      },
+      "confidential": "No"
+    }
+  },
+  "duplicate": {
+    "hid": 98000115066,
+    "detail": {
+      "given_name": "AHIBEJAIHIIFIHIH",
+      "sur_name": "REVHIHIFIIHIAJEB",
+      "gender": "M",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "nid": "1490878858787",
+      "present_address": {
+        "address_line": "6th BEJAIHIIFIHIH lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "country_code": "050",
+        "city_corporation_id": "20"
+      },
+      "bin_brn": "14908788587870000",
+      "confidential": "No"
+    }
+  },
+  "common_uid_nid_and_binbrn": {
+    "hid": 98000114705,
+    "detail": {
+      "given_name": "AHIBEJAIHIIGCJAI",
+      "sur_name": "REVIAJCGIIHIAJEB",
+      "gender": "M",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "nid": "1490878862908",
+      "present_address": {
+        "address_line": "6th BEJAIHIIGCJAI lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "country_code": "050",
+        "city_corporation_id": "20"
+      },
+      "household_code": "7886290",
+      "bin_brn": "14908788629080000",
+      "confidential": "No",
+      "uid": "14908788629"
+    }
+  }
+}
