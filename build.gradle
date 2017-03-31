@@ -30,9 +30,27 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
 }
 
-test{
+
+task setup (type: Test) {
     useJUnit {
-        excludeCategories ('categories.FunctionalTest', 'categories.MciApiTest', 'categories.PerfTest')
+        excludeCategories ('categories.FunctionalTest', 'categories.MciApiTest', 'categories.PerfTest', 'categories.ApiTest')
+
+        includeCategories 'categories.DatasetupTest'
+    }
+
+    testLogging {
+        exceptionFormat "full" // default is "short"
+        events "passed", "skipped", "failed"
+    }
+
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+}
+
+task runFunctionalTest(type:Test) {
+    useJUnit {
+        excludeCategories ('categories.FunctionalTest', 'categories.MciApiTest', 'categories.PerfTest','categories.DatasetupTest')
 
         includeCategories 'categories.ApiTest'
     }
