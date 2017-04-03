@@ -125,7 +125,7 @@ public class DataSenseUserTests {
     IdpUserEnum provider = IdpUserEnum.PROVIDER;
     String providerAccessToken = login(provider, IDP_SERVER_BASE_URL);
 
-    String catchment = "302607";
+    String catchment = "302602";
 
     String hid = createValidPatient();
     String bundle = BundleFactory.BundleWithConditionEncounterForFever(hid);
@@ -489,7 +489,6 @@ public class DataSenseUserTests {
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
     patient.gender = "M";
     String  patientDetails = new PatientCCDSJSONFactory(mciBaseUrl).withValidJSON(patient);
-
     return given().
         body(patientDetails)
         .header("X-Auth-Token", accessToken).
