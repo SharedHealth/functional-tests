@@ -12,4 +12,9 @@ public class DataSetupTest {
   public void setupData() throws IOException {
     new DataSetup().setup();
   }
+
+  @Test
+  public void deDuplicateDataSetUp() throws Exception {
+    new DataSetup().deDuplicateSetup();
+  }
 }
