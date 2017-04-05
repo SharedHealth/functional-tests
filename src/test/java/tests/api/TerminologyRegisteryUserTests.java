@@ -12,9 +12,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_OK;
-import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,6 +28,13 @@ public class TerminologyRegisteryUserTests {
         .then().assertThat()
         .statusCode(SC_OK)
         .body(notNullValue());
+  }
+
+  @Test
+  public void shouldNotGetMedicationFeedForInvalidUrl() throws Exception {
+    given().get(baseUrl + "/openmrs/ws/atomfeed/medication/ree")
+        .then().assertThat()
+        .statusCode(SC_INTERNAL_SERVER_ERROR);
   }
 
   @Test
@@ -106,6 +111,13 @@ public class TerminologyRegisteryUserTests {
   }
 
   @Test
+  public void shouldNotGetReferenceTermFeedForInvalidUrl() throws Exception {
+    given().get(baseUrl +"/openmrs/ws/atomfeed/conceptreferenceterm/rec")
+        .then().assertThat()
+        .statusCode(SC_INTERNAL_SERVER_ERROR);
+  }
+
+  @Test
   public void shouldGetReferenceTermIfIDIsValid() throws Exception {
     PreemptiveBasicAuthScheme authScheme = new PreemptiveBasicAuthScheme();
     authScheme.setUserName("admin");
@@ -162,6 +174,13 @@ public class TerminologyRegisteryUserTests {
   }
 
   @Test
+  public void shouldNotGetConceptFeedDetailsForInvalidUrl() throws Exception {
+    given().get(baseUrl +"/openmrs/ws/atomfeed/concept/rec")
+        .then().assertThat()
+        .statusCode(SC_INTERNAL_SERVER_ERROR);
+  }
+
+  @Test
   public void shouldGetConceptDetailsIfIDIsValid() throws Exception {
     PreemptiveBasicAuthScheme authScheme = new PreemptiveBasicAuthScheme();
     authScheme.setUserName("admin");
@@ -208,4 +227,5 @@ public class TerminologyRegisteryUserTests {
     String message = new JSONObject(response.getBody().asString()).getJSONObject("error").get("message").toString();
     assertEquals("User is not logged in",message);
   }
+
 }
