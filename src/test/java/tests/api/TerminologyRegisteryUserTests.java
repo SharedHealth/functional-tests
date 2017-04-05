@@ -14,6 +14,7 @@ import org.junit.experimental.categories.Category;
 import static com.jayway.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -80,6 +81,23 @@ public class TerminologyRegisteryUserTests {
   }
 
   @Test
+  public void shouldNotGetMedicationDetailsIfUserNameIsInvalid() throws Exception {
+    PreemptiveBasicAuthScheme authScheme = new PreemptiveBasicAuthScheme();
+    authScheme.setUserName("admi");
+    authScheme.setPassword("Admin123");
+    RestAssured.authentication = authScheme;
+
+    Response response = given()
+        .get(baseUrl + "/openmrs/ws/rest/v1/tr/drugs/5799c579-3c78-4133-9e02-91c1006d862d")
+        .then().assertThat()
+        .statusCode(SC_UNAUTHORIZED)
+        .extract().response();
+
+    String message = new JSONObject(response.getBody().asString()).getJSONObject("error").get("message").toString();
+    assertEquals("User is not logged in",message);
+  }
+
+  @Test
   public void shouldGetRecentReferenceTermFeed() throws Exception {
     given().get(baseUrl + "/openmrs/ws/atomfeed/conceptreferenceterm/recent")
         .then().assertThat()
@@ -116,6 +134,23 @@ public class TerminologyRegisteryUserTests {
 
     String message = new JSONObject(response.getBody().asString()).getJSONObject("error").get("message").toString();
     assertEquals("Reference term not found",message);
+  }
+
+  @Test
+  public void shouldNotGetReferenceTermIfUserNameIsInvalid() throws Exception {
+    PreemptiveBasicAuthScheme authScheme = new PreemptiveBasicAuthScheme();
+    authScheme.setUserName("admn");
+    authScheme.setPassword("Admin123");
+    RestAssured.authentication = authScheme;
+
+    Response response = given()
+        .get(baseUrl + "/openmrs/ws/rest/v1/tr/referenceterms/5799c579-3c78-4133-9e02-91c1006d862d")
+        .then().assertThat()
+        .statusCode(SC_UNAUTHORIZED)
+        .extract().response();
+
+    String message = new JSONObject(response.getBody().asString()).getJSONObject("error").get("message").toString();
+    assertEquals("User is not logged in",message);
   }
 
   @Test
@@ -157,4 +192,20 @@ public class TerminologyRegisteryUserTests {
     assertEquals("Concept not found",message);
   }
 
+  @Test
+  public void shouldNotGetConceptDetailsIfUserNameIsInvalid() throws Exception {
+    PreemptiveBasicAuthScheme authScheme = new PreemptiveBasicAuthScheme();
+    authScheme.setUserName("admn");
+    authScheme.setPassword("Admin123");
+    RestAssured.authentication = authScheme;
+
+    Response response = given()
+        .get(baseUrl + "/openmrs/ws/rest/v1/tr/concepts/5799c579-3c78-4133-9e02-91c1006d862d")
+        .then().assertThat()
+        .statusCode(SC_UNAUTHORIZED)
+        .extract().response();
+
+    String message = new JSONObject(response.getBody().asString()).getJSONObject("error").get("message").toString();
+    assertEquals("User is not logged in",message);
+  }
 }
