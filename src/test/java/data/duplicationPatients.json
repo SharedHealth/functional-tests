@@ -1,0 +1,324 @@
+{
+  "patient_2_with_same_uid": {
+    "hid": 98000147184,
+    "detail": {
+      "hid": "98000147184",
+      "nid": "1491304229889",
+      "bin_brn": "14913042298899889",
+      "given_name": "AHIBEJBDAECCJIIJ",
+      "sur_name": "REVJIIJCCEADBJEB",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "dob_type": "1",
+      "gender": "M",
+      "uid": "14913042270",
+      "present_address": {
+        "address_line": "6th BEJBDAECCJIIJ lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "city_corporation_id": "20",
+        "country_code": "050"
+      },
+      "confidential": "No",
+      "household_code": "0422988",
+      "created_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "updated_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "status": {
+        "type": "1"
+      },
+      "active": true,
+      "hid_card_status": "REGISTERED",
+      "created": "2017-04-04T16:40:25.129+05:30",
+      "modified": "2017-04-04T16:40:25.129+05:30"
+    }
+  },
+  "patient_1_with_matching_name_and_address": {
+    "hid": 98000152556,
+    "detail": {
+      "hid": "98000152556",
+      "nid": "1491304249007",
+      "bin_brn": "14913042490077009",
+      "given_name": "AHIBEJBDAECEJAAH",
+      "sur_name": "REVHAAJECEADBJEB",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "dob_type": "1",
+      "gender": "M",
+      "uid": "14913042490",
+      "present_address": {
+        "address_line": "6th BEJBDAECEJAAH lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "city_corporation_id": "20",
+        "country_code": "050"
+      },
+      "confidential": "No",
+      "household_code": "0424900",
+      "created_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "updated_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "status": {
+        "type": "1"
+      },
+      "active": true,
+      "hid_card_status": "REGISTERED",
+      "created": "2017-04-04T16:40:44.040+05:30",
+      "modified": "2017-04-04T16:40:44.040+05:30"
+    }
+  },
+  "patient_2_with_matching_name_and_address": {
+    "hid": 98000156300,
+    "detail": {
+      "hid": "98000156300",
+      "nid": "1491304251779",
+      "bin_brn": "14913042517799771",
+      "given_name": "AHIBEJBDAECEJAAH",
+      "sur_name": "REVHAAJECEADBJEB",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "dob_type": "1",
+      "gender": "M",
+      "uid": "14913042517",
+      "present_address": {
+        "address_line": "6th BEJBDAECEJAAH lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "city_corporation_id": "20",
+        "country_code": "050"
+      },
+      "confidential": "No",
+      "household_code": "0425177",
+      "created_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "updated_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "status": {
+        "type": "1"
+      },
+      "active": true,
+      "hid_card_status": "REGISTERED",
+      "created": "2017-04-04T16:40:46.740+05:30",
+      "modified": "2017-04-04T16:40:46.740+05:30"
+    }
+  },
+  "patient_1_with_same_uid": {
+    "hid": 98000156276,
+    "detail": {
+      "hid": "98000156276",
+      "nid": "1491304227065",
+      "bin_brn": "14913042270655607",
+      "given_name": "AHIBEJBDAECCHAGF",
+      "sur_name": "REVFGAHCCEADBJEB",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "dob_type": "1",
+      "gender": "M",
+      "uid": "14913042270",
+      "present_address": {
+        "address_line": "6th BEJBDAECCHAGF lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "city_corporation_id": "20",
+        "country_code": "050"
+      },
+      "confidential": "No",
+      "household_code": "0422706",
+      "created_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "updated_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "status": {
+        "type": "1"
+      },
+      "active": true,
+      "hid_card_status": "REGISTERED",
+      "created": "2017-04-04T16:40:22.087+05:30",
+      "modified": "2017-04-04T16:40:22.087+05:30"
+    }
+  },
+  "patient_2_with_same_nid": {
+    "hid": 98000152291,
+    "detail": {
+      "hid": "98000152291",
+      "nid": "1491304216583",
+      "given_name": "AHIBEJBDAECBGFID",
+      "sur_name": "REVDIFGBCEADBJEB",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "dob_type": "1",
+      "gender": "M",
+      "present_address": {
+        "address_line": "6th BEJBDAECBGFID lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "city_corporation_id": "20",
+        "country_code": "050"
+      },
+      "confidential": "No",
+      "created_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "updated_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "status": {
+        "type": "1"
+      },
+      "active": true,
+      "hid_card_status": "REGISTERED",
+      "created": "2017-04-04T16:40:13.948+05:30",
+      "modified": "2017-04-04T16:40:13.948+05:30"
+    }
+  },
+  "patient_2_with_same_binbrn": {
+    "hid": 98000155740,
+    "detail": {
+      "hid": "98000155740",
+      "nid": "1491304241171",
+      "bin_brn": "14913042381377318",
+      "given_name": "AHIBEJBDAECEBBHB",
+      "sur_name": "REVBHBBECEADBJEB",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "dob_type": "1",
+      "gender": "M",
+      "uid": "14913042411",
+      "present_address": {
+        "address_line": "6th BEJBDAECEBBHB lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "city_corporation_id": "20",
+        "country_code": "050"
+      },
+      "confidential": "No",
+      "household_code": "0424117",
+      "created_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "updated_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "status": {
+        "type": "1"
+      },
+      "active": true,
+      "hid_card_status": "REGISTERED",
+      "created": "2017-04-04T16:40:36.164+05:30",
+      "modified": "2017-04-04T16:40:36.164+05:30"
+    }
+  },
+  "patient_1_with_same_binbrn": {
+    "hid": 98000150287,
+    "detail": {
+      "hid": "98000150287",
+      "nid": "1491304238137",
+      "bin_brn": "14913042381377318",
+      "given_name": "AHIBEJBDAECDIBDH",
+      "sur_name": "REVHDBIDCEADBJEB",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "dob_type": "1",
+      "gender": "M",
+      "uid": "14913042381",
+      "present_address": {
+        "address_line": "6th BEJBDAECDIBDH lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "city_corporation_id": "20",
+        "country_code": "050"
+      },
+      "confidential": "No",
+      "household_code": "0423813",
+      "created_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "updated_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "status": {
+        "type": "1"
+      },
+      "active": true,
+      "hid_card_status": "REGISTERED",
+      "created": "2017-04-04T16:40:33.369+05:30",
+      "modified": "2017-04-04T16:40:33.369+05:30"
+    }
+  },
+  "patient_1_with_same_nid": {
+    "hid": 98000155484,
+    "detail": {
+      "hid": "98000155484",
+      "nid": "1491304216583",
+      "given_name": "AHIBEJBDAECBGFID",
+      "sur_name": "REVDIFGBCEADBJEB",
+      "date_of_birth": "1980-06-14T16:50:00.000+05:30",
+      "dob_type": "1",
+      "gender": "M",
+      "present_address": {
+        "address_line": "6th BEJBDAECBGFID lane",
+        "division_id": "30",
+        "district_id": "26",
+        "upazila_id": "02",
+        "city_corporation_id": "20",
+        "country_code": "050"
+      },
+      "confidential": "No",
+      "created_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "updated_by": {
+        "facility": {
+          "id": "10019841"
+        }
+      },
+      "status": {
+        "type": "1"
+      },
+      "active": true,
+      "hid_card_status": "REGISTERED",
+      "created": "2017-04-04T16:40:11.231+05:30",
+      "modified": "2017-04-04T16:40:11.231+05:30"
+    }
+  }
+}
