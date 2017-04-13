@@ -25,6 +25,9 @@ import static com.jayway.restassured.RestAssured.with;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static utils.IdentityLoginUtil.login;
 import static utils.IdentityLoginUtil.loginFor;
 
@@ -128,6 +131,27 @@ public class MCIIntegrationTests {
     }
 
     @Test
+    public void facilityUserShouldCreatePatientWithOnlyMandatoryFields() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        Patient patient = PatientFactory.validPatientWithOnlyMandatoryFields();
+        patient.gender = "M";
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidMandatoryJSON(patient);
+
+        given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .assertThat()
+            .statusCode(SC_CREATED)
+            .contentType(ContentType.JSON);
+    }
+
+    @Test
     public void getPatientShouldFailForInvalidFacilityAccessToken() throws Exception {
         String validHid = createValidPatient();
         IdpUserEnum idpUser = IdpUserEnum.FACILITY;
@@ -189,16 +213,54 @@ public class MCIIntegrationTests {
         IdpUserEnum idpUser = IdpUserEnum.FACILITY;
         String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
 
-        given().
+        JsonPath response = given().
             header("X-Auth-Token", accessToken).
             header("From", idpUser.getEmail()).
             header("client_id", idpUser.getClientId())
-            .header("Content-Type","application/json")
+            .header("Content-Type", "application/json")
             .get(patientContextPath + "/" + validHid)
             .then().assertThat()
             .statusCode(SC_OK)
             .contentType(ContentType.JSON)
-            .body(notNullValue());
+            .extract().response().jsonPath();
+
+        assertNotNull(response.get("sur_name"));
+    }
+
+    @Test
+    public void facilityUserShouldGetPatientWithOnlyMandatoryFields() throws Exception {
+        IdpUserEnum idpUser = IdpUserEnum.FACILITY;
+        String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
+        Patient patient = PatientFactory.validPatientWithOnlyMandatoryFields();
+        patient.gender = "M";
+        String patientDetails = new PatientCCDSJSONFactory(baseUrl).withValidMandatoryJSON(patient);
+
+        String hid = given().
+            body(patientDetails).
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .post(patientContextPath)
+            .then()
+            .statusCode(SC_CREATED)
+            .extract()
+            .response().jsonPath().getString("id");
+
+        JsonPath response = given().
+            header("X-Auth-Token", accessToken).
+            header("From", idpUser.getEmail()).
+            header("client_id", idpUser.getClientId())
+            .header("Content-Type", "application/json")
+            .get(patientContextPath + "/" + hid)
+            .then()
+            .statusCode(SC_OK)
+            .contentType(ContentType.JSON)
+            .extract().response().jsonPath();
+
+        assertNotNull(response.get("given_name"));
+        assertNotNull(response.get("date_of_birth"));
+        assertNull(response.get("sur_name"));
     }
 
     @Test

@@ -52,6 +52,18 @@ public class PatientFactory {
         return patient;
     }
 
+    public  static Patient validPatientWithOnlyMandatoryFields() {
+        String randomNumber = String.valueOf(new Date().getTime());
+        Patient patient = new Patient();
+        patient.given = "AHI" + PatientFactory.getEncodedName(randomNumber);
+        patient.gender = "male";
+        patient.birthDate = "1980-06-14";
+        patient.division_id = "30";
+        patient.district_id = "26";
+        patient.upazila_id = "02";
+        patient.addressLine = "6th " + PatientFactory.getEncodedName(randomNumber) + " lane";
+        return patient;
+    }
     public static Patient validPatientWithAllInformation() {
         Patient patient = validPatientWithMandatoryInformation();
         patient.active = true;

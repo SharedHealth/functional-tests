@@ -29,4 +29,18 @@ public class PatientCCDSJSONFactory {
     Gson gson = new Gson();
     return gson.toJson(jsonPatient);
   }
+
+  public String withValidMandatoryJSON(Patient patient){
+    PatientForJSON jsonPatient = new PatientForJSON();
+    jsonPatient.given_name = patient.given;
+    jsonPatient.gender = patient.gender;
+    jsonPatient.date_of_birth = patient.birthDate;
+    jsonPatient.present_address.address_line = patient.addressLine;
+    jsonPatient.present_address.division_id = patient.division_id;
+    jsonPatient.present_address.district_id = patient.district_id;
+    jsonPatient.present_address.upazila_id = patient.upazila_id;
+
+    Gson gson = new Gson();
+    return gson.toJson(jsonPatient);
+  }
 }
