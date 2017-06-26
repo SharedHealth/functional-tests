@@ -36,7 +36,7 @@ public class EnvironmentConfiguration {
         devEnvironment.property.put("code_id", "51899-3");
         devEnvironment.property.put(TR_SERVER_BASE_URL_KEY, "http://tr-dev.twhosted.com");
         devEnvironment.property.put(PROVIDER_ID_KEY, "24");
-        devEnvironment.property.put(TR_FEVER_CONCEPT_UUID_KEY, "d22b304b-878d-11e5-95dd-005056b0145c");
+        devEnvironment.property.put(TR_FEVER_CONCEPT_UUID_KEY, "d587c115-82f3-11e5-b875-0050568225ca");
 
         ConfigurationProperty localEnvironment = new ConfigurationProperty();
         localEnvironment.property.put(MCI_SERVER_BASE_URL_KEY, "http://192.168.33.20:8081");
