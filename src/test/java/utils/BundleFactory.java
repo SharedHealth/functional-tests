@@ -113,7 +113,7 @@ public class BundleFactory {
         condition.setVerificationStatus(Condition.ConditionVerificationStatus.PROVISIONAL);
         String feverUuid = config.property.get(TR_FEVER_CONCEPT_UUID_KEY);
         condition.setCode(new CodeableConcept().addCoding(new Coding()
-                .setSystem(trContextPath + "/concepts/" + feverUuid)
+                .setSystem(trContextPath + "concepts/" + feverUuid)
                 .setCode(feverUuid)
                 .setDisplay("Fever")
         ));

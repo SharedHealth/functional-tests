@@ -110,6 +110,7 @@ public class CreatePatientTests {
   }
 
   @Test
+  @Ignore("Auto Merge Scenario")
   public void facilityUserShouldBeAbleToUpdateAnExistingPatientOnAllFieldsMatch() throws Exception {
     IdpUserEnum idpUser = IdpUserEnum.FACILITY;
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
@@ -131,6 +132,7 @@ public class CreatePatientTests {
   }
 
   @Test
+  @Ignore("Auto Merge Scenario")
   public void facilityUserShouldBeAbleToUpdateAnExistingPatientIfNidUidAndBinBrnMatch() throws Exception {
     IdpUserEnum idpUser = IdpUserEnum.FACILITY;
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
@@ -160,6 +162,7 @@ public class CreatePatientTests {
   }
 
   @Test
+  @Ignore("Auto Merge Scenario")
   public void facilityUserShouldBeAbleToUpdateAnExistingPatientIfNidAndBinBrnMatch() throws Exception {
     IdpUserEnum idpUser = IdpUserEnum.FACILITY;
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
@@ -188,6 +191,7 @@ public class CreatePatientTests {
   }
 
   @Test
+  @Ignore("Auto Merge Scenario")
   public void facilityUserShouldBeAbleToUpdateExistingPatientIfBinBrnAndUidMatch() throws Exception {
     IdpUserEnum idpUser = IdpUserEnum.FACILITY;
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
@@ -216,6 +220,7 @@ public class CreatePatientTests {
   }
 
   @Test
+  @Ignore("Auto Merge Scenario")
   public void facilityUserShouldBeAbleToUpdateExistingPatientIfNidAndUidMatch() throws Exception {
     IdpUserEnum idpUser = IdpUserEnum.FACILITY;
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
@@ -244,6 +249,7 @@ public class CreatePatientTests {
   }
 
   @Test
+  @Ignore("Auto Merge Scenario")
   public void facilityUserShouldBeAbleToCreateNewPatientOnlyNidMatches() throws Exception {
     IdpUserEnum idpUser = IdpUserEnum.FACILITY;
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);
