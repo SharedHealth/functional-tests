@@ -44,8 +44,7 @@ public class PatientFactory {
         patient.birthDate = "1980-06-14";
         patient.division_id = "30";
         patient.district_id = "26";
-        patient.upazila_id = "02";
-        patient.city_corporation_id = "20";
+        patient.upazila_id = "07";
         patient.addressCode = "201918991101";
         patient.addressLine = "6th " + PatientFactory.getEncodedName(patient.nid) + " lane";
         patient.countryCode = "50";

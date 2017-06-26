@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static com.jayway.restassured.RestAssured.given;
+import static config.EnvironmentConfiguration.TR_SERVER_BASE_URL_KEY;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -20,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 @Category(ApiTest.class)
 public class TerminologyRegisteryUserTests {
   ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
-  private final String baseUrl = config.property.get("tr_server");
+  private final String baseUrl = config.property.get(TR_SERVER_BASE_URL_KEY);
 
   @Test
   public void shouldGetRecentMedicationFeed() throws Exception {

@@ -7,7 +7,7 @@ import com.jayway.restassured.path.json.JsonPath;
 import config.ConfigurationProperty;
 import config.EnvironmentConfiguration;
 import data.PatientFactory;
-import domain.BundleFactory;
+import utils.BundleFactory;
 import domain.Patient;
 import domain.PatientCCDSJSONFactory;
 import nu.xom.ParsingException;
@@ -33,10 +33,10 @@ import static utils.IdentityLoginUtil.login;
 public class DataSenseUserTests {
 
   ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
-  private final String IDP_SERVER_BASE_URL = config.property.get("idp_server_base_url");
-  private final String shrBaseUrl = config.property.get("shr_registry");
-  private final String mciBaseUrl = config.property.get("mci_registry");
-  private final String patientContextPath = "/api/v1/patients";
+  private final String IDP_SERVER_BASE_URL = config.property.get(EnvironmentConfiguration.IDP_SERVER_BASE_URL);
+  private final String shrBaseUrl = config.property.get(EnvironmentConfiguration.SHR_SERVER_BASE_URL_KEY);
+  private final String mciBaseUrl = config.property.get(EnvironmentConfiguration.MCI_SERVER_BASE_URL_KEY);
+  private final String  patientContextPath = config.property.get(EnvironmentConfiguration.MCI_PATIENT_CONTEXT_PATH_KEY);
 
   @Before
   public void setUp() throws Exception {
@@ -134,7 +134,7 @@ public class DataSenseUserTests {
     String response = given().header("X-Auth-Token", accessToken).
         header("From", datasense.getEmail()).
         header("client_id", datasense.getClientId()).
-        get(shrBaseUrl + "/v1/catchments/" + catchment + "/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
+        get(shrBaseUrl + "/catchments/" + catchment + "/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
         .then()
         .statusCode(SC_OK)
         .extract()
@@ -154,7 +154,7 @@ public class DataSenseUserTests {
     given().header("X-Auth-Token", accessToken).
         header("From", datasense.getEmail()).
         header("client_id", datasense.getClientId()).
-        get(shrBaseUrl+"/v1/catchments/"+catchment+"/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
+        get(shrBaseUrl+"/catchments/"+catchment+"/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
         .then().assertThat()
         .statusCode(SC_FORBIDDEN)
         .body("message",equalTo("Access is denied to user "+datasense.getClientId()+" for catchment "+catchment));
@@ -176,7 +176,7 @@ public class DataSenseUserTests {
     String response = given().header("X-Auth-Token", accessToken).
         header("From", datasense.getEmail()).
         header("client_id", datasense.getClientId()).
-        get(shrBaseUrl + "/v1/catchments/" + catchment + "/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
+        get(shrBaseUrl + "/catchments/" + catchment + "/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
         .then()
         .statusCode(SC_OK)
         .extract()
