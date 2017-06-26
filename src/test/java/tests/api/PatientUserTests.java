@@ -185,7 +185,7 @@ public class PatientUserTests {
         given().header("X-Auth-Token", accessToken).
                 header("From", idpUser.getEmail()).
                 header("client_id", idpUser.getClientId()).
-                get(shrBaseUrl + "/v1/catchments/" + catchments + "/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
+                get(shrBaseUrl + "/catchments/" + catchments + "/encounters?updateSince=2017-03-01T00%3A00%3A00.000%2B0530")
                 .then().assertThat()
                 .statusCode(SC_FORBIDDEN)
                 .body("message", equalTo("Access is denied"));

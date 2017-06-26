@@ -125,7 +125,7 @@ public class DataSenseUserTests {
     IdpUserEnum provider = IdpUserEnum.PROVIDER;
     String providerAccessToken = login(provider, IDP_SERVER_BASE_URL);
 
-    String catchment = "302602";
+    String catchment = "302607";
 
     String hid = createValidPatient();
     String bundle = BundleFactory.BundleWithConditionEncounterForFever(hid);
@@ -171,7 +171,7 @@ public class DataSenseUserTests {
     String hid = createValidPatient();
     String bundle = BundleFactory.BundleWithConditionEncounterForFever(hid);
     createEncounterForPatient(provider, providerAccessToken, hid, bundle);
-    String catchment = "30260220";
+    String catchment = "302607";
 
     String response = given().header("X-Auth-Token", accessToken).
         header("From", datasense.getEmail()).
