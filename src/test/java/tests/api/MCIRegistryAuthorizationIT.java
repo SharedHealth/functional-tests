@@ -31,9 +31,9 @@ import static utils.IdentityLoginUtil.loginFor;
 @Category(ApiTest.class)
 public class MCIRegistryAuthorizationIT {
   ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
-  private final String IDP_SERVER_BASE_URL = config.property.get("idp_server_base_url");
-  private final String baseUrl = config.property.get("mci_registry");
-  private final String patientContextPath = "/api/v2/patients";
+  private final String IDP_SERVER_BASE_URL = config.property.get(EnvironmentConfiguration.IDP_SERVER_BASE_URL);
+  private final String baseUrl = config.property.get(EnvironmentConfiguration.MCI_SERVER_BASE_URL_KEY);
+  private final String  patientContextPath = "/api/v2/patients";
 
   @Before
   public void setUp() throws Exception {

@@ -13,7 +13,7 @@ public class EnvironmentConfiguration {
     public static final String FACILITY_ID_KEY = "facility_id";
     public static final String PROVIDER_ID_KEY = "provider_id";
     public static final String MCI_SERVER_BASE_URL_KEY = "mci_server_base_url";
-    public static final String MCI_PATIENT_CONTEXT_PATH_KEY = "mci_registry_patient_context_path";
+    public static final String MCI_PATIENT_CONTEXT_PATH_KEY = "mci_patient_context_path";
     public static final String TR_SERVER_BASE_URL_KEY = "tr_server";
     public static final String TR_FEVER_CONCEPT_UUID_KEY = "tr_fever_concept_uuid";
     public static final String IDP_SERVER_BASE_URL = "idp_server_base_url";

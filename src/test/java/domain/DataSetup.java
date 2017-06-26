@@ -16,9 +16,9 @@ import static utils.IdentityLoginUtil.login;
 
 public class DataSetup {
   private static final ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
-  PatientsCollection patientsCollection;
-  String baseUrl = config.property.get("mci_registry");
-  private final String IDP_SERVER_BASE_URL = config.property.get("idp_server_base_url");
+  private PatientsCollection patientsCollection;
+  private final String IDP_SERVER_BASE_URL = config.property.get(EnvironmentConfiguration.IDP_SERVER_BASE_URL);
+  private final String baseUrl = config.property.get(EnvironmentConfiguration.MCI_SERVER_BASE_URL_KEY);
 
   public DataSetup() {
     patientsCollection = new PatientsCollection();
@@ -196,9 +196,8 @@ public class DataSetup {
   }
 
   private String createPatient(String patientDetails) {
-    String baseUrl = config.property.get("mci_registry");
-    String IDP_SERVER_BASE_URL = config.property.get("idp_server_base_url");
-    String patientContextPath = "/api/v1/patients";
+    String IDP_SERVER_BASE_URL = config.property.get(EnvironmentConfiguration.IDP_SERVER_BASE_URL);
+    String  patientContextPath = config.property.get(EnvironmentConfiguration.MCI_PATIENT_CONTEXT_PATH_KEY);
 
     IdpUserEnum idpUser = IdpUserEnum.FACILITY;
     String accessToken = login(idpUser, IDP_SERVER_BASE_URL);

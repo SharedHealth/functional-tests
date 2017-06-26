@@ -27,14 +27,14 @@ import static utils.IdentityLoginUtil.loginFor;
 
 public class DeDuplicationTests {
   ConfigurationProperty config = EnvironmentConfiguration.getEnvironmentProperties();
-  private final String IDP_SERVER_BASE_URL = config.property.get("idp_server_base_url");
-  private final String baseUrl = config.property.get("mci_registry");
-  private final String patientContextPath = "/api/v1/patients";
+  private final String IDP_SERVER_BASE_URL = config.property.get(EnvironmentConfiguration.IDP_SERVER_BASE_URL);
+  private final String mciBaseUrl = config.property.get(EnvironmentConfiguration.MCI_SERVER_BASE_URL_KEY);
+  private final String  patientContextPath = config.property.get(EnvironmentConfiguration.MCI_PATIENT_CONTEXT_PATH_KEY);
   private String patientList;
 
   @Before
   public void setUp() throws Exception {
-    RestAssured.baseURI = baseUrl;
+    RestAssured.baseURI = mciBaseUrl;
     String myCurrentDir = System.getProperty("user.dir");
     patientList = new String(Files.readAllBytes(Paths.get(myCurrentDir + "/src/test/java/data/duplicationPatients.json")));
   }
